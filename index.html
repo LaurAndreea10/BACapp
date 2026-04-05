@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#06090f">
+<title>BAC Space Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700&family=Manrope:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root{
+--bg:#06090f;--bg2:#0b0f1a;--bg3:#101626;--bg4:#161e30;
+--surf:rgba(11,15,26,.88);--surf2:rgba(16,22,38,.75);
+--line:rgba(255,255,255,.06);--line2:rgba(255,255,255,.11);--line3:rgba(255,255,255,.18);
+--gold:#e4a84c;--gold2:#f2c978;--gold-d:rgba(228,168,76,.08);--gold-g:rgba(228,168,76,.18);
+--teal:#3ccfbe;--teal-d:rgba(60,207,190,.08);
+--rose:#e86060;--rose-d:rgba(232,96,96,.08);
+--violet:#8b6cf0;--violet-d:rgba(139,108,240,.08);
+--green:#50c878;--green-d:rgba(80,200,120,.08);
+--sky:#5898f0;--sky-d:rgba(88,152,240,.08);
+--peach:#f09860;--peach-d:rgba(240,152,96,.08);
+--txt:#e0e4f0;--txt2:#7a84a0;--txt3:#454d66;
+--r:16px;--rs:10px;--rr:999px;
+--sh:0 6px 28px rgba(0,0,0,.35);
+--t:.18s cubic-bezier(.4,0,.2,1);
+--sbw:252px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14.5px;scroll-behavior:smooth}
+body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden;font-weight:400}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 55% 40% at 80% 0%,rgba(228,168,76,.04),transparent 55%),radial-gradient(ellipse 45% 45% at 10% 95%,rgba(60,207,190,.03),transparent 55%);pointer-events:none;z-index:0}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:4px}
+button,input,textarea,select{font:inherit;border:none;outline:none}
+
+@keyframes flicker{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.8;transform:scale(1.12)}
+}
+
+.sb{position:fixed;top:0;left:0;bottom:0;width:var(--sbw);background:var(--surf);border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:100;transition:transform var(--t);backdrop-filter:blur(24px)}
+.sb-logo{padding:20px 16px 14px;border-bottom:1px solid var(--line)}
+.sb-logo h1{font-family:'Fraunces',serif;font-size:1.45rem;font-weight:700;color:var(--gold);font-style:italic;letter-spacing:-.03em;line-height:1}
+.sb-logo small{font-family:'IBM Plex Mono',monospace;font-size:.52rem;color:var(--txt3);text-transform:uppercase;letter-spacing:2.5px;display:block;margin-top:5px}
+.sb-nav{flex:1;padding:8px 6px;overflow-y:auto}
+.sb-lbl{font-size:.5rem;text-transform:uppercase;letter-spacing:3px;color:var(--txt3);padding:14px 10px 5px;font-family:'IBM Plex Mono',monospace}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--rs);cursor:pointer;transition:all var(--t);color:var(--txt2);font-size:.8rem;position:relative;margin-bottom:1px}
+.ni .ic{font-size:.85rem;width:18px;text-align:center}
+.ni:hover{background:rgba(255,255,255,.04);color:var(--txt)}
+.ni.act{background:var(--gold-d);color:var(--gold);font-weight:600}
+.ni.act::before{content:'';position:absolute;left:0;top:25%;width:2.5px;height:50%;background:var(--gold);border-radius:0 2px 2px 0}
+.sb-ft{padding:12px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sb-chip{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--rs);padding:8px;text-align:center}
+.sb-chip .v{font-family:'Fraunces',serif;font-size:1.1rem;color:var(--gold);display:block;font-weight:700}
+.sb-chip .l{font-size:.5rem;color:var(--txt3);text-transform:uppercase;letter-spacing:1.5px;font-family:'IBM Plex Mono',monospace}
+
+.mn{margin-left:var(--sbw);min-height:100vh;position:relative;z-index:1}
+.tb{position:sticky;top:0;background:rgba(6,9,15,.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--line);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;z-index:50}
+.tb-t{font-family:'Fraunces',serif;font-size:1rem;color:var(--txt);font-style:italic}
+.tb-a{display:flex;align-items:center;gap:6px}
+.strk{display:flex;align-items:center;gap:4px;background:var(--gold-d);border:1px solid rgba(228,168,76,.15);border-radius:var(--rr);padding:4px 10px;font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--gold);cursor:pointer;transition:all var(--t)}
+.strk:hover{background:var(--gold-g)}
+.ib{width:32px;height:32px;border-radius:var(--rs);border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--txt2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all var(--t)}
+.ib:hover{border-color:var(--line2);color:var(--txt)}
+
+.pn{display:none;padding:20px;animation:fu .22s ease}.pn.act{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@keyframes pls{0%,100%{opacity:1}50%{opacity:.6}}
+@keyframes bn{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-4px);opacity:1}}
+
+.cd{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:16px;transition:border-color var(--t),transform var(--t),box-shadow var(--t);backdrop-filter:blur(10px)}
+.cd:hover{border-color:var(--line2);transform:translateY(-1px);box-shadow:var(--sh)}
+.ct{font-family:'Fraunces',serif;font-size:.95rem;color:var(--txt);margin-bottom:10px;display:flex;align-items:center;gap:7px;font-style:italic;font-weight:500}
+.dt{width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ga{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
+.hd{display:flex;align-items:baseline;gap:8px;margin-bottom:16px}
+.hd h2{font-family:'Fraunces',serif;font-size:1.4rem;font-weight:700;color:var(--txt);font-style:italic;letter-spacing:-.02em}
+.hd .sub{font-size:.65rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace}
+.bt{padding:7px 14px;border-radius:var(--rs);border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--txt2);font-size:.75rem;cursor:pointer;transition:all var(--t);font-weight:500}
+.bt:hover{color:var(--txt);border-color:var(--line2);background:rgba(255,255,255,.07)}
+.bt-g{background:var(--gold-d);border-color:rgba(228,168,76,.18);color:var(--gold)}.bt-g:hover{background:var(--gold-g)}
+.bt-c{background:var(--teal-d);border-color:rgba(60,207,190,.15);color:var(--teal)}
+.bt-r{background:var(--rose-d);border-color:rgba(232,96,96,.15);color:var(--rose)}
+.bt-p{background:linear-gradient(135deg,var(--gold),#d08030);border:none;color:#080b14;font-weight:700;box-shadow:0 6px 20px rgba(228,168,76,.18)}
+.bt-p:hover{box-shadow:0 10px 28px rgba(228,168,76,.25);transform:translateY(-1px)}
+.bg{display:inline-flex;align-items:center;padding:2px 7px;border-radius:var(--rr);font-size:.58rem;font-family:'IBM Plex Mono',monospace;font-weight:500}
+.bg-g{background:var(--gold-d);color:var(--gold)}.bg-c{background:var(--teal-d);color:var(--teal)}
+.bg-r{background:var(--rose-d);color:var(--rose)}.bg-v{background:var(--violet-d);color:var(--violet)}
+.bg-gr{background:var(--green-d);color:var(--green)}.bg-s{background:var(--sky-d);color:var(--sky)}
+input,textarea,select{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:var(--rs);color:var(--txt);padding:8px 12px;font-size:.82rem;width:100%;transition:border-color var(--t)}
+input:focus,textarea:focus,select:focus{border-color:rgba(228,168,76,.25)}
+select option{background:var(--bg2)}
+label{font-size:.58rem;color:var(--txt3);display:block;margin-bottom:3px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:1.5px}
+.pb{height:4px;background:rgba(255,255,255,.05);border-radius:var(--rr);overflow:hidden}
+.pf{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:var(--rr);transition:width .5s ease}
+.pf.c{background:linear-gradient(90deg,var(--teal),#60f0e0)}
+.dv{height:1px;background:var(--line);margin:12px 0}
+.sc{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:14px;cursor:pointer;transition:all var(--t);position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,var(--ca),var(--cb));opacity:.7}
+.sc:hover{border-color:var(--line2);transform:translateY(-2px);box-shadow:var(--sh)}
+.sc .si{font-size:1.4rem;margin-bottom:5px}.sc .sn{font-family:'Fraunces',serif;font-size:.88rem;color:var(--txt);font-style:italic;margin-bottom:2px}
+.sc .sx{font-size:.58rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace}
+.sc .sp{height:2.5px;background:rgba(255,255,255,.05);border-radius:2px;margin-top:8px;overflow:hidden}
+.sc .sb2{height:100%;background:linear-gradient(90deg,var(--ca),var(--cb));border-radius:2px;transition:width .5s ease}
+.qo{padding:11px 14px;border:1px solid var(--line);border-radius:var(--rs);cursor:pointer;transition:all var(--t);font-size:.82rem;color:var(--txt2);background:rgba(255,255,255,.03);margin-bottom:5px}
+.qo:hover{border-color:var(--line2);color:var(--txt);background:rgba(255,255,255,.05)}
+.qo.ok{background:rgba(60,207,190,.08);border-color:rgba(60,207,190,.3);color:var(--teal)}
+.qo.no{background:rgba(232,96,96,.08);border-color:rgba(232,96,96,.3);color:var(--rose)}
+.pr{width:170px;height:170px;position:relative;margin:0 auto 14px}
+.pr svg{transform:rotate(-90deg)}
+.rbg{fill:none;stroke:rgba(255,255,255,.05);stroke-width:6}
+.rp{fill:none;stroke:var(--gold);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset 1s linear;filter:drop-shadow(0 0 6px rgba(228,168,76,.35))}
+.rp.c{stroke:var(--teal);filter:drop-shadow(0 0 6px rgba(60,207,190,.35))}
+.rc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.rt{font-family:'IBM Plex Mono',monospace;font-size:1.9rem;color:var(--txt);font-weight:600;line-height:1}
+.rl{font-size:.55rem;text-transform:uppercase;letter-spacing:2.5px;color:var(--txt3);margin-top:3px;font-family:'IBM Plex Mono',monospace}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cl{text-align:center;font-size:.52rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace;padding-bottom:2px;text-transform:uppercase}
+.cy{aspect-ratio:1;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:.62rem;cursor:pointer;color:var(--txt3);transition:all var(--t);font-family:'IBM Plex Mono',monospace}
+.cy.has{background:var(--gold-d);color:var(--gold);border:1px solid rgba(228,168,76,.15)}
+.cy.tod{background:var(--gold);color:var(--bg);font-weight:700}
+.am{display:flex;flex-direction:column;gap:2px;max-height:300px;overflow-y:auto;padding-right:3px}
+.bb{padding:9px 13px;border-radius:12px;font-size:.8rem;line-height:1.7;margin-bottom:5px;max-width:88%;animation:fu .2s ease}
+.bb.bot{background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--txt);align-self:flex-start;border-bottom-left-radius:3px}
+.bb.usr{background:var(--gold-d);border:1px solid rgba(228,168,76,.15);color:var(--gold);align-self:flex-end;border-bottom-right-radius:3px;margin-left:auto}
+.ar{display:flex;gap:6px;margin-top:8px}.ar textarea{flex:1;resize:none;height:40px}
+.etm{font-family:'IBM Plex Mono',monospace;font-size:2.4rem;color:var(--gold);text-align:center;letter-spacing:3px;padding:14px;filter:drop-shadow(0 0 14px rgba(228,168,76,.15))}
+.etm.urg{color:var(--rose);filter:drop-shadow(0 0 14px rgba(232,96,96,.25));animation:pls .5s ease infinite}
+.ex-subj{padding:14px;border:1px solid var(--line);border-radius:var(--rs);background:rgba(255,255,255,.03);margin-bottom:8px;line-height:1.75;font-size:.82rem;color:var(--txt2);white-space:pre-wrap}
+.ex-subj strong{color:var(--txt);font-weight:600}
+.ex-subj .text-fragment{background:rgba(228,168,76,.06);border-left:3px solid var(--gold);padding:10px 14px;margin:8px 0;font-style:italic;color:var(--txt);border-radius:0 var(--rs) var(--rs) 0}
+.score-display{background:linear-gradient(135deg,rgba(228,168,76,.12),rgba(60,207,190,.08));border:1px solid rgba(228,168,76,.2);border-radius:var(--r);padding:16px;text-align:center;margin-top:10px}
+.score-display .score-num{font-family:'Fraunces',serif;font-size:2.2rem;font-weight:900;color:var(--gold)}
+.score-display .score-lbl{font-size:.6rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:2px}
+.essay-model{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--rs);padding:14px;margin-bottom:8px;cursor:pointer;transition:all var(--t)}
+.essay-model:hover{border-color:var(--line2)}.essay-model.open .em-body{display:block}
+.em-body{display:none;margin-top:8px;font-size:.8rem;color:var(--txt2);line-height:1.75;white-space:pre-wrap}
+.gt{padding:10px 13px;border:1px solid var(--line);border-radius:var(--rs);background:rgba(255,255,255,.03);margin-bottom:5px;cursor:pointer;transition:all var(--t)}
+.gt:hover{border-color:var(--line2)}.gt .gn{font-weight:600;font-size:.82rem;color:var(--txt);margin-bottom:2px}
+.gt .gd{font-size:.76rem;color:var(--txt2);line-height:1.6;display:none}.gt.open .gd{display:block}
+.gt.open{border-color:rgba(228,168,76,.2);background:var(--gold-d)}
+.cs{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--rs);padding:12px;font-size:.75rem;color:var(--txt2);line-height:1.8;font-family:'IBM Plex Mono',monospace}
+.mc{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);height:380px;position:relative;z-index:1}
+.mc .leaflet-container{height:100%;width:100%;background:var(--bg2)}
+.gml{background:rgba(6,9,15,.88);color:var(--gold);border:1px solid rgba(228,168,76,.25);border-radius:7px;padding:2px 7px;font-size:.65rem;font-family:'Manrope',sans-serif;white-space:nowrap;backdrop-filter:blur(8px)}
+.ge{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--rs);padding:12px;margin-bottom:6px}
+.ge .gq{font-size:.82rem;color:var(--txt);margin-bottom:8px;line-height:1.6}
+.ge .gh{font-size:.73rem;color:var(--txt3);margin-top:5px;font-style:italic;display:none}.ge.sh .gh{display:block}
+.av{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--rs);padding:12px;display:flex;align-items:center;gap:10px;transition:all var(--t)}
+.av.ul{border-color:rgba(228,168,76,.2);background:var(--gold-d)}.av .ai{font-size:1.4rem;width:36px;text-align:center;flex-shrink:0}
+.av .an{font-size:.8rem;font-weight:600;color:var(--txt);margin-bottom:1px}.av .ad{font-size:.65rem;color:var(--txt3)}.av.lk{opacity:.35;filter:grayscale(.7)}
+.ch{padding:5px 11px;border-radius:var(--rr);border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--txt2);font-size:.73rem;cursor:pointer;transition:all var(--t)}
+.ch:hover{border-color:var(--line2);color:var(--txt)}.ch.act{background:var(--gold-d);border-color:rgba(228,168,76,.18);color:var(--gold)}
+.ld{display:flex;gap:4px;align-items:center;padding:3px 0}.ld span{width:4px;height:4px;border-radius:50%;background:var(--gold);animation:bn .8s ease infinite}
+.ld span:nth-child(2){animation-delay:.15s}.ld span:nth-child(3){animation-delay:.3s}
+.tst{position:fixed;bottom:18px;right:18px;background:var(--surf);border:1px solid rgba(228,168,76,.2);color:var(--gold);padding:11px 16px;border-radius:var(--r);font-size:.8rem;z-index:9999;backdrop-filter:blur(16px);animation:fu .22s ease;box-shadow:var(--sh)}
+.na{width:100%;min-height:120px;resize:vertical;line-height:1.7}
+@media(max-width:768px){.sb{transform:translateX(-100%)}.sb.open{transform:translateX(0);box-shadow:0 0 40px rgba(0,0,0,.6)}.mn{margin-left:0}.pn{padding:12px}.g2{grid-template-columns:1fr}.tb{padding:9px 12px}.hm{display:flex!important}.mc{height:260px}}
+.hm{display:none;width:32px;height:32px;align-items:center;justify-content:center;border-radius:var(--rs);border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--txt2);cursor:pointer;font-size:.95rem}
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}.ov.show{display:block}
+</style>
+</head>
+<body>
+<div class="ov" id="ov" onclick="closeSB()"></div>
+<nav class="sb" id="sb">
+<div class="sb-logo"><h1>BAC Space</h1><small>Premium · 2025</small></div>
+<div class="sb-nav">
+<div class="sb-lbl">Principal</div>
+<div class="ni act" onclick="go('home',this)"><span class="ic">🏠</span>Dashboard</div>
+<div class="ni" onclick="go('materii',this)"><span class="ic">📚</span>Materii & Lecții</div>
+<div class="ni" onclick="go('quiz',this)"><span class="ic">❓</span>Quiz</div>
+<div class="ni" onclick="go('geo',this)"><span class="ic">🌍</span>Geografie & Hărți</div>
+<div class="sb-lbl">Examen</div>
+<div class="ni" onclick="go('exam',this)"><span class="ic">🎯</span>Simulare BAC</div>
+<div class="ni" onclick="go('eseuri',this)"><span class="ic">✍️</span>Modele eseuri</div>
+<div class="ni" onclick="go('gen',this)"><span class="ic">🎲</span>Generator subiecte</div>
+<div class="sb-lbl">Instrumente</div>
+<div class="ni" onclick="go('pomo',this)"><span class="ic">🍅</span>Pomodoro</div>
+<div class="ni" onclick="go('cal',this)"><span class="ic">📅</span>Calendar</div>
+<div class="ni" onclick="go('ai',this)"><span class="ic">🤖</span>AI Coach</div>
+<div class="sb-lbl">Resurse</div>
+<div class="ni" onclick="go('cs',this)"><span class="ic">📋</span>Fișe rapide</div>
+<div class="ni" onclick="go('glos',this)"><span class="ic">📖</span>Glosar</div>
+<div class="ni" onclick="go('achv',this)"><span class="ic">🏆</span>Achievements</div>
+<div class="ni" onclick="go('stats',this)"><span class="ic">📊</span>Statistici</div>
+</div>
+<div class="sb-ft">
+<div class="sb-chip"><span class="v" id="sb-xp">0</span><span class="l">XP</span></div>
+<div class="sb-chip"><span class="v" id="sb-str">0🔥</span><span class="l">Streak</span></div>
+</div>
+</nav>
+
+<main class="mn">
+<div class="tb">
+<div style="display:flex;align-items:center;gap:8px">
+<button class="hm" onclick="openSB()">☰</button>
+<span class="tb-t" id="ttl">Dashboard</span>
+</div>
+<div class="tb-a">
+<div class="strk" onclick="go('cal',null)"><span style="animation:flicker 1.5s ease-in-out infinite">🔥</span><span id="sc">0</span> zile</div>
+<button class="ib" onclick="go('pomo',null)">🍅</button>
+<button class="ib" id="nb" onclick="reqN()">🔔</button>
+</div>
+</div>
+
+<!-- HOME -->
+<div class="pn act" id="p-home">
+<div class="hd"><h2>👋 Bine ai venit</h2><span class="sub">// sesiunea de azi</span></div>
+<div class="g2" style="margin-bottom:12px">
+<div class="cd">
+<div class="ct"><span class="dt"></span>Rezumat</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center">
+<div><div style="font-family:'Fraunces',serif;font-size:1.5rem;color:var(--gold);font-weight:700" id="dxp">0</div><div style="font-size:.5rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:1.5px">XP</div></div>
+<div><div style="font-family:'Fraunces',serif;font-size:1.5rem;color:var(--teal);font-weight:700" id="dlc">0</div><div style="font-size:.5rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:1.5px">Lecții</div></div>
+<div><div style="font-family:'Fraunces',serif;font-size:1.5rem;color:var(--violet);font-weight:700" id="dqz">0</div><div style="font-size:.5rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:1.5px">Quiz</div></div>
+<div><div style="font-family:'Fraunces',serif;font-size:1.5rem;color:var(--peach);font-weight:700" id="dex">0</div><div style="font-size:.5rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:1.5px">Examene</div></div>
+</div>
+<div class="dv"></div>
+<div style="font-size:.58rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace;display:flex;justify-content:space-between;margin-bottom:3px"><span>Nivel <span id="xlv">1</span></span><span id="xnx">100 XP →</span></div>
+<div class="pb"><div class="pf" id="xbar" style="width:0%"></div></div>
+</div>
+<div class="cd">
+<div class="ct"><span class="dt" style="background:var(--teal)"></span>Start rapid</div>
+<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px" id="qs"></div>
+<div style="display:flex;gap:6px">
+<button class="bt bt-p" onclick="go('exam',null)" style="flex:1">🎯 Simulare BAC</button>
+<button class="bt bt-g" onclick="go('gen',null)" style="flex:1">🎲 Generator subiecte</button>
+</div>
+</div>
+</div>
+<div class="hd"><h2>Materii</h2><span class="sub">// progres</span></div>
+<div class="ga" id="dm"></div>
+</div>
+
+<!-- MATERII -->
+<div class="pn" id="p-materii">
+<div class="hd"><h2>Materii & Lecții</h2><span class="sub">// studiază</span></div>
+<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px" id="mch"></div>
+<div class="g2">
+<div><div style="font-family:'Fraunces',serif;font-size:.95rem;color:var(--txt);margin-bottom:10px;font-style:italic"><span class="dt" style="background:var(--violet);display:inline-block;margin-right:6px"></span><span id="lml">Alege o materie</span></div><div id="ll" style="display:flex;flex-direction:column;gap:4px"></div></div>
+<div><div class="cd" style="min-height:260px"><div class="ct"><span class="dt"></span>Player lecție</div><div id="lc" style="color:var(--txt2);font-size:.82rem;line-height:1.8">Alege o lecție.</div></div></div>
+</div>
+</div>
+
+<!-- QUIZ -->
+<div class="pn" id="p-quiz">
+<div class="hd"><h2>Quiz</h2><span class="sub">// testează-te</span></div>
+<div class="g2">
+<div><div class="cd" style="margin-bottom:12px"><label>Materie</label><select id="qm" onchange="lq()"></select></div><div class="cd"><div id="qa"><div style="color:var(--txt2);font-size:.82rem">Selectează o materie.</div></div></div></div>
+<div class="cd"><div class="ct"><span class="dt" style="background:var(--teal)"></span>Statistici</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:center">
+<div style="background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--rs);padding:10px"><div style="font-family:'Fraunces',serif;font-size:1.5rem;color:var(--teal);font-weight:700" id="qc">0</div><div style="font-size:.5rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace;text-transform:uppercase">Corecte</div></div>
+<div style="background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--rs);padding:10px"><div style="font-family:'Fraunces',serif;font-size:1.5rem;color:var(--rose);font-weight:700" id="qw">0</div><div style="font-size:.5rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace;text-transform:uppercase">Greșite</div></div>
+</div>
+<div style="margin-top:10px"><div style="display:flex;justify-content:space-between;font-size:.58rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace;margin-bottom:3px"><span>Acuratețe</span><span id="qac">—</span></div><div class="pb"><div class="pf c" id="qab" style="width:0%"></div></div></div>
+</div>
+</div>
+</div>
+
+<!-- GEO -->
+<div class="pn" id="p-geo">
+<div class="hd"><h2>🌍 Geografie & Hărți</h2><span class="sub">// interactive</span></div>
+<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px">
+<button class="ch act" onclick="sgt('romania',this)">🇷🇴 România</button>
+<button class="ch" onclick="sgt('europa',this)">🇪🇺 Europa</button>
+<button class="ch" onclick="sgt('fizica',this)">🏔️ Fizică</button>
+<button class="ch" onclick="sgt('economica',this)">💹 Economică</button>
+</div>
+<div class="g2">
+<div><div class="cd" style="padding:0;overflow:hidden"><div class="mc" id="gm"></div></div><div style="display:flex;gap:5px;margin-top:8px;flex-wrap:wrap" id="gl"></div></div>
+<div><div class="cd"><div class="ct"><span class="dt" style="background:var(--teal)"></span>Info hartă</div><div id="gd" style="font-size:.82rem;color:var(--txt2);line-height:1.7">Selectează un layer.</div></div></div>
+</div>
+</div>
+
+<!-- EXAM SIMULATION — with text fragments and literary analysis -->
+<div class="pn" id="p-exam">
+<div class="hd"><h2>Simulare BAC</h2><span class="sub">// cronometru oficial 3h</span></div>
+<div class="g2">
+<div class="cd">
+<div class="ct"><span class="dt" style="background:var(--rose)"></span>Configurare</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div><label>Materie</label><select id="em" onchange="ldES()" style="margin-top:3px"></select></div>
+<div><label>Tip subiect</label><select id="et" onchange="ldES()" style="margin-top:3px">
+<option value="random">Aleatoriu</option>
+<option value="sub1">Subiectul I — Text/Analiză</option>
+<option value="sub2">Subiectul II — Argumentare</option>
+<option value="sub3">Subiectul III — Eseu literar</option>
+</select></div>
+<div><label>Durată</label><select id="ed" onchange="rE()" style="margin-top:3px">
+<option value="180">3h — Examen complet BAC</option>
+<option value="60">1h — Subiect singur</option>
+<option value="90">1h30 — Două subiecte</option>
+<option value="30">30min — Antrenament rapid</option>
+</select></div>
+<div class="etm" id="etm">3:00:00</div>
+<div style="display:flex;gap:6px">
+<button class="bt bt-p" id="es" onclick="tE()" style="flex:1">▶ Start simulare</button>
+<button class="bt" onclick="rE()">↺</button>
+</div>
+</div>
+</div>
+<div>
+<div class="cd" style="margin-bottom:12px">
+<div class="ct"><span class="dt"></span>Subiect de examen</div>
+<div id="esc" style="max-height:400px;overflow-y:auto">
+<div style="font-size:.82rem;color:var(--txt2)">Selectează materia și pornește simularea.</div>
+</div>
+</div>
+<div class="cd">
+<div class="ct"><span class="dt" style="background:var(--teal)"></span>Răspuns</div>
+<textarea id="ew" placeholder="Scrie răspunsul complet..." style="min-height:180px;resize:vertical"></textarea>
+<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+<button class="bt bt-p" onclick="gradeExam()" style="flex:1">🤖 Corectare AI pe barem</button>
+<button class="bt bt-g" onclick="estScore()" style="flex:0">📊 Scor estimat</button>
+<button class="bt" onclick="document.getElementById('ew').value=''">🗑</button>
+</div>
+<div id="eai" style="margin-top:8px"></div>
+<div id="scoreBox"></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- MODELE ESEURI -->
+<div class="pn" id="p-eseuri">
+<div class="hd"><h2>✍️ Modele eseuri</h2><span class="sub">// structuri și exemple</span></div>
+<div id="essayList"></div>
+</div>
+
+<!-- GENERATOR SUBIECTE AI -->
+<div class="pn" id="p-gen">
+<div class="hd"><h2>🎲 Generator subiecte BAC</h2><span class="sub">// AI random</span></div>
+<div class="g2">
+<div class="cd">
+<div class="ct"><span class="dt" style="background:var(--violet)"></span>Generează subiect</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<div><label>Materie</label><select id="gm3" style="margin-top:3px"></select></div>
+<div><label>Tip</label><select id="gt2" style="margin-top:3px">
+<option value="complet">Subiect complet (I+II+III)</option>
+<option value="sub1">Doar Subiectul I</option>
+<option value="sub2">Doar Subiectul II</option>
+<option value="sub3">Doar Subiectul III</option>
+</select></div>
+<div><label>Dificultate</label><select id="gdf" style="margin-top:3px">
+<option value="mediu">Medie (standard BAC)</option>
+<option value="usor">Ușoară (antrenament)</option>
+<option value="greu">Grea (olimpiadă)</option>
+</select></div>
+<button class="bt bt-p" onclick="genSubject()">🎲 Generează cu AI</button>
+</div>
+</div>
+<div class="cd">
+<div class="ct"><span class="dt" style="background:var(--green)"></span>Subiect generat</div>
+<div id="genResult" style="font-size:.82rem;color:var(--txt2);line-height:1.75;max-height:500px;overflow-y:auto">Apasă „Generează" pentru un subiect BAC random creat de AI.</div>
+<div style="margin-top:8px;display:flex;gap:6px">
+<button class="bt bt-g" onclick="copyGenToExam()">📋 Copiază în simulare</button>
+<button class="bt bt-c" onclick="genSubject()">🔄 Alt subiect</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- POMODORO -->
+<div class="pn" id="p-pomo">
+<div class="hd"><h2>Pomodoro</h2><span class="sub">// focus</span></div>
+<div class="g2">
+<div class="cd" style="text-align:center">
+<div style="margin-bottom:12px"><label>Materie</label><select id="pm" style="margin-top:3px"></select></div>
+<div style="display:flex;gap:4px;justify-content:center;margin-bottom:14px">
+<button class="bt bt-g" onclick="sPm('focus')">Focus 25'</button>
+<button class="bt" onclick="sPm('short')">Pauză 5'</button>
+<button class="bt" onclick="sPm('long')">Pauză 15'</button>
+</div>
+<div class="pr"><svg width="170" height="170" viewBox="0 0 170 170"><circle class="rbg" cx="85" cy="85" r="76"/><circle class="rp" id="rp" cx="85" cy="85" r="76" stroke-dasharray="477.5" stroke-dashoffset="0"/></svg><div class="rc"><div class="rt" id="pd">25:00</div><div class="rl" id="pl">Focus</div></div></div>
+<div style="display:flex;gap:6px;justify-content:center"><button class="bt bt-p" id="ps" onclick="tP()">▶ Start</button><button class="bt" onclick="rP()">↺</button></div>
+<div class="dv"></div>
+<div id="pspr" style="margin-top:4px"></div>
+<div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div style="text-align:center"><div style="font-size:.5rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;margin-bottom:3px">Sesiuni</div><div style="font-family:'Fraunces',serif;font-size:1.6rem;color:var(--gold);font-weight:700" id="pss">0</div></div>
+<div style="text-align:center"><div style="font-size:.5rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;margin-bottom:3px">Minute</div><div style="font-family:'Fraunces',serif;font-size:1.6rem;color:var(--teal);font-weight:700" id="pmn">0</div></div>
+</div>
+</div>
+<div class="cd">
+<div class="ct"><span class="dt" style="background:var(--violet)"></span>Subiect de studiu</div>
+<div id="psc" style="font-size:.8rem;color:var(--txt2);line-height:1.7">Selectează materie și pornește.</div>
+</div>
+</div>
+</div>
+
+<!-- CALENDAR -->
+<div class="pn" id="p-cal">
+<div class="hd"><h2>Calendar</h2><span class="sub">// progres</span></div>
+<div class="g2">
+<div class="cd"><div class="ct"><span class="dt"></span><span id="cml">—</span><div style="margin-left:auto;display:flex;gap:4px"><button class="bt" onclick="chM(-1)" style="padding:3px 8px">←</button><button class="bt" onclick="chM(1)" style="padding:3px 8px">→</button></div></div><div class="cg" id="cg"></div></div>
+<div class="cd"><div class="ct"><span class="dt" style="background:var(--violet)"></span>Adaugă sesiune</div><div style="display:flex;flex-direction:column;gap:7px"><div><label>Data</label><input type="date" id="md"></div><div><label>Materie</label><select id="mm"></select></div><div><label>Minute</label><input type="number" id="mnn" placeholder="25" min="5" max="240"></div><button class="bt bt-g" onclick="aS()">+ Adaugă</button></div></div>
+</div>
+</div>
+
+<!-- AI -->
+<div class="pn" id="p-ai">
+<div class="hd"><h2>AI Coach</h2><span class="sub">// feedback</span></div>
+<div class="g2">
+<div class="cd" style="display:flex;flex-direction:column"><div class="ct"><span class="dt" style="background:var(--violet)"></span>Conversație</div>
+<div class="am" id="aim"><div class="bb bot">Salut! Cu ce te ajut la BAC? 🎓</div></div>
+<div class="ar"><textarea id="aip" placeholder="Întreabă..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sAI()}"></textarea><button class="bt bt-p" onclick="sAI()">→</button></div>
+</div>
+<div class="cd"><div class="ct"><span class="dt"></span>Rapid</div><div id="qq" style="display:flex;flex-direction:column;gap:4px"></div><div style="margin-top:8px"><label>Context</label><select id="acx"></select></div></div>
+</div>
+</div>
+
+<!-- CS -->
+<div class="pn" id="p-cs">
+<div class="hd"><h2>Fișe rapide</h2><span class="sub">// sinteză</span></div>
+<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px" id="csc"></div>
+<div class="g2" id="csg"></div>
+</div>
+
+<!-- GLOS -->
+<div class="pn" id="p-glos">
+<div class="hd"><h2>Glosar</h2><span class="sub">// definiții</span></div>
+<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap"><div style="flex:1;min-width:180px"><input type="search" id="gs" placeholder="Caută..." oninput="fG()"></div><select id="gm2" onchange="fG()" style="max-width:200px"></select></div>
+<div id="gli"></div>
+</div>
+
+<!-- ACHV -->
+<div class="pn" id="p-achv"><div class="hd"><h2>Achievements</h2><span class="sub">// progres</span></div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px" id="ag"></div></div>
+
+<!-- STATS -->
+<div class="pn" id="p-stats"><div class="hd"><h2>Statistici</h2><span class="sub">// vizual</span></div><div class="g2"><div class="cd"><div class="ct"><span class="dt"></span>XP 14 zile</div><div style="height:160px"><canvas id="cxp"></canvas></div></div><div class="cd"><div class="ct"><span class="dt" style="background:var(--green)"></span>Progres materii</div><div id="pgl" style="display:flex;flex-direction:column;gap:8px"></div></div></div></div>
+
+</main>
+
+<script>
+const M=[
+{id:'romana',name:'Română',icon:'📖',c:['#e4a84c','#f2c978']},
+{id:'mate',name:'Matematică',icon:'📐',c:['#3ccfbe','#60f0e0']},
+{id:'fizica',name:'Fizică',icon:'⚛️',c:['#8b6cf0','#a888f8']},
+{id:'chimie',name:'Chimie',icon:'🧪',c:['#e86060','#f08080']},
+{id:'bio',name:'Biologie',icon:'🌿',c:['#50c878','#78e8a0']},
+{id:'istorie',name:'Istorie',icon:'📜',c:['#e4a84c','#c89040']},
+{id:'geo',name:'Geografie',icon:'🌍',c:['#5898f0','#78b0f8']},
+{id:'info',name:'Informatică',icon:'💻',c:['#3ccfbe','#30a090']},
+];
+
+const L={
+romana:[
+{t:'Romanul realist — Ion',c:'**Ion** de Liviu Rebreanu\n\n• Tema proprietății — glasul pământului vs glasul iubirii\n• Tehnici: narațiune la pers. III-a, omnisciență\n• Structura simetrică: începe și se termină cu hora\n• Conflict: ambiție vs. iubire',xp:20},
+{t:'Romanul psihologic — Camil Petrescu',c:'**Ultima noapte de dragoste, întâia noapte de război**\n\n• Autenticitate, perspectivă subiectivă — eu-narator\n• Două planuri: dragoste (Ela) și război (Jiu)\n• Monolog interior, cronologie subiectivă',xp:20},
+{t:'Blaga — Eu nu strivesc corola',c:'• Expresionism — cunoaștere luciferică vs paradisiacă\n• Eul liric refuză cunoașterea rațională\n• Lumina care sporește „a lumii taină" vs lumina care „ucide"',xp:25},
+{t:'Arghezi — Testament',c:'• Estetica urâtului: elemente brute în poezie\n• Cartea ca „hrisov" și „letopiseț" — moștenire spirituală\n• Amestec sacru-profan, limbaj popular + savant',xp:25},
+{t:'Eminescu — Luceafărul',c:'• Poem filozofic romantic — tema geniului neînțeles\n• Antiteză: Hyperion vs Cătălina\n• 4 părți: 2 pământești + 2 cosmice\n• „Ce-ți pasă ție, chip de lut..."',xp:25},
+{t:'Caragiale — O scrisoare pierdută',c:'• Comedie de moravuri — satiră politică\n• Personaje-tip: Tipătescu, Zoe, Cațavencu, Pristanda\n• Didascalii: indicații scenice (intrări, gesturi, tonul vocii)\n• Ironie, situații comice, repetiție',xp:20},
+{t:'Enigma Otiliei — Călinescu',c:'• Roman realist balzacian\n• Felix Sima — observator lucid\n• Otilia — enigmatică, între libertate și convenții\n• Moș Costache — avar',xp:20},
+{t:'Moara cu noroc — Slavici',c:'• Nuvelă realistă — banul corupător\n• Ghiță: om cinstit → om corupt\n• Lică Sămădăul: forța distructivă\n• Structura circulară: sfatul babei',xp:20},
+{t:'Redactarea eseului BAC',c:'1. Introducere: opera, autorul, curentul\n2. Teză clară\n3. Argument 1 + citat/exemplu\n4. Argument 2 + detaliu stilistic\n5. Concluzie: reformulare + opinie',xp:15},
+{t:'Figuri de stil',c:'• Metafora • Comparația • Personificarea\n• Epitetul • Antiteza • Hiperbola\n• Aliterația • Enumerația',xp:15},
+],
+mate:[
+{t:'Limite',c:'lim(f+g)=lim f+lim g\nCazuri nedeterminate: 0/0, ∞/∞\nlim(sin x/x)=1; lim(1+1/x)^x=e',xp:25},
+{t:'Continuitate',c:'f continuă în x₀ ⟺ lim f(x)=f(x₀)\nWeierstrass, Bolzano, Darboux',xp:25},
+{t:'Derivate — reguli',c:'(xⁿ)\'=n·xⁿ⁻¹; (eˣ)\'=eˣ; (ln x)\'=1/x\n(sin x)\'=cos x; (fg)\'=f\'g+fg\'',xp:30},
+{t:'Derivate — aplicații',c:'Monotonia: f\'>0 crescătoare\nExtreme locale: f\'(x₀)=0\nConvexitate: f\'\'>0 convexă',xp:30},
+{t:'Integrale',c:'∫xⁿdx=xⁿ⁺¹/(n+1)+C\n∫ₐᵇf(x)dx=F(b)−F(a)\nAria, volumul de rotație',xp:30},
+{t:'Matrice și determinanți',c:'Det 2×2: ad−bc; Cramer; Gauss',xp:25},
+{t:'Probabilități',c:'P(A)=fav/pos; Aranjamente, Combinări',xp:20},
+],
+fizica:[
+{t:'Cinematica',c:'MRU, MRUV, cădere liberă, mișcare circulară',xp:25},
+{t:'Dinamica',c:'F=ma; Ec=mv²/2; Ep=mgh; conservare',xp:25},
+{t:'Termodinamică',c:'pV=νRT; ΔU=Q−L; transformări',xp:25},
+{t:'Electricitate',c:'U=RI; Serie/Paralel; Kirchhoff; P=UI',xp:25},
+{t:'Optică',c:'Reflexia, Refracția (Snellius), Lentile',xp:20},
+],
+chimie:[
+{t:'Structura atomului',c:'Configurație electronică, regula Hund, Pauli',xp:25},
+{t:'Stoechiometrie',c:'n=m/M; C=n/V; Nr. Avogadro',xp:25},
+{t:'Echilibrul chimic',c:'Kc, Le Chatelier, viteza de reacție',xp:25},
+{t:'Hidrocarburi',c:'Alcani, Alchene (Markovnikov), Alchine, Arene',xp:30},
+{t:'Compuși organici',c:'Alcooli, Aldehide, Acizi, Esteri, Amine, Proteine',xp:25},
+],
+bio:[
+{t:'Celula',c:'Procariote vs Eucariote; Organite',xp:20},
+{t:'Metabolismul',c:'Respirație celulară, Fotosinteză',xp:25},
+{t:'Genetică — ADN',c:'Replicare, Transcripție, Translație, Cod genetic',xp:25},
+{t:'Genetica mendeliană',c:'Legile Mendel, crucișări, codominanță',xp:25},
+{t:'Sistemul nervos',c:'Neuron, SNC/SNP, sinapsa, arc reflex',xp:25},
+{t:'Ecologie',c:'Lanț trofic, ecosistem, biodiversitate',xp:20},
+],
+istorie:[
+{t:'Marea Unire 1918',c:'Basarabia, Bucovina, Alba Iulia; Trianon 1920',xp:25},
+{t:'România interbelică',c:'Reforma agrară, Constituția 1923, Carol II',xp:20},
+{t:'Al Doilea Război Mondial',c:'Pierderi 1940, Antonescu, 23 aug 1944',xp:25},
+{t:'Comunismul',c:'1947-1989, Ceaușescu, Revoluția',xp:25},
+{t:'Post-1989',c:'Constituția 1991, NATO 2004, UE 2007',xp:20},
+],
+geo:[
+{t:'Relieful României',c:'Carpați (Moldoveanu 2544m), Subcarpați, Podișuri, Câmpii, Delta',xp:25},
+{t:'Hidrografia',c:'Dunărea 1075km, Delta UNESCO, Mureș, Olt, Siret',xp:20},
+{t:'Clima',c:'Temperat-continentală; influențe oceanice/continentale/mediteraneene',xp:20},
+{t:'Populația',c:'~19 mil, urbanizare 55%, emigrare post-2007',xp:20},
+{t:'Europa fizică',c:'Alpi, Volga, Dunărea; climat oceanic/continental/mediteranean',xp:20},
+],
+info:[
+{t:'Algoritmi fundamentali',c:'Maxim/minim, sortare, căutare binară',xp:25},
+{t:'Recursivitate',c:'Factorial, Fibonacci, Euclid; condiție de oprire',xp:30},
+{t:'Grafuri',c:'BFS, DFS, Dijkstra; matrice/liste adiacență',xp:30},
+{t:'Programare dinamică',c:'Rucsac, LIS, distanța de editare',xp:30},
+],
+};
+M.forEach(m=>{if(!L[m.id])L[m.id]=[{t:'Intro '+m.name,c:'Material introductiv.',xp:10}]});
+
+const Q={
+romana:[{q:'Cine a scris "Ion"?',o:['Rebreanu','Sadoveanu','Petrescu','Călinescu'],a:0},{q:'Eugen Lovinescu promova:',o:['Tradiționalismul','Modernismul','Realismul','Simbolismul'],a:1},{q:'"Eu nu strivesc corola" — autor:',o:['Arghezi','Blaga','Barbu','Eminescu'],a:1},{q:'Didascaliile sunt specifice genului:',o:['Epic','Liric','Dramatic','Epistolar'],a:2},{q:'Narator obiectiv = perspectivă:',o:['Subiectivă','Auctorială','Interioară','Personală'],a:1}],
+mate:[{q:'(xⁿ)\' =',o:['n·xⁿ⁺¹','n·xⁿ⁻¹','xⁿ/n','(n+1)·xⁿ'],a:1},{q:'∫eˣdx =',o:['eˣ+C','eˣ⁻¹+C','xeˣ+C','eˣ/x+C'],a:0},{q:'|a b; c d| =',o:['ab+cd','ac-bd','ad-bc','ad+bc'],a:2}],
+fizica:[{q:'F=m·a este:',o:['Legea I','Legea II','Legea III','Gravitația'],a:1},{q:'Ec =',o:['mv','mv²/2','mgh','mv²'],a:1}],
+chimie:[{q:'1 mol = particule:',o:['6×10²²','6×10²³','6×10²⁴','6×10²¹'],a:1},{q:'CₙH₂ₙ₊₂ =',o:['Alchene','Alcani','Alchine','Arene'],a:1}],
+bio:[{q:'ADN replicare:',o:['Conservativ','Semi-conservativ','Dispersiv','Aleatoriu'],a:1},{q:'Codon start:',o:['UAA','AUG','UGA','UAG'],a:1}],
+istorie:[{q:'Marea Unire:',o:['1916','1917','1918','1919'],a:2},{q:'România în UE:',o:['2004','2005','2007','2010'],a:2}],
+geo:[{q:'Cel mai înalt vârf RO:',o:['Omu','Moldoveanu','Negoiu','Peleaga'],a:1},{q:'Clima RO:',o:['Tropicală','Oceanică','Temperat-continentală','Mediteraneană'],a:2}],
+info:[{q:'BFS folosește:',o:['Stivă','Coadă','Arbore','Heap'],a:1}],
+};
+M.forEach(m=>{if(!Q[m.id])Q[m.id]=[{q:'Întrebare '+m.name,o:['A','B','C','D'],a:0}]});
+
+// EXAM SUBJECTS with real literary fragments
+const ES={
+romana:{
+sub1:`<strong>Subiectul I — Înțelegerea textului (30 puncte)</strong>
+
+Citește fragmentul:
+
+<div class="text-fragment">„Venise satisfăcut de ce văzuse. Moșia era frumoasă și bogată. Dar nu era numai atât. Era, în primul rând, a lui. Pământul, câmpul, dealurile, pădurile, viile — tot era al lui. Și el știa asta cu o bucurie aspră, care-i umplea pieptul ca un vânt tare."
+
+(fragment de tip realist)</div>
+
+1. Precizează <strong>perspectiva narativă</strong> și <strong>felul narațiunii</strong> (la persoana a III-a, omniscientă etc.). Argumentează. (6p)
+2. Identifică <strong>două figuri de stil</strong> din text și precizează tipul lor. (6p)
+3. Menționează <strong>tema textului</strong> și motivele care o susțin. (6p)
+4. <strong>Caracterizează personajul</strong> din perspectiva relației cu proprietatea, pe baza fragmentului. (6p)
+5. Exprimă-ți opinia despre <strong>relația omului cu pământul</strong>, pornind de la text (min. 50 cuvinte). (6p)`,
+sub2:`<strong>Subiectul II — Text argumentativ (20 puncte)</strong>
+
+Redactează un text argumentativ de 150-300 de cuvinte despre importanța lecturii în formarea personalității.
+
+• Formulează o <strong>teză clară</strong>
+• Susține cu <strong>două argumente</strong> relevante
+• Exemplifică cu referințe culturale sau experiențe personale
+• <strong>Concluzie</strong> coerentă
+
+<em>Se punctează: coerența (4p), argumentarea (8p), limbajul (4p), ortografia (4p).</em>`,
+sub3:`<strong>Subiectul III — Eseu literar (30 puncte)</strong>
+
+Scrie un eseu de minimum 400 de cuvinte despre <strong>particularitățile de construcție a unui personaj</strong> dintr-un roman studiat.
+
+Cerințe:
+• Prezentarea <strong>statutului social, psihologic și moral</strong>
+• <strong>Două trăsături</strong> de caracter, susținute cu scene/citate
+• Relația personajului cu alte personaje
+• <strong>Tehnicile de caracterizare</strong> (directă/indirectă, monolog interior, dialog, fișă morală)
+• Semnificația numelui personajului (dacă e relevantă)
+
+<em>Barem: conținut (18p), structură (6p), redactare (6p). Bonus oficiu: 10p.</em>`,
+},
+mate:{
+sub1:`<strong>Subiectul I (30 puncte, 5p/item)</strong>
+
+1. Calculați: lim(x→∞) (3x²+2x−1)/(x²−4)
+2. Determinați f'(x) pentru f(x) = x³·ln(x)
+3. Calculați: ∫₀¹ (2x+1)dx
+4. Rezolvați: 2ˣ⁺¹ = 32
+5. Calculați det |2 3; 1 4|
+6. Câte numere de 3 cifre distincte din {1,2,3,4,5}?`,
+sub2:`<strong>Subiectul II (30 puncte)</strong>
+
+f: ℝ → ℝ, f(x) = x³ − 3x + 2
+
+a) f'(x) și intervalele de monotonie (10p)
+b) Punctele de extrem local (5p)
+c) Ecuația tangentei în x₀=1 (5p)
+d) ∫₀² f(x)dx (10p)`,
+sub3:`<strong>Subiectul III (30 puncte)</strong>
+
+A = |1 2; 0 1|, B = |1 0; 3 1|
+
+a) A·B și B·A. Sunt egale? (10p)
+b) det(A·B) (5p)
+c) A⁻¹ (10p)
+d) Sistem Cramer: x+2y=5; 3y+z=4; x+z=3 (5p)`,
+},
+fizica:{
+sub1:`<strong>Subiectul I (30 puncte, 5p/item)</strong>
+
+1. Corp m=2kg pe plan la 30° fără frecare. Accelerația? (g=10)
+2. Gaz ideal: T₁=300K, V₁=2L, izobar la T₂=600K. V₂?
+3. R₁=6Ω ‖ R₂=3Ω. R_echiv?
+4. Lentilă f=10cm, obiect la d₀=20cm. d_i?
+5. Pendul L=1m. T? (g=10)
+6. Ec pentru m=4kg, v=5m/s`,
+sub2:`<strong>Subiectul II (30 puncte)</strong>
+
+Automobil m=1000kg, din repaus, accelerare uniformă.
+a) v=20m/s în t=10s. Accelerația? (6p)
+b) Forța rezultantă (6p)
+c) Distanța în 10s (6p)
+d) Lucrul mecanic (6p)
+e) Puterea medie (6p)`,
+},
+chimie:{sub1:'<strong>Sub I (30p):</strong> Configurație C(Z=6), masa 2 mol H₂SO₄, arderea CH₄, volum CO₂ din 3 mol C, legătura NaCl, concentrație molară.',sub2:'<strong>Sub II (30p):</strong> N₂+3H₂⇌2NH₃ ΔH<0. Kc, Le Chatelier, calcul Kc numeric, rol catalizator.'},
+bio:{sub1:'<strong>Sub I (30p):</strong> 3 organite+funcții, procariota vs eucariota, replicare ADN, codon, sinapsa.',sub2:'<strong>Sub II (30p):</strong> Lanț trofic iarbă→iepure→vulpe→acvilă. Producători, nivel trofic, energie, piramidă, impact dispariție.'},
+istorie:{sub1:'<strong>Sub I — Sursă (30p):</strong>\n\n<div class="text-fragment">„La 1 decembrie 1918, delegații s-au adunat la Alba Iulia pentru a vota unirea cu România. Un act de voință națională."</div>\n\n1. Evenimentul și anul (6p)\n2. Alte acte de unire din 1918 (6p)\n3. Un lider politic (6p)\n4. Document internațional (6p)\n5. Argumentează importanța (6p)',sub2:'<strong>Sub II (30p):</strong> Eseu: România în WWII. Pierderi 1940, alianța cu Germania, 23 aug 1944, consecințe.'},
+geo:{sub1:'<strong>Sub I (30p):</strong> 3 ramuri Carpați + vârfuri, 3 unități extracarpatic, 3 râuri, clima RO, Delta Dunării.',sub2:'<strong>Sub II (30p):</strong> Caracterizați relieful RO: unități, altitudini, importanță economică, resurse. Min 200 cuvinte.'},
+};
+
+// ESSAY MODELS
+const ESSAYS=[
+{title:'Caracterizarea lui Ion — Liviu Rebreanu',type:'Eseu literar — Personaj',content:'**Introducere:** Ion al Glanetașului este personajul central al romanului „Ion" (1920) de Liviu Rebreanu, operă fundamentală a realismului românesc.\n\n**Teză:** Ion este un personaj complex, dominat de glasul pământului, a cărui ambiție pentru proprietate îi determină destinul tragic.\n\n**Argument 1 — Relația cu pământul:** Ion este un țăran fără pământ care vede în proprietate singura cale spre respectabilitate. Rebreanu îl caracterizează indirect prin acțiunile sale: se căsătorește cu Ana (fiica lui Vasile Baciu) nu din iubire, ci pentru zestrea în pământ.\n\n**Argument 2 — Conflictul interior:** Personajul oscilează între „glasul pământului" și „glasul iubirii" (Florica). Această dualitate îl definește: ambițios dar vulnerabil, calculat dar pasional.\n\n**Tehnici de caracterizare:** directă (prin narator omniscient), indirectă (prin acțiuni, relația cu alte personaje), perspectiva auctorială.\n\n**Concluzie:** Ion rămâne un personaj-tip al literaturii realiste românești, ilustrând destinul tragic al țăranului dominat de dorința de proprietate.'},
+{title:'Eseu argumentativ — Importanța lecturii',type:'Text argumentativ',content:'**Teză:** Lectura reprezintă un instrument esențial în formarea personalității și dezvoltarea gândirii critice.\n\n**Argument 1:** Lectura dezvoltă empatia și înțelegerea lumii. Studiile arată că cititorii de ficțiune au o capacitate superioară de a se pune în locul altora, dezvoltând inteligența emoțională.\n\n**Argument 2:** Lectura stimulează gândirea critică și capacitatea de analiză. Prin contactul cu texte diverse, cititorul învață să evalueze argumente, să identifice manipularea și să-și formeze opinii proprii.\n\n**Exemplu:** Romanele lui Dostoievski ne oferă o perspectivă profundă asupra naturii umane, în timp ce eseurile filozofice dezvoltă capacitatea de raționament abstract.\n\n**Concluzie:** Într-o epocă dominată de informații superficiale, lectura rămâne cel mai eficient mod de formare intelectuală și morală.'},
+{title:'Analiza unui text la prima vedere',type:'Subiectul I — Structură',content:'**Structura răspunsului la Sub. I:**\n\n**1. Perspectiva narativă:** „Textul este narrat la persoana a III-a, din perspectiva unui narator omniscient/obiectiv/subiectiv..." + argumentare cu citat.\n\n**2. Figuri de stil:** „În text identificăm: metafora «...» care sugerează...; epitetul «...» care conferă expresivitate..." — ÎNTOTDEAUNA cu citat + explicație.\n\n**3. Tema:** „Tema textului este [natura/iubirea/societatea]..." — susținută de motive literare din text.\n\n**4. Caracterizare:** „Personajul se definește prin [trăsătură], evidențiată de [citat/acțiune]..." — directă + indirectă.\n\n**5. Opinie:** Min. 50 cuvinte, cu conector „Consider că..." + argument personal + referință la text.'},
+];
+
+// GEO DATA
+const GD={romania:{center:[45.94,24.97],zoom:7,layers:{'Orașe':[{n:'București',lat:44.43,lng:26.10,i:'Capitala, ~1.8M'},{n:'Cluj-Napoca',lat:46.77,lng:23.62,i:'Hub IT'},{n:'Timișoara',lat:45.75,lng:21.21,i:'Banatul'},{n:'Iași',lat:47.16,lng:27.60,i:'Centru universitar'},{n:'Constanța',lat:44.16,lng:28.63,i:'Port Marea Neagră'},{n:'Brașov',lat:45.64,lng:25.59,i:'Turism'}],'Vârfuri':[{n:'Moldoveanu 2544m',lat:45.60,lng:24.74,i:'Cel mai înalt — Făgăraș'},{n:'Negoiu 2535m',lat:45.60,lng:24.55,i:'Făgăraș'},{n:'Omu 2505m',lat:45.44,lng:25.46,i:'Bucegi'},{n:'Pietrosul 2303m',lat:47.59,lng:24.63,i:'Rodna'}],'Râuri':[{n:'Delta Dunării',lat:45.08,lng:29.33,i:'UNESCO, 5800 km²'},{n:'Confluență Olt-Dunăre',lat:43.74,lng:24.36,i:'Oltul: 615 km'},{n:'Izvorul Mureșului',lat:46.61,lng:25.95,i:'Mureș: 761 km'}]}},europa:{center:[50,15],zoom:4,layers:{'Capitale':[{n:'Paris',lat:48.86,lng:2.35,i:'Franța'},{n:'Berlin',lat:52.52,lng:13.41,i:'Germania'},{n:'Roma',lat:41.90,lng:12.50,i:'Italia'},{n:'Londra',lat:51.51,lng:-0.13,i:'UK'},{n:'Viena',lat:48.21,lng:16.37,i:'Austria'},{n:'Budapesta',lat:47.50,lng:19.04,i:'Ungaria'}]}},fizica:{center:[45.94,24.97],zoom:7,layers:{'Zone climatice':[{n:'Alpină >1800m',lat:45.59,lng:24.63,i:'Sub 0°C'},{n:'Montană',lat:45.40,lng:25.45,i:'2-6°C'},{n:'Câmpie',lat:44.40,lng:26.10,i:'10-11°C'}],'Relief':[{n:'Pod. Transilvaniei',lat:46.30,lng:24.30,i:'Cel mai mare podiș'},{n:'Câmpia Română',lat:44.20,lng:25.80,i:'Cea mai întinsă'},{n:'Dobrogea',lat:44.50,lng:28.40,i:'Cea mai veche'}]}},economica:{center:[45.94,24.97],zoom:7,layers:{'Resurse':[{n:'Petrol — Ploiești',lat:44.95,lng:26.02,i:'Prima rafinărie'},{n:'Gaze — Mediaș',lat:46.17,lng:24.35,i:'Cel mai mare zăcământ'},{n:'Aur — Roșia Montană',lat:46.31,lng:23.12,i:'Cea mai mare mină'}]}}};
+
+const CS2={mate:{t:'Matematică',i:'📐',s:[{t:'Derivate',c:'(xⁿ)\'=n·xⁿ⁻¹; (eˣ)\'=eˣ; (ln x)\'=1/x\n(sin x)\'=cos x; (fg)\'=f\'g+fg\''},{t:'Integrale',c:'∫xⁿdx=xⁿ⁺¹/(n+1)+C; ∫eˣdx=eˣ+C'}]},fizica:{t:'Fizică',i:'⚛️',s:[{t:'Mecanică',c:'F=ma; Ec=mv²/2; Ep=mgh; P=L/t'},{t:'Electricitate',c:'U=RI; P=UI; Serie/Paralel; Kirchhoff'}]},geo:{t:'Geografie',i:'🌍',s:[{t:'Relief',c:'Carpați: Orientali/Meridionali/Occidentali\nMoldoveanu 2544m'},{t:'Clima',c:'Temperat-continentală\nInfluențe: oceanice V, continentale E'}]},romana:{t:'Română',i:'📖',s:[{t:'Curente',c:'Realism: Rebreanu. Romantism: Eminescu\nModernism: Petrescu, Blaga, Arghezi'},{t:'Eseu BAC',c:'Intro→Teză→Arg1+ex→Arg2+ex→Concl'}]}};
+const GL=[{m:'romana',t:'Modernism',d:'Inovație formală, citadinism. Lovinescu.'},{m:'romana',t:'Didascalii',d:'Indicații scenice în textul dramatic: mișcare, ton, gesturi, decor.'},{m:'romana',t:'Narator omniscient',d:'Naratorul cunoaște totul: gândurile, trecutul și viitorul personajelor.'},{m:'mate',t:'Derivată',d:'Rata de schimbare instantanee.'},{m:'fizica',t:'Inerție',d:'Rezistența la schimbarea mișcării.'},{m:'chimie',t:'Mol',d:'6.022×10²³ entități.'},{m:'bio',t:'Sinapsa',d:'Joncțiunea dintre neuroni.'},{m:'geo',t:'Delta Dunării',d:'UNESCO, 5800 km².'},{m:'istorie',t:'Dictatul de la Viena',d:'30 aug 1940, N.Transilvania→Ungaria.'}];
+const AD=[{id:'l1',i:'📖',n:'Prima lecție',d:'1 lecție',ck:s=>Object.keys(s.lf||{}).length>=1},{id:'l5',i:'📚',n:'Bibliotecar',d:'5 lecții',ck:s=>Object.keys(s.lf||{}).length>=5},{id:'q1',i:'❓',n:'Primul quiz',d:'1 corect',ck:s=>(s.qc||0)>=1},{id:'s3',i:'🔥',n:'3 zile',d:'Streak 3',ck:s=>(s.streak||0)>=3},{id:'p5',i:'🍅',n:'Pomodoro',d:'5 sesiuni',ck:s=>(s.ps||0)>=5},{id:'x1',i:'⭐',n:'100 XP',d:'100 XP',ck:s=>(s.xp||0)>=100},{id:'e1',i:'🎯',n:'Prima simulare',d:'1 examen',ck:s=>(s.exams||0)>=1}];
+
+// STATE
+let S=JSON.parse(localStorage.getItem('bsv10')||'{}');
+S=Object.assign({xp:0,streak:0,lastStudy:null,lf:{},qc:0,qw:0,ps:0,pmn:0,sessions:[],notes:{},calM:new Date().getMonth(),calY:new Date().getFullYear(),gex:0,exams:0,lastScore:null},S);
+function sv(){localStorage.setItem('bsv10',JSON.stringify(S));AD.forEach(a=>{if(!S[a.id]&&a.ck(S)){S[a.id]=true;toast('🏆 '+a.n+'!')}})}
+function ax(n){S.xp+=n;sv();ux()}
+function ux(){const lv=Math.floor(S.xp/100)+1,r=S.xp%100;$('dxp').textContent=S.xp;$('sb-xp').textContent=S.xp;$('xlv').textContent=lv;$('xnx').textContent=`${100-r} XP → Nivel ${lv+1}`;$('xbar').style.width=r+'%'}
+function ms(){const t=new Date().toDateString();if(S.lastStudy!==t){const y=new Date(Date.now()-86400000).toDateString();S.streak=S.lastStudy===y?S.streak+1:1;S.lastStudy=t;sv()}$('sc').textContent=S.streak;$('sb-str').textContent=S.streak+'🔥'}
+function toast(m){const t=document.createElement('div');t.className='tst';t.textContent=m;document.body.appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transition='all .3s';setTimeout(()=>t.remove(),400)},3000)}
+function $(id){return document.getElementById(id)}
+
+// NAV
+const TT={home:'Dashboard',materii:'Materii & Lecții',quiz:'Quiz',geo:'Geografie & Hărți',pomo:'Pomodoro',cal:'Calendar',exam:'Simulare BAC',eseuri:'Modele eseuri',gen:'Generator subiecte',ai:'AI Coach',cs:'Fișe rapide',glos:'Glosar',achv:'Achievements',stats:'Statistici'};
+function go(id,el){document.querySelectorAll('.pn').forEach(p=>p.classList.remove('act'));$('p-'+id).classList.add('act');document.querySelectorAll('.ni').forEach(n=>n.classList.remove('act'));if(el)el.classList.add('act');else{const n=document.querySelector(`.ni[onclick*="'${id}'"]`);if(n)n.classList.add('act')}$('ttl').textContent=TT[id]||'';closeSB();if(id==='cal')rCal();if(id==='quiz')lq();if(id==='stats')rSt();if(id==='achv')rAch();if(id==='glos')rGl();if(id==='geo')iGm();if(id==='eseuri')rEss()}
+function openSB(){$('sb').classList.add('open');$('ov').classList.add('show')}
+function closeSB(){$('sb').classList.remove('open');$('ov').classList.remove('show')}
+
+// BUILD UI
+function bUI(){
+$('dm').innerHTML=M.map(m=>{const dn=Object.keys(S.lf).filter(k=>k.startsWith(m.id+'-')).length;const tt=(L[m.id]||[]).length;const p=tt?Math.round(dn/tt*100):0;return `<div class="sc" style="--ca:${m.c[0]};--cb:${m.c[1]}" onclick="go('materii',null);sM('${m.id}')"><div class="si">${m.icon}</div><div class="sn">${m.name}</div><div class="sx">${dn}/${tt} · ${p}%</div><div class="sp"><div class="sb2" style="width:${p}%"></div></div></div>`}).join('');
+$('qs').innerHTML=M.slice(0,6).map(m=>`<span class="ch" onclick="go('materii',null);sM('${m.id}')">${m.icon} ${m.name}</span>`).join('');
+$('mch').innerHTML=M.map(m=>`<span class="ch" onclick="sM('${m.id}')" id="c-${m.id}">${m.icon} ${m.name}</span>`).join('');
+const ms2=M.map(m=>`<option value="${m.id}">${m.icon} ${m.name}</option>`).join('');
+['qm','em','pm','mm','acx','gm2','gm3'].forEach(id=>{const e=$(id);if(!e)return;e.innerHTML=(id==='acx'?'<option value="">—</option>':'')+ms2})}
+
+let cM=null;
+function sM(id){cM=id;document.querySelectorAll('[id^=c-]').forEach(c=>c.classList.remove('act'));const ch=$('c-'+id);if(ch)ch.classList.add('act');$('lml').textContent=M.find(x=>x.id===id)?.name||id;rL(id)}
+function rL(mid){const ls=L[mid]||[];$('ll').innerHTML=ls.map((l,i)=>{const dn=S.lf[mid+'-'+i];return `<div class="cd" style="cursor:pointer;padding:10px 13px;display:flex;align-items:center;gap:9px;border-color:${dn?'rgba(60,207,190,.2)':'var(--line)'}" onclick="oL('${mid}',${i})"><div style="width:24px;height:24px;border-radius:50%;background:${dn?'var(--teal-d)':'rgba(255,255,255,.03)'};border:1px solid ${dn?'rgba(60,207,190,.2)':'var(--line)'};display:flex;align-items:center;justify-content:center;font-size:.6rem;color:${dn?'var(--teal)':'var(--txt3)'};font-family:'IBM Plex Mono',monospace">${dn?'✓':(i+1)}</div><div style="flex:1"><div style="font-size:.8rem;color:${dn?'var(--teal)':'var(--txt)'};font-weight:500">${l.t}</div><div style="font-size:.55rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace">+${l.xp} XP</div></div></div>`}).join('')}
+function oL(mid,i){const l=L[mid][i];const dn=S.lf[mid+'-'+i];const m=M.find(x=>x.id===mid);$('lc').innerHTML=`<div style="margin-bottom:12px"><div style="display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap"><span class="bg bg-g">${m?.icon} ${m?.name}</span>${dn?'<span class="bg bg-c">✓</span>':`<span class="bg bg-v">+${l.xp} XP</span>`}</div><h3 style="font-family:'Fraunces',serif;font-size:1rem;color:var(--txt);margin-bottom:8px;font-style:italic">${l.t}</h3><div style="color:var(--txt2);font-size:.8rem;line-height:1.8;white-space:pre-wrap">${l.c}</div></div>${!dn?`<button class="bt bt-p" onclick="fL('${mid}',${i})" style="width:100%">✓ Finalizează (+${l.xp} XP)</button>`:''}`}
+function fL(mid,i){if(S.lf[mid+'-'+i])return;S.lf[mid+'-'+i]=true;ax(L[mid][i].xp);ms();sv();rL(mid);oL(mid,i);$('dlc').textContent=Object.keys(S.lf).length;bUI()}
+
+// QUIZ
+let qS={i:0,a:false};
+function lq(){const mid=$('qm')?.value;if(!mid)return;qS.i=Math.floor(Math.random()*(Q[mid]?.length||1));qS.a=false;rQ(mid)}
+function rQ(mid){const q=(Q[mid]||[])[qS.i];if(!q)return;$('qa').innerHTML=`<div style="font-size:.82rem;color:var(--txt);font-weight:500;margin-bottom:10px;line-height:1.6">${q.q}</div>`+q.o.map((o,i)=>`<div class="qo" onclick="aQ(${i},'${mid}')">${String.fromCharCode(65+i)}. ${o}</div>`).join('')}
+function aQ(i,mid){if(qS.a)return;qS.a=true;const q=Q[mid][qS.i];const ok=i===q.a;document.querySelectorAll('.qo').forEach((e,j)=>{if(j===q.a)e.classList.add('ok');else if(j===i&&!ok)e.classList.add('no')});if(ok){S.qc++;ax(10)}else S.qw++;ms();$('qc').textContent=S.qc;$('qw').textContent=S.qw;$('dqz').textContent=S.qc;const t=S.qc+S.qw,ac=t?Math.round(S.qc/t*100):0;$('qac').textContent=ac+'%';$('qab').style.width=ac+'%';sv();setTimeout(()=>lq(),1700)}
+
+// GEO MAP
+let gMap=null,gMk=[],cgT='romania',cgL2=null;const L2=window.L;
+function iGm(){if(gMap){gMap.invalidateSize();return}setTimeout(()=>{const d=GD[cgT];gMap=L2.map('gm',{zoomControl:true,attributionControl:false}).setView(d.center,d.zoom);L2.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(gMap);rGL()},100)}
+function sgt(t,el){cgT=t;cgL2=null;document.querySelectorAll('#p-geo .ch').forEach(c=>c.classList.remove('act'));el.classList.add('act');const d=GD[t];if(gMap&&d)gMap.setView(d.center,d.zoom);clGM();rGL();$('gd').innerHTML='Selectează un layer.'}
+function rGL(){const d=GD[cgT];if(!d)return;$('gl').innerHTML=Object.keys(d.layers).map(k=>`<button class="bt ${cgL2===k?'bt-g':''}" onclick="lGL2('${k}')" style="font-size:.7rem">${k}</button>`).join('')}
+function lGL2(n){cgL2=n;const d=GD[cgT];if(!d)return;const pts=d.layers[n]||[];clGM();pts.forEach(p=>{const ic=L2.divIcon({className:'',html:`<div class="gml">${p.n}</div>`,iconSize:[0,0],iconAnchor:[-8,12]});const mk=L2.marker([p.lat,p.lng],{icon:ic}).addTo(gMap);const cm=L2.circleMarker([p.lat,p.lng],{radius:5,fillColor:'#e4a84c',fillOpacity:.9,color:'rgba(228,168,76,.35)',weight:2}).addTo(gMap);mk.on('click',()=>{$('gd').innerHTML=`<strong style="color:var(--gold);font-family:'Fraunces',serif;font-style:italic">${p.n}</strong><div style="font-size:.8rem;color:var(--txt2);margin-top:4px">${p.i}</div>`});cm.on('click',()=>mk.fire('click'));gMk.push(mk,cm)});if(pts.length)gMap.fitBounds(L2.latLngBounds(pts.map(p=>[p.lat,p.lng])),{padding:[25,25],maxZoom:8});rGL()}
+function clGM(){gMk.forEach(m=>gMap.removeLayer(m));gMk=[]}
+
+// POMODORO
+let pm2={md:'focus',run:false,tot:1500,rem:1500,iv:null};
+const PT={focus:1500,short:300,long:900},PL2={focus:'Focus',short:'Pauză scurtă',long:'Pauză lungă'},CI=2*Math.PI*76;
+function sPm(md){clearInterval(pm2.iv);pm2.run=false;pm2.md=md;pm2.tot=PT[md];pm2.rem=pm2.tot;$('ps').textContent='▶ Start';$('pl').textContent=PL2[md];$('rp').className='rp'+(md==='short'?' c':'');uPU()}
+function tP(){if(pm2.run){clearInterval(pm2.iv);pm2.run=false;$('ps').textContent='▶ Start'}else{pm2.run=true;$('ps').textContent='⏸ Pauză';if(pm2.md==='focus')ldPS();pm2.iv=setInterval(()=>{pm2.rem--;uPU();if(pm2.rem<=0){clearInterval(pm2.iv);pm2.run=false;$('ps').textContent='▶ Start';if(pm2.md==='focus'){S.ps++;S.pmn=(S.pmn||0)+25;$('pss').textContent=S.ps;$('pmn').textContent=S.pmn;ax(25);ms();sv();toast('🍅 +25 XP!')}pm2.rem=pm2.tot;uPU()}},1000)}}
+function rP(){clearInterval(pm2.iv);pm2.run=false;pm2.rem=pm2.tot;$('ps').textContent='▶ Start';uPU()}
+function uPU(){const m=Math.floor(pm2.rem/60).toString().padStart(2,'0'),s=(pm2.rem%60).toString().padStart(2,'0');$('pd').textContent=`${m}:${s}`;$('rp').style.strokeDasharray=CI;$('rp').style.strokeDashoffset=CI*(1-pm2.rem/pm2.tot)}
+function ldPS(){const mid=$('pm').value;const ls=L[mid]||[];if(!ls.length)return;const idx=Math.floor(Math.random()*ls.length);const l=ls[idx];const m=M.find(x=>x.id===mid);$('psc').innerHTML=`<span class="bg bg-g">${m?.icon} ${m?.name}</span> <span class="bg bg-v">${l.t}</span><div style="margin-top:8px;white-space:pre-wrap">${l.c}</div><button class="bt bt-c" onclick="fL('${mid}',${idx})" style="margin-top:8px;font-size:.72rem">✓ Finalizează</button>`;$('pspr').innerHTML=`<div style="font-size:.7rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace">Studiezi: ${m?.icon} ${l.t}</div>`}
+
+// CALENDAR
+const MN=['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'];
+function chM(d){S.calM+=d;if(S.calM>11){S.calM=0;S.calY++}if(S.calM<0){S.calM=11;S.calY--}sv();rCal()}
+function rCal(){$('cml').textContent=`${MN[S.calM]} ${S.calY}`;const g=$('cg');const off=(new Date(S.calY,S.calM,1).getDay()+6)%7;const dim=new Date(S.calY,S.calM+1,0).getDate();const td=new Date().toISOString().slice(0,10);g.innerHTML=['Lu','Ma','Mi','Jo','Vi','Sâ','Du'].map(d=>`<div class="cl">${d}</div>`).join('');for(let i=0;i<off;i++)g.innerHTML+=`<div class="cy"></div>`;for(let d=1;d<=dim;d++){const ds=`${S.calY}-${String(S.calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const has=S.sessions.some(s=>s.date===ds);g.innerHTML+=`<div class="cy ${has?'has':''} ${ds===td?'tod':''}">${d}</div>`}}
+function aS(){const d=$('md').value,mt=$('mm').value,mn=parseInt($('mnn').value)||25;if(!d){toast('Selectează data!');return}S.sessions.push({date:d,materie:mt,min:mn});ax(Math.round(mn/5));ms();sv();rCal();toast(`✅ ${mn} min`)}
+
+// EXAM SIMULATION with literary text fragments
+let ex={run:false,rem:0,tot:0,iv:null};
+function ldES(){const mid=$('em').value,tp=$('et').value;const subj=ES[mid];if(!subj){$('esc').innerHTML='<div style="color:var(--txt2);font-size:.82rem">Subiecte disponibile: Română, Matematică, Fizică, Chimie, Biologie, Istorie, Geografie.</div>';return}let c='';if(tp==='random'){const ks=Object.keys(subj);c=subj[ks[Math.floor(Math.random()*ks.length)]]}else c=subj[tp]||subj.sub1||'Indisponibil.';$('esc').innerHTML=`<div class="ex-subj">${c}</div>`}
+function tE(){if(ex.run){clearInterval(ex.iv);ex.run=false;$('es').textContent='▶ Start'}else{const mn=parseInt($('ed').value)||180;ex.tot=mn*60;ex.rem=ex.tot;ex.run=true;$('es').textContent='⏸ Pauză';ldES();ex.iv=setInterval(()=>{ex.rem--;uEU();if(ex.rem<=0){clearInterval(ex.iv);ex.run=false;$('es').textContent='▶ Start';S.exams=(S.exams||0)+1;$('dex').textContent=S.exams;toast('⏰ Simulare completă! +50 XP');ax(50);ms();sv()}},1000);uEU()}}
+function rE(){clearInterval(ex.iv);ex.run=false;$('es').textContent='▶ Start';const mn=parseInt($('ed').value)||180;const h=Math.floor(mn/60),m=mn%60;$('etm').textContent=`${h}:${String(m).padStart(2,'0')}:00`;$('etm').classList.remove('urg')}
+function uEU(){const r=ex.rem,h=Math.floor(r/3600),m=Math.floor((r%3600)/60),s=r%60;$('etm').textContent=`${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;$('etm').classList.toggle('urg',r<300&&r>0)}
+
+// AI GRADING on real barem
+async function gradeExam(){const t=$('ew').value.trim();if(!t){toast('Scrie un răspuns!');return}const mid=$('em').value;const mname=M.find(x=>x.id===mid)?.name;const subjectContent=$('esc')?.innerText||'';await cAI(`Ești evaluator BAC la ${mname}. Corectează răspunsul de mai jos conform baremului oficial BAC.
+
+SUBIECTUL:
+${subjectContent.substring(0,500)}
+
+RĂSPUNSUL ELEVULUI:
+${t}
+
+Oferă:
+1. PUNCTAJ ESTIMAT pe fiecare cerință (din totalul de puncte)
+2. PUNCTAJ TOTAL estimat (din 100, incluzând 10p oficiu)
+3. PUNCTE TARI (ce a făcut bine)
+4. PUNCTE SLABE (ce lipsește sau e greșit)
+5. SUGESTII CONCRETE de îmbunătățire
+6. NOTĂ ESTIMATĂ (1-10)
+
+Fii riguros și obiectiv, ca un evaluator real.`,'eai')}
+
+// SCORE ESTIMATOR
+function estScore(){const t=$('ew').value.trim();if(!t){toast('Scrie un răspuns!');return}
+const words=t.split(/\s+/).filter(Boolean).length;
+let score=10; // oficiu
+if(words>50)score+=10;if(words>100)score+=10;if(words>200)score+=15;if(words>300)score+=10;if(words>400)score+=5;
+if(t.includes('teză')||t.includes('teza'))score+=5;
+if(t.includes('argument'))score+=5;
+if(t.includes('concluzie')||t.includes('concluz'))score+=5;
+if(t.includes('exemplu')||t.includes('citat'))score+=5;
+if(t.match(/„[^"]+"/))score+=5; // citate
+score=Math.min(score,100);
+S.lastScore=score;sv();
+$('scoreBox').innerHTML=`<div class="score-display"><div class="score-num">${score}/100</div><div class="score-lbl">Scor estimat rapid</div><div style="font-size:.75rem;color:var(--txt2);margin-top:6px">${words} cuvinte · Notă ~${Math.round(score/10)}</div><div style="font-size:.7rem;color:var(--txt3);margin-top:4px">Pentru evaluare detaliată, apasă „Corectare AI pe barem"</div></div>`}
+
+// GENERATOR SUBIECTE AI
+let lastGenContent='';
+async function genSubject(){const mid=$('gm3').value;const tp=$('gt2').value;const df=$('gdf').value;const mname=M.find(x=>x.id===mid)?.name;$('genResult').innerHTML='<div class="ld"><span></span><span></span><span></span></div>';
+try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,system:`Ești profesor expert BAC România. Generezi subiecte BAC originale, realiste, la nivel ${df==='usor'?'ușor (antrenament)':df==='greu'?'greu (olimpiadă)':'mediu (standard BAC)'}.`,messages:[{role:'user',content:`Generează un subiect BAC complet pentru ${mname}, tip: ${tp==='complet'?'toate cele 3 subiecte (I, II, III)':tp}.\n\nPentru Română: include un fragment literar sau text la prima vedere cu cerințe de analiză (perspective narative, figuri de stil, caracterizare personaj, tipul narațiunii, didascalii dacă e text dramatic).\n\nFolosește formatul oficial BAC cu punctaje pe cerințe. Fii specific și detaliat.`}]})});const d=await r.json();const rp=d.content?.map(c=>c.text||'').join('')||'Eroare.';lastGenContent=rp;$('genResult').innerHTML=`<div style="white-space:pre-wrap">${rp.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')}</div>`}catch(e){$('genResult').innerHTML='<div style="color:var(--rose)">Eroare generare.</div>'}}
+function copyGenToExam(){if(!lastGenContent){toast('Generează mai întâi!');return}$('esc').innerHTML=`<div class="ex-subj">${lastGenContent.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')}</div>`;go('exam',null);toast('📋 Subiect copiat în simulare!')}
+
+// ESSAY MODELS
+function rEss(){$('essayList').innerHTML=ESSAYS.map((e,i)=>`<div class="essay-model" onclick="this.classList.toggle('open')"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:.82rem;font-weight:600;color:var(--txt)">${e.title}</div><div style="font-size:.68rem;color:var(--txt3);margin-top:2px">${e.type}</div></div><span style="color:var(--txt3)">▾</span></div><div class="em-body">${e.content.replace(/\*\*(.*?)\*\*/g,'<strong style="color:var(--gold)">$1</strong>').replace(/\n/g,'<br>')}</div></div>`).join('')}
+
+// AI COACH
+const QQ3=['Structura eseului BAC','Cum analizez un text la prima vedere?','Ce sunt didascaliile?','Cum caracterizez un personaj?','Tipuri de perspectivă narativă','Formule matematică BAC'];
+function bAI(){$('qq').innerHTML=QQ3.map(q=>`<button class="bt" onclick="aqQ2('${q}')" style="text-align:left;padding:7px 11px;font-size:.73rem;color:var(--txt2)">${q}</button>`).join('')}
+function aqQ2(q){$('aip').value=q;sAI()}
+async function sAI(){const inp=$('aip');const t=inp.value.trim();if(!t)return;inp.value='';const ms2=$('aim');ms2.innerHTML+=`<div class="bb usr">${t}</div><div class="bb bot" id="ail"><div class="ld"><span></span><span></span><span></span></div></div>`;ms2.scrollTop=ms2.scrollHeight;const mid=$('acx')?.value;const ctx=mid?` Context: ${M.find(m=>m.id===mid)?.name} BAC.`:' Context: BAC.';try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:`Ești profesor expert BAC.${ctx} Răspunde concis, în română.`,messages:[{role:'user',content:t}]})});const d=await r.json();const rp=d.content?.map(c=>c.text||'').join('')||'Eroare.';$('ail').outerHTML=`<div class="bb bot">${rp.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`;ax(5);ms()}catch(e){$('ail').outerHTML=`<div class="bb bot" style="color:var(--rose)">Eroare AI.</div>`}ms2.scrollTop=ms2.scrollHeight}
+async function cAI(pr,tid){const el=$(tid);if(el)el.innerHTML='<div class="ld"><span></span><span></span><span></span></div>';try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,system:'Ești evaluator BAC expert. Feedback detaliat în română.',messages:[{role:'user',content:pr}]})});const d=await r.json();const rp=d.content?.map(c=>c.text||'').join('')||'Eroare.';if(el)el.innerHTML=`<div class="cd" style="margin-top:0;background:rgba(255,255,255,.03)"><div style="font-size:.8rem;color:var(--txt);line-height:1.7">${rp.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div></div>`}catch(e){if(el)el.innerHTML=`<div style="color:var(--rose);font-size:.73rem">Eroare AI.</div>`}}
+
+// CHEATSHEETS
+function bCS(){const ch=$('csc');const ks=Object.keys(CS2);ch.innerHTML=ks.map((k,i)=>`<span class="ch ${i===0?'act':''}" onclick="fCS2('${k}',this)">${CS2[k].i} ${CS2[k].t}</span>`).join('');rCS2(ks[0])}
+function fCS2(k,el){document.querySelectorAll('#csc .ch').forEach(c=>c.classList.remove('act'));el.classList.add('act');rCS2(k)}
+function rCS2(k){const cs=CS2[k];if(!cs)return;$('csg').innerHTML=cs.s.map(s=>`<div class="cd"><div class="ct"><span class="dt"></span>${s.t}</div><div class="cs">${s.c.replace(/\n/g,'<br>')}</div></div>`).join('')}
+
+// GLOSSAR
+function rGl(){fG()}
+function fG(){const q=($('gs').value||'').toLowerCase();const mid=$('gm2').value||'';const f=GL.filter(g=>(!mid||g.m===mid)&&(!q||g.t.toLowerCase().includes(q)||g.d.toLowerCase().includes(q)));$('gli').innerHTML=f.length?f.map(g=>`<div class="gt" onclick="this.classList.toggle('open')"><div style="display:flex;align-items:center;justify-content:space-between"><div class="gn">${g.t}</div><span class="bg bg-g">${M.find(m=>m.id===g.m)?.name||g.m}</span></div><div class="gd">${g.d}</div></div>`).join(''):`<div style="color:var(--txt3);font-size:.8rem;padding:16px">Niciun termen.</div>`}
+
+// ACHIEVEMENTS
+function rAch(){$('ag').innerHTML=AD.map(a=>{const u=!!S[a.id];return `<div class="av ${u?'ul':'lk'}"><div class="ai">${a.i}</div><div><div class="an">${a.n}</div><div class="ad">${a.d}</div></div>${u?'<div style="margin-left:auto"><span class="bg bg-c">✓</span></div>':''}</div>`}).join('')}
+
+// STATS
+function rSt(){const c=$('cxp');if(!c)return;const ctx=c.getContext('2d');const w=c.parentElement.clientWidth-2,h=155;c.width=w;c.height=h;ctx.clearRect(0,0,w,h);const ds=[],vs=[];for(let i=13;i>=0;i--){const d=new Date(Date.now()-i*86400000);ds.push(d.getDate());vs.push(S.sessions.filter(s=>s.date===d.toISOString().slice(0,10)).reduce((a,s)=>a+Math.round(s.min/5),0))}const mx=Math.max(...vs,1);const bw=Math.floor((w-36)/14*.7),gp=Math.floor((w-36)/14*.3);vs.forEach((v,i)=>{const x=36+i*((w-36)/14)+gp/2;const bh=Math.max(2,(v/mx)*(h-36));const y=h-18-bh;ctx.fillStyle='rgba(228,168,76,.12)';ctx.fillRect(x,y,bw,bh);ctx.fillStyle='#e4a84c';ctx.fillRect(x,y,bw,2.5);ctx.fillStyle='rgba(224,228,240,.35)';ctx.font='8px IBM Plex Mono,monospace';ctx.textAlign='center';ctx.fillText(ds[i],x+bw/2,h-4)});
+$('pgl').innerHTML=M.map(m=>{const dn=Object.keys(S.lf).filter(k=>k.startsWith(m.id+'-')).length;const tt=(L[m.id]||[]).length;const p=tt?Math.round(dn/tt*100):0;return `<div><div style="display:flex;justify-content:space-between;font-size:.7rem;margin-bottom:2px"><span style="color:var(--txt2)">${m.icon} ${m.name}</span><span style="color:var(--txt3);font-family:'IBM Plex Mono',monospace">${p}%</span></div><div class="pb"><div class="pf" style="width:${p}%;background:linear-gradient(90deg,${m.c[0]},${m.c[1]})"></div></div></div>`}).join('')}
+
+function reqN(){if(!('Notification' in window)){toast('Nesuportat.');return}if(Notification.permission==='granted'){toast('🔔 Active!');return}Notification.requestPermission().then(p=>{if(p==='granted'){toast('🔔 Activate!');$('nb').style.color='var(--gold)'}else toast('Refuzate.')})}
+
+// INIT
+document.addEventListener('DOMContentLoaded',()=>{
+bUI();bAI();bCS();ux();ms();uPU();
+$('dlc').textContent=Object.keys(S.lf).length;
+$('dqz').textContent=S.qc;$('dex').textContent=S.exams||0;
+$('qc').textContent=S.qc;$('qw').textContent=S.qw;
+$('pss').textContent=S.ps||0;$('pmn').textContent=S.pmn||0;
+if(S.qc+S.qw>0){const ac=Math.round(S.qc/(S.qc+S.qw)*100);$('qac').textContent=ac+'%';$('qab').style.width=ac+'%'}
+$('md').value=new Date().toISOString().slice(0,10);
+rE();$('rp').style.strokeDasharray=CI;$('rp').style.strokeDashoffset=0;
+rCal();if(Notification.permission==='granted')$('nb').style.color='var(--gold)';
+AD.forEach(a=>{if(!S[a.id]&&a.ck(S)){S[a.id]=true}})
+});
+</script>
+</body>
+</html>
