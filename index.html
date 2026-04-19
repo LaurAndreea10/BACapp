@@ -229,6 +229,10 @@ label{font-size:.58rem;color:var(--txt3);display:block;margin-bottom:3px;font-fa
 </div>
 </div>
 </div>
+<div class="cd" style="margin-bottom:12px">
+<div class="ct"><span class="dt" style="background:var(--green)"></span>Ce am de făcut azi (automat)</div>
+<div id="todayPlan" style="font-size:.8rem;color:var(--txt2)">Nicio activitate încă. Finalizează o lecție pentru a genera recapitulările 1-3-7-14-30.</div>
+</div>
 <div class="hd"><h2>Materii</h2><span class="sub">// progres</span></div>
 <div class="ga" id="dm"></div>
 </div>
@@ -254,6 +258,12 @@ label{font-size:.58rem;color:var(--txt3);display:block;margin-bottom:3px;font-fa
 <div style="background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--rs);padding:10px"><div style="font-family:'Fraunces',serif;font-size:1.5rem;color:var(--rose);font-weight:700" id="qw">0</div><div style="font-size:.5rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace;text-transform:uppercase">Greșite</div></div>
 </div>
 <div style="margin-top:10px"><div style="display:flex;justify-content:space-between;font-size:.58rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace;margin-bottom:3px"><span>Acuratețe</span><span id="qac">—</span></div><div class="pb"><div class="pf c" id="qab" style="width:0%"></div></div></div>
+<div class="dv"></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<button class="bt bt-g" id="wrongModeBtn" onclick="toggleWrongMode()">🎯 Mod greșeli: OFF</button>
+<button class="bt" onclick="clearWrongBank()">🧹 Curăță lista greșeli</button>
+</div>
+<div id="quizInsights" style="margin-top:8px;font-size:.75rem;color:var(--txt2);line-height:1.7"></div>
 </div>
 </div>
 </div>
@@ -627,7 +637,7 @@ const AD=[{id:'l1',i:'📖',n:'Prima lecție',d:'1 lecție',ck:s=>Object.keys(s.
 
 // STATE
 let S=JSON.parse(localStorage.getItem('bsv10')||'{}');
-S=Object.assign({xp:0,streak:0,lastStudy:null,lf:{},qc:0,qw:0,ps:0,pmn:0,sessions:[],notes:{},calM:new Date().getMonth(),calY:new Date().getFullYear(),gex:0,exams:0,lastScore:null},S);
+S=Object.assign({xp:0,streak:0,lastStudy:null,lf:{},qc:0,qw:0,ps:0,pmn:0,sessions:[],notes:{},calM:new Date().getMonth(),calY:new Date().getFullYear(),gex:0,exams:0,lastScore:null,reviews:[],reviewDone:{},qErr:{},qWrongBank:[],quizWrongMode:false},S);
 function sv(){localStorage.setItem('bsv10',JSON.stringify(S));AD.forEach(a=>{if(!S[a.id]&&a.ck(S)){S[a.id]=true;toast('🏆 '+a.n+'!')}})}
 function ax(n){S.xp+=n;sv();ux()}
 function ux(){const lv=Math.floor(S.xp/100)+1,r=S.xp%100;$('dxp').textContent=S.xp;$('sb-xp').textContent=S.xp;$('xlv').textContent=lv;$('xnx').textContent=`${100-r} XP → Nivel ${lv+1}`;$('xbar').style.width=r+'%'}
@@ -653,13 +663,32 @@ let cM=null;
 function sM(id){cM=id;document.querySelectorAll('[id^=c-]').forEach(c=>c.classList.remove('act'));const ch=$('c-'+id);if(ch)ch.classList.add('act');$('lml').textContent=M.find(x=>x.id===id)?.name||id;rL(id)}
 function rL(mid){const ls=L[mid]||[];$('ll').innerHTML=ls.map((l,i)=>{const dn=S.lf[mid+'-'+i];return `<div class="cd" style="cursor:pointer;padding:10px 13px;display:flex;align-items:center;gap:9px;border-color:${dn?'rgba(60,207,190,.2)':'var(--line)'}" onclick="oL('${mid}',${i})"><div style="width:24px;height:24px;border-radius:50%;background:${dn?'var(--teal-d)':'rgba(255,255,255,.03)'};border:1px solid ${dn?'rgba(60,207,190,.2)':'var(--line)'};display:flex;align-items:center;justify-content:center;font-size:.6rem;color:${dn?'var(--teal)':'var(--txt3)'};font-family:'IBM Plex Mono',monospace">${dn?'✓':(i+1)}</div><div style="flex:1"><div style="font-size:.8rem;color:${dn?'var(--teal)':'var(--txt)'};font-weight:500">${l.t}</div><div style="font-size:.55rem;color:var(--txt3);font-family:'IBM Plex Mono',monospace">+${l.xp} XP</div></div></div>`}).join('')}
 function oL(mid,i){const l=L[mid][i];const dn=S.lf[mid+'-'+i];const m=M.find(x=>x.id===mid);$('lc').innerHTML=`<div style="margin-bottom:12px"><div style="display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap"><span class="bg bg-g">${m?.icon} ${m?.name}</span>${dn?'<span class="bg bg-c">✓</span>':`<span class="bg bg-v">+${l.xp} XP</span>`}</div><h3 style="font-family:'Fraunces',serif;font-size:1rem;color:var(--txt);margin-bottom:8px;font-style:italic">${l.t}</h3><div style="color:var(--txt2);font-size:.8rem;line-height:1.8;white-space:pre-wrap">${l.c}</div></div>${!dn?`<button class="bt bt-p" onclick="fL('${mid}',${i})" style="width:100%">✓ Finalizează (+${l.xp} XP)</button>`:''}`}
-function fL(mid,i){if(S.lf[mid+'-'+i])return;S.lf[mid+'-'+i]=true;ax(L[mid][i].xp);ms();sv();rL(mid);oL(mid,i);$('dlc').textContent=Object.keys(S.lf).length;bUI()}
+function mkDay(d){const z=new Date(d);z.setHours(0,0,0,0);return z.toISOString().slice(0,10)}
+function addDays(base,n){const d=new Date(base);d.setDate(d.getDate()+n);return mkDay(d)}
+function schedReviews(mid,i,title){const base=new Date();const key=`${mid}-${i}`;[1,3,7,14,30].forEach(off=>{const due=addDays(base,off);const id=`${key}-${off}-${due}`;if(S.reviews.some(r=>r.id===id))return;S.reviews.push({id,lessonKey:key,mid,lessonIdx:i,title,offset:off,due})})}
+function dueReviews(){const td=mkDay(new Date());return (S.reviews||[]).filter(r=>!S.reviewDone[r.id]&&r.due<=td)}
+function doneReview(id){S.reviewDone[id]=true;sv();rTodayPlan();rCal();toast('✅ Recapitulare marcată')}
+function estMinutesBySubject(){const v={};M.forEach(m=>v[m.id]=0);dueReviews().forEach(r=>{v[r.mid]+=12});Object.keys(S.lf||{}).forEach(k=>{const mid=k.split('-')[0];v[mid]+=3});return Object.entries(v).filter(([,mn])=>mn>0).sort((a,b)=>b[1]-a[1]).slice(0,4)}
+function rTodayPlan(){const box=$('todayPlan');if(!box)return;const due=dueReviews();const overdue=due.filter(r=>r.due<mkDay(new Date()));const weak=Object.entries(S.qErr||{}).sort((a,b)=>b[1]-a[1]).slice(0,1)[0];const weakMid=weak?weak[0].split('::')[0]:'';const weakText=M.find(m=>m.id===weakMid)?.name||'materia principală';const mins=estMinutesBySubject();const sim=(S.qw||0)>=(S.qc||0)?'Simulare 60 min (consolidare)' : 'Simulare 30 min (viteză + acuratețe)';box.innerHTML=`<div style="display:grid;gap:8px">
+<div>📌 <strong>Lecții prioritare:</strong> ${Object.keys(S.lf||{}).length<5?'continuă lecțiile de bază (minim 2)':`consolidează ${weakText}`}</div>
+<div>🔁 <strong>Recapitulări scadente:</strong> ${due.length} ${overdue.length?`<span style="color:var(--rose)">(${overdue.length} în urmă)</span>`:''}</div>
+<div style="display:flex;flex-wrap:wrap;gap:5px">${due.slice(0,5).map(r=>`<button class="bt" style="padding:4px 8px" onclick="doneReview('${r.id}')">${M.find(m=>m.id===r.mid)?.icon||'📘'} ${r.offset}z · ${r.title.slice(0,26)} ✓</button>`).join('')||'<span style="color:var(--txt3)">Nicio recapitulare azi.</span>'}</div>
+<div>🎯 <strong>Simulare recomandată:</strong> ${sim}</div>
+<div>⏱️ <strong>Timp pe materii:</strong> ${mins.length?mins.map(([mid,mn])=>`${M.find(m=>m.id===mid)?.icon||''} ${M.find(m=>m.id===mid)?.name}: ~${mn} min`).join(' · '):'fă o sesiune de 25 min la materia principală'}</div>
+</div>`}
+function fL(mid,i){if(S.lf[mid+'-'+i])return;S.lf[mid+'-'+i]=true;schedReviews(mid,i,L[mid][i].t);ax(L[mid][i].xp);ms();sv();rL(mid);oL(mid,i);$('dlc').textContent=Object.keys(S.lf).length;bUI();rTodayPlan()}
 
 // QUIZ
 let qS={i:0,a:false};
-function lq(){const mid=$('qm')?.value;if(!mid)return;qS.i=Math.floor(Math.random()*(Q[mid]?.length||1));qS.a=false;rQ(mid)}
+function qid(mid,idx){return `${mid}::${idx}`}
+function toggleWrongMode(){S.quizWrongMode=!S.quizWrongMode;sv();$('wrongModeBtn').textContent=`🎯 Mod greșeli: ${S.quizWrongMode?'ON':'OFF'}`;lq()}
+function clearWrongBank(){S.qWrongBank=[];S.qErr={};S.quizWrongMode=false;sv();rQuizInsights();$('wrongModeBtn').textContent='🎯 Mod greșeli: OFF';lq()}
+function lq(){const mid=$('qm')?.value;if(!mid)return;const arr=Q[mid]||[];if(!arr.length)return;let pool=arr.map((_,i)=>i);if(S.quizWrongMode){const wb=new Set((S.qWrongBank||[]).filter(x=>x.startsWith(mid+'::')));pool=pool.filter(i=>wb.has(qid(mid,i)));if(!pool.length){S.quizWrongMode=false;$('wrongModeBtn').textContent='🎯 Mod greșeli: OFF';pool=arr.map((_,i)=>i);toast('Nu ai greșeli salvate pentru această materie.')}}qS.i=pool[Math.floor(Math.random()*pool.length)];qS.a=false;rQ(mid)}
 function rQ(mid){const q=(Q[mid]||[])[qS.i];if(!q)return;$('qa').innerHTML=`<div style="font-size:.82rem;color:var(--txt);font-weight:500;margin-bottom:10px;line-height:1.6">${q.q}</div>`+q.o.map((o,i)=>`<div class="qo" onclick="aQ(${i},'${mid}')">${String.fromCharCode(65+i)}. ${o}</div>`).join('')}
-function aQ(i,mid){if(qS.a)return;qS.a=true;const q=Q[mid][qS.i];const ok=i===q.a;document.querySelectorAll('.qo').forEach((e,j)=>{if(j===q.a)e.classList.add('ok');else if(j===i&&!ok)e.classList.add('no')});if(ok){S.qc++;ax(10)}else S.qw++;ms();$('qc').textContent=S.qc;$('qw').textContent=S.qw;$('dqz').textContent=S.qc;const t=S.qc+S.qw,ac=t?Math.round(S.qc/t*100):0;$('qac').textContent=ac+'%';$('qab').style.width=ac+'%';sv();setTimeout(()=>lq(),1700)}
+function rQuizInsights(){const el=$('quizInsights');if(!el)return;const top=Object.entries(S.qErr||{}).sort((a,b)=>b[1]-a[1]).slice(0,5);const weak={};top.forEach(([k,v])=>{const mid=k.split('::')[0];weak[mid]=(weak[mid]||0)+v});const weakCh=Object.entries(weak).sort((a,b)=>b[1]-a[1]).slice(0,3);el.innerHTML=`<div>⚠️ <strong>Greșeli frecvente:</strong> ${top.length?top.map(([k,v])=>`${(Q[k.split('::')[0]]||[])[parseInt(k.split('::')[1],10)]?.q?.slice(0,38)||'Întrebare'} (${v})`).join(' · '):'Nicio greșeală salvată.'}</div>
+<div>📉 <strong>Capitole slabe:</strong> ${weakCh.length?weakCh.map(([mid,v])=>`${M.find(m=>m.id===mid)?.name||mid} (${v} erori)`).join(' · '):'—'}</div>
+<div>🔁 <strong>Întrebări salvate pentru refacere:</strong> ${(S.qWrongBank||[]).length}</div>`}
+function aQ(i,mid){if(qS.a)return;qS.a=true;const q=Q[mid][qS.i];const ok=i===q.a;document.querySelectorAll('.qo').forEach((e,j)=>{if(j===q.a)e.classList.add('ok');else if(j===i&&!ok)e.classList.add('no')});if(ok){S.qc++;ax(10)}else{S.qw++;const id=qid(mid,qS.i);S.qErr[id]=(S.qErr[id]||0)+1;if(!S.qWrongBank.includes(id))S.qWrongBank.push(id)}ms();$('qc').textContent=S.qc;$('qw').textContent=S.qw;$('dqz').textContent=S.qc;const t=S.qc+S.qw,ac=t?Math.round(S.qc/t*100):0;$('qac').textContent=ac+'%';$('qab').style.width=ac+'%';sv();rQuizInsights();setTimeout(()=>lq(),1700)}
 
 // GEO MAP
 let gMap=null,gMk=[],cgT='romania',cgL2=null;const L2=window.L;
@@ -681,7 +710,7 @@ function ldPS(){const mid=$('pm').value;const ls=L[mid]||[];if(!ls.length)return
 // CALENDAR
 const MN=['Ianuarie','Februarie','Martie','Aprilie','Mai','Iunie','Iulie','August','Septembrie','Octombrie','Noiembrie','Decembrie'];
 function chM(d){S.calM+=d;if(S.calM>11){S.calM=0;S.calY++}if(S.calM<0){S.calM=11;S.calY--}sv();rCal()}
-function rCal(){$('cml').textContent=`${MN[S.calM]} ${S.calY}`;const g=$('cg');const off=(new Date(S.calY,S.calM,1).getDay()+6)%7;const dim=new Date(S.calY,S.calM+1,0).getDate();const td=new Date().toISOString().slice(0,10);g.innerHTML=['Lu','Ma','Mi','Jo','Vi','Sâ','Du'].map(d=>`<div class="cl">${d}</div>`).join('');for(let i=0;i<off;i++)g.innerHTML+=`<div class="cy"></div>`;for(let d=1;d<=dim;d++){const ds=`${S.calY}-${String(S.calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const has=S.sessions.some(s=>s.date===ds);g.innerHTML+=`<div class="cy ${has?'has':''} ${ds===td?'tod':''}">${d}</div>`}}
+function rCal(){$('cml').textContent=`${MN[S.calM]} ${S.calY}`;const g=$('cg');const off=(new Date(S.calY,S.calM,1).getDay()+6)%7;const dim=new Date(S.calY,S.calM+1,0).getDate();const td=new Date().toISOString().slice(0,10);g.innerHTML=['Lu','Ma','Mi','Jo','Vi','Sâ','Du'].map(d=>`<div class="cl">${d}</div>`).join('');for(let i=0;i<off;i++)g.innerHTML+=`<div class="cy"></div>`;for(let d=1;d<=dim;d++){const ds=`${S.calY}-${String(S.calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const has=S.sessions.some(s=>s.date===ds);const hasReview=(S.reviews||[]).some(r=>r.due===ds&&!S.reviewDone[r.id]);g.innerHTML+=`<div class="cy ${(has||hasReview)?'has':''} ${ds===td?'tod':''}" title="${hasReview?'Recapitulare scadentă':''}">${d}${hasReview?'<div style="font-size:.45rem;color:var(--gold)">R</div>':''}</div>`}}
 function aS(){const d=$('md').value,mt=$('mm').value,mn=parseInt($('mnn').value)||25;if(!d){toast('Selectează data!');return}S.sessions.push({date:d,materie:mt,min:mn});ax(Math.round(mn/5));ms();sv();rCal();toast(`✅ ${mn} min`)}
 
 // EXAM SIMULATION with literary text fragments
@@ -766,6 +795,9 @@ $('dqz').textContent=S.qc;$('dex').textContent=S.exams||0;
 $('qc').textContent=S.qc;$('qw').textContent=S.qw;
 $('pss').textContent=S.ps||0;$('pmn').textContent=S.pmn||0;
 if(S.qc+S.qw>0){const ac=Math.round(S.qc/(S.qc+S.qw)*100);$('qac').textContent=ac+'%';$('qab').style.width=ac+'%'}
+$('wrongModeBtn').textContent=`🎯 Mod greșeli: ${S.quizWrongMode?'ON':'OFF'}`;
+rQuizInsights();
+rTodayPlan();
 $('md').value=new Date().toISOString().slice(0,10);
 rE();$('rp').style.strokeDasharray=CI;$('rp').style.strokeDashoffset=0;
 rCal();if(Notification.permission==='granted')$('nb').style.color='var(--gold)';
