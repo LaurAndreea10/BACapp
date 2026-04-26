@@ -1,12 +1,25 @@
-# Fix AI Coach: răspunsuri presetate
+# Fix AI Coach: răspunsuri presetate locale
 
 `ai-coach-presets.js` este fallback-ul local pentru AI Coach.
 
-## De ce era eroarea CORS
+## Important: zero costuri
+
+Această soluție **nu folosește Anthropic**, **nu consumă tokeni**, **nu implică abonament** și **nu necesită API Key**.
+
+În interfață, câmpurile de tip:
+
+- `Anthropic API Key`
+- `Model`
+- `Șterge cheia`
+- `Nu ai setat încă o cheie`
+
+pot fi ignorate sau ascunse, deoarece AI Coach trebuie să răspundă local cu presetările din `ai-coach-presets.js`.
+
+## De ce apărea eroarea CORS
 
 Browserul nu poate apela direct `https://api.anthropic.com/v1/messages` dintr-un site public GitHub Pages. Anthropic nu trimite headerul `Access-Control-Allow-Origin` pentru astfel de apeluri, deci preflight-ul CORS este blocat. În plus, un apel direct din frontend ar expune cheia API în codul public.
 
-Soluția corectă pentru AI real ar fi un backend/proxy server-side. Pentru această aplicație statică, folosim răspunsuri presetate locale.
+Pentru BAC Space, soluția aleasă este una fără costuri: răspunsuri presetate locale.
 
 ## Ce face scriptul
 
@@ -27,14 +40,10 @@ Soluția corectă pentru AI real ar fi un backend/proxy server-side. Pentru acea
 Adaugă scriptul cât mai devreme posibil, ideal în `<head>` după scripturile externe, ca să poată intercepta `fetch` înainte ca AI Coach să trimită request-ul:
 
 ```html
-<script src="/BACapp/ai-coach-presets.js" defer></script>
-```
-
-Dacă AI Coach definește și apelează codul foarte devreme, folosește fără `defer`:
-
-```html
 <script src="/BACapp/ai-coach-presets.js"></script>
 ```
+
+Evită `defer` aici dacă AI Coach trimite request-ul imediat după încărcarea paginii.
 
 ## Pentru întrebările sugerate
 
@@ -58,6 +67,6 @@ Scriptul va detecta click-ul și va afișa automat răspunsul presetat.
 </button>
 ```
 
-## Recomandare pe termen lung
+## Recomandare pentru interfață
 
-Elimină complet din `index.html` apelul direct către `https://api.anthropic.com/v1/messages`. Pentru AI real, folosește un endpoint backend, de exemplu Cloudflare Worker, Netlify Function sau Vercel Function, unde cheia API rămâne server-side.
+Pentru versiunea fără costuri, ascunde sau elimină din `index.html` zona de configurare Anthropic API Key / Model. Dacă rămâne vizibilă, utilizatorii vor crede că trebuie introdusă o cheie, deși AI Coach poate funcționa local cu presetări.
