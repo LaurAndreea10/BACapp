@@ -115,6 +115,37 @@
     return lastCoachQuestion;
   }
 
+  function hideAnthropicSettings() {
+    const labels = ['anthropic api key', 'api key', 'model', 'șterge', 'sterge', 'nu ai setat încă o cheie', 'nu ai setat inca o cheie'];
+    const aiPanel = document.getElementById('p-ai') || document.body;
+    const candidates = Array.from(aiPanel.querySelectorAll('label, input, select, button, small, p, div'));
+
+    candidates.forEach(node => {
+      const text = normalize(node.textContent || node.placeholder || node.value || '');
+      const idName = normalize(`${node.id || ''} ${node.name || ''} ${node.className || ''}`);
+      const isAnthropicControl = labels.some(label => text.includes(normalize(label)) || idName.includes(normalize(label.replaceAll(' ', ''))));
+      if (!isAnthropicControl) return;
+
+      const card = node.closest('.cd, .gt, .ge, .av, .cs') || node.parentElement;
+      if (card && card !== aiPanel && card !== document.body) {
+        card.style.display = 'none';
+        card.setAttribute('aria-hidden', 'true');
+      } else {
+        node.style.display = 'none';
+        node.setAttribute('aria-hidden', 'true');
+      }
+    });
+
+    const noteId = 'local-ai-coach-note';
+    if (document.getElementById(noteId) || !aiPanel || aiPanel === document.body) return;
+    const note = document.createElement('div');
+    note.id = noteId;
+    note.className = 'cs';
+    note.style.marginBottom = '10px';
+    note.innerHTML = '🤖 AI Coach rulează local, cu răspunsuri presetate. Nu folosește Anthropic, nu consumă tokeni și nu cere API Key.';
+    aiPanel.prepend(note);
+  }
+
   const nativeFetch = window.fetch ? window.fetch.bind(window) : null;
   if (nativeFetch) {
     window.fetch = function patchedFetch(input, init = {}) {
@@ -133,7 +164,8 @@
   window.BAC_AI_COACH_PRESETS = {
     answers: PRESET_ANSWERS,
     getPresetAnswer,
-    answerSuggestedQuestion
+    answerSuggestedQuestion,
+    hideAnthropicSettings
   };
 
   ['askAI', 'aiAsk', 'sendAI', 'sendMsg'].forEach(name => {
@@ -156,4 +188,8 @@
     event.preventDefault();
     answerSuggestedQuestion(question);
   });
+
+  document.addEventListener('DOMContentLoaded', hideAnthropicSettings);
+  setTimeout(hideAnthropicSettings, 300);
+  setTimeout(hideAnthropicSettings, 1200);
 })();
