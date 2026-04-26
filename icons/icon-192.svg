@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192" role="img" aria-label="BAC Space">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101626"/>
+      <stop offset="1" stop-color="#06090f"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f2c978"/>
+      <stop offset="1" stop-color="#e4a84c"/>
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="42" fill="url(#bg)"/>
+  <circle cx="145" cy="42" r="24" fill="#e4a84c" opacity="0.14"/>
+  <circle cx="44" cy="148" r="34" fill="#3ccfbe" opacity="0.10"/>
+  <path d="M54 53h58c18 0 30 10 30 26 0 10-5 18-14 22 12 4 19 14 19 27 0 19-14 31-36 31H54V53Zm25 23v17h30c6 0 10-3 10-9 0-5-4-8-10-8H79Zm0 39v20h33c7 0 11-4 11-10s-4-10-12-10H79Z" fill="url(#gold)"/>
+  <path d="M49 166h94" stroke="#f2c978" stroke-width="5" stroke-linecap="round" opacity="0.75"/>
+</svg>
