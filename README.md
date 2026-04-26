@@ -1,79 +1,94 @@
 # 🎓 BAC Space
 
-> A modern educational platform designed to help students prepare efficiently for the Romanian Baccalaureate exam.
+> Platformă educațională modernă pentru pregătirea eficientă a examenului de Bacalaureat din România.
 
-🔗 **Live Demo:** [BAC Space](https://laurandreea10.github.io/BACapp/)
-
----
-
-## ✨ Overview
-
-**BAC Space** is a web application built to support high school students in their preparation for the **Baccalaureate exam**. It combines learning, practice, and productivity tools into a single, intuitive platform.
-
-The goal of this project is to provide a structured, engaging, and efficient study experience by integrating quizzes, simulations, essay models, planning tools, and AI-powered assistance.
+🔗 **Live demo:** [BAC Space](https://laurandreea10.github.io/BACapp/)
 
 ---
 
-## 🚀 Key Features
+## ✨ Prezentare
 
-- 🏠 **Dashboard** – quick access to all main sections
-- 📚 **Subjects & Lessons** – structured learning materials
-- ❓ **Quizzes** – test your knowledge interactively
-- 🗺️ **Geography & Maps** – visual and interactive learning
-- 📝 **BAC Simulation** – timed exam environment
-- ✍️ **Essay Models** – examples and writing guidance
-- 🎲 **AI Subject Generator** – generate practice topics
-- 🍅 **Pomodoro Timer** – stay focused and productive
-- 📅 **Calendar** – organize your study schedule
-- 🤖 **AI Coach** – feedback and assistance
-- 📌 **Quick Sheets & Glossary** – fast revision tools
-- 🏆 **Achievements & Statistics** – track your progress
+**BAC Space** este o aplicație web statică pentru elevii care se pregătesc pentru examenul de **Bacalaureat**. Aplicația combină lecții, quiz-uri, simulări, eseuri-model și instrumente de productivitate într-o interfață unitară.
+
+Scopul proiectului este să ofere un spațiu de învățare structurat, motivant și ușor de folosit, cu progres salvat local în browser.
 
 ---
 
-## 🎯 Target Audience
+## 🚀 Funcționalități principale
 
-This platform is ideal for:
-
-- high school students preparing for the Baccalaureate exam
-- learners who want a structured and efficient study system
-- users looking for an all-in-one learning and productivity tool
-
----
-
-## 💡 Benefits
-
-- ✅ centralized study environment
-- ✅ interactive learning and self-assessment
-- ✅ improved time management with Pomodoro
-- ✅ clear progress tracking with stats and achievements
-- ✅ modern and user-friendly interface
+- 🏠 **Dashboard** cu XP, nivel, streak și progres
+- 📚 **Materii & lecții** pentru învățare structurată
+- ❓ **Quiz-uri interactive** cu statistici de acuratețe
+- 🎯 **Mod greșeli** pentru refacerea întrebărilor dificile
+- 🔁 **Recapitulări spațiate** 1-3-7-14-30 zile
+- 🗺️ **Geografie & hărți** pentru învățare vizuală
+- 📝 **Simulare BAC** cu cronometru
+- ✍️ **Modele de eseuri** și ghidaj de redactare
+- 🎲 **Generator de subiecte** pentru antrenament
+- 🍅 **Pomodoro** pentru sesiuni de studiu concentrate
+- 📅 **Calendar** pentru planificarea recapitulărilor
+- 🤖 **AI Coach**, fișe rapide, glosar, achievements și statistici
 
 ---
 
-## 🖥️ Application Sections
+## 🛠️ Tehnologii
 
-The platform includes multiple sections such as:
+Proiectul este un site static construit cu:
 
-**Dashboard, Subjects & Lessons, Quiz, Geography & Maps, BAC Simulation, Subject Generator, Pomodoro, Calendar, AI Coach, Quick Sheets, Glossary, Achievements, and Statistics.**
+- HTML
+- CSS
+- JavaScript vanilla
+- Leaflet pentru hărți interactive
+- GitHub Pages pentru publicare
 
-Users can also track their progress through features like **XP, streaks, levels, and session summaries**.
+Nu necesită build step sau dependențe locale.
 
 ---
 
-## 🌐 Access
+## ▶️ Rulare locală
 
-Try the app here:
+Clonează repository-ul și pornește un server static:
 
-👉 **[Open BAC Space](https://laurandreea10.github.io/BACapp/)**
+```bash
+git clone https://github.com/LaurAndreea10/BACapp.git
+cd BACapp
+python3 -m http.server 8000
+```
+
+Apoi deschide în browser:
+
+```text
+http://localhost:8000
+```
+
+---
+
+## 🌐 Publicare
+
+Site-ul este publicat prin **GitHub Pages** la:
+
+👉 [https://laurandreea10.github.io/BACapp/](https://laurandreea10.github.io/BACapp/)
+
+Modificările ajunse în branch-ul principal vor fi reflectate pe site după procesarea GitHub Pages.
+
+---
+
+## 📌 Îmbunătățiri recomandate în continuare
+
+- separarea CSS și JavaScript în fișiere dedicate
+- adăugarea unui manifest PWA și a unui service worker pentru folosire offline
+- adăugarea de teste smoke pentru navigare, quiz și simulare
+- optimizarea accesibilității pentru tastatură și cititoare de ecran
+- adăugarea de capturi reale în secțiunea de preview
 
 ---
 
 ## 📷 Preview
 
-You can add screenshots here:
+Adaugă capturi în `assets/`, apoi actualizează această secțiune:
 
 ```md
 ![Dashboard](./assets/dashboard.png)
 ![Quiz](./assets/quiz.png)
 ![Simulation](./assets/simulation.png)
+```
