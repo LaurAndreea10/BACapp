@@ -1,8 +1,27 @@
-# Fix AI Coach: răspunsuri presetate
+# Fix AI Coach: răspunsuri presetate locale
 
-Acest branch adaugă `ai-coach-presets.js`, un fallback local pentru AI Coach.
+`ai-coach-presets.js` este fallback-ul local pentru AI Coach.
 
-## Ce face
+## Important: zero costuri
+
+Această soluție **nu folosește Anthropic**, **nu consumă tokeni**, **nu implică abonament** și **nu necesită API Key**.
+
+În interfață, câmpurile de tip:
+
+- `Anthropic API Key`
+- `Model`
+- `Șterge cheia`
+- `Nu ai setat încă o cheie`
+
+pot fi ignorate sau ascunse, deoarece AI Coach trebuie să răspundă local cu presetările din `ai-coach-presets.js`.
+
+## De ce apărea eroarea CORS
+
+Browserul nu poate apela direct `https://api.anthropic.com/v1/messages` dintr-un site public GitHub Pages. Anthropic nu trimite headerul `Access-Control-Allow-Origin` pentru astfel de apeluri, deci preflight-ul CORS este blocat. În plus, un apel direct din frontend ar expune cheia API în codul public.
+
+Pentru BAC Space, soluția aleasă este una fără costuri: răspunsuri presetate locale.
+
+## Ce face scriptul
 
 - adaugă răspunsuri presetate pentru întrebări despre:
   - plan de studiu
@@ -11,17 +30,20 @@ Acest branch adaugă `ai-coach-presets.js`, un fallback local pentru AI Coach.
   - simulare BAC
   - stres / motivație
   - recapitulare
+- interceptează apelurile directe către `api.anthropic.com/v1/messages` și returnează un răspuns local compatibil cu forma răspunsului Anthropic
 - încearcă să intercepteze funcțiile uzuale de trimitere (`askAI`, `aiAsk`, `sendAI`, `sendMsg`)
 - adaugă helper-ul global `BAC_AI_COACH_PRESETS.answerSuggestedQuestion(question)`
-- permite folosirea de butoane cu `data-ai-question` sau `data-coach-question`
+- permite folosirea de butoane cu `data-ai-question`, `data-coach-question`, `.ai-suggestion` sau `.coach-suggestion`
 
 ## Activare în `index.html`
 
-Adaugă înainte de `</body>`:
+Adaugă scriptul cât mai devreme posibil, ideal în `<head>` după scripturile externe, ca să poată intercepta `fetch` înainte ca AI Coach să trimită request-ul:
 
 ```html
-<script src="/BACapp/ai-coach-presets.js" defer></script>
+<script src="/BACapp/ai-coach-presets.js"></script>
 ```
+
+Evită `defer` aici dacă AI Coach trimite request-ul imediat după încărcarea paginii.
 
 ## Pentru întrebările sugerate
 
@@ -45,6 +67,6 @@ Scriptul va detecta click-ul și va afișa automat răspunsul presetat.
 </button>
 ```
 
-## Observație
+## Recomandare pentru interfață
 
-Nu am modificat direct `index.html` deoarece conectorul GitHub returnează fișierul mare trunchiat înainte de secțiunea AI Coach. Modificarea directă fără fișier complet ar risca să strice pagina live.
+Pentru versiunea fără costuri, ascunde sau elimină din `index.html` zona de configurare Anthropic API Key / Model. Dacă rămâne vizibilă, utilizatorii vor crede că trebuie introdusă o cheie, deși AI Coach poate funcționa local cu presetări.

@@ -33,6 +33,7 @@
   ];
 
   const DEFAULT_ANSWER = `Pot răspunde momentan cu sfaturi presetate. Alege una dintre întrebările sugerate sau scrie despre: plan de studiu, greșeli la quiz, eseu la română, simulare BAC, stres/motivație sau recapitulare.`;
+  let lastCoachQuestion = '';
 
   function normalize(text) {
     return String(text || '')
@@ -43,7 +44,7 @@
   }
 
   function getPresetAnswer(question) {
-    const q = normalize(question);
+    const q = normalize(question || lastCoachQuestion);
     const found = PRESET_ANSWERS.find(item => item.triggers.some(trigger => q.includes(normalize(trigger))));
     return found ? found.answer : DEFAULT_ANSWER;
   }
@@ -59,9 +60,74 @@
     return true;
   }
 
+  function getCoachInput() {
+    return document.getElementById('aii') || document.getElementById('aiInput') || document.querySelector('#p-ai textarea, #p-ai input, .ar textarea');
+  }
+
+  function rememberQuestion(question) {
+    const clean = String(question || '').trim();
+    if (clean) lastCoachQuestion = clean;
+    return clean;
+  }
+
   function answerSuggestedQuestion(question) {
+    const clean = rememberQuestion(question);
+    if (clean) appendCoachBubble(clean, 'usr');
+    appendCoachBubble(getPresetAnswer(clean), 'bot');
+  }
+
+  function fallbackAsk() {
+    const input = getCoachInput();
+    const question = rememberQuestion(input && input.value ? input.value : '');
+    if (!question) return;
     appendCoachBubble(question, 'usr');
     appendCoachBubble(getPresetAnswer(question), 'bot');
+    input.value = '';
+  }
+
+  function anthropicPresetPayload(question) {
+    return {
+      id: `preset-${Date.now()}`,
+      type: 'message',
+      role: 'assistant',
+      model: 'bac-space-preset-coach',
+      content: [{ type: 'text', text: getPresetAnswer(question) }],
+      stop_reason: 'end_turn',
+      stop_sequence: null,
+      usage: { input_tokens: 0, output_tokens: 0 }
+    };
+  }
+
+  function getQuestionFromAnthropicBody(body) {
+    try {
+      const payload = typeof body === 'string' ? JSON.parse(body) : body;
+      const messages = Array.isArray(payload?.messages) ? payload.messages : [];
+      const lastUser = [...messages].reverse().find(message => message.role === 'user');
+      const content = lastUser?.content;
+      if (typeof content === 'string') return rememberQuestion(content);
+      if (Array.isArray(content)) {
+        const text = content.map(part => typeof part === 'string' ? part : part?.text || '').join(' ').trim();
+        return rememberQuestion(text);
+      }
+    } catch (error) {
+      console.warn('Could not parse AI Coach request body; using generic preset answer.', error);
+    }
+    return lastCoachQuestion;
+  }
+
+  const nativeFetch = window.fetch ? window.fetch.bind(window) : null;
+  if (nativeFetch) {
+    window.fetch = function patchedFetch(input, init = {}) {
+      const url = typeof input === 'string' ? input : input?.url;
+      if (url && url.includes('api.anthropic.com/v1/messages')) {
+        const question = getQuestionFromAnthropicBody(init?.body);
+        return Promise.resolve(new Response(JSON.stringify(anthropicPresetPayload(question)), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        }));
+      }
+      return nativeFetch(input, init);
+    };
   }
 
   window.BAC_AI_COACH_PRESETS = {
@@ -70,22 +136,11 @@
     answerSuggestedQuestion
   };
 
-  const previousAsk = window.askAI || window.aiAsk || window.sendAI || window.sendMsg;
-  const fallbackAsk = () => {
-    const input = document.getElementById('aii') || document.getElementById('aiInput') || document.querySelector('#p-ai textarea, #p-ai input, .ar textarea');
-    const question = input && input.value ? input.value.trim() : '';
-    if (!question) return;
-    appendCoachBubble(question, 'usr');
-    appendCoachBubble(getPresetAnswer(question), 'bot');
-    input.value = '';
-  };
-
   ['askAI', 'aiAsk', 'sendAI', 'sendMsg'].forEach(name => {
+    const original = window[name];
     window[name] = function patchedCoachAsk(...args) {
       try {
-        if (typeof previousAsk === 'function' && previousAsk !== window[name]) {
-          return previousAsk.apply(this, args);
-        }
+        if (typeof original === 'function') return original.apply(this, args);
       } catch (error) {
         console.warn('AI Coach live answer failed; using preset fallback.', error);
       }
