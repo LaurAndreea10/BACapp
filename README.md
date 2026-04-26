@@ -27,6 +27,7 @@ Scopul proiectului este să ofere un spațiu de învățare structurat, motivant
 - 🎲 **Generator de subiecte** pentru antrenament
 - 🍅 **Pomodoro** pentru sesiuni de studiu concentrate
 - 📅 **Calendar** pentru planificarea recapitulărilor
+- 📲 **PWA-ready**: manifest, iconițe și service worker pentru instalare și fallback offline
 - 🤖 **AI Coach**, fișe rapide, glosar, achievements și statistici
 
 ---
@@ -40,6 +41,7 @@ Proiectul este un site static construit cu:
 - JavaScript vanilla
 - Leaflet pentru hărți interactive
 - GitHub Pages pentru publicare
+- Web App Manifest și Service Worker pentru suport PWA
 
 Nu necesită build step sau dependențe locale.
 
@@ -63,6 +65,21 @@ http://localhost:8000
 
 ---
 
+## 📲 PWA / offline
+
+Repository-ul include fișierele pentru experiența PWA:
+
+- `manifest.webmanifest`
+- `service-worker.js`
+- `pwa-register.js`
+- `offline.html`
+- `icons/icon-192.svg`
+- `icons/icon-512.svg`
+
+Pentru activarea completă în pagina principală, vezi instrucțiunile din [`PWA_SETUP.md`](./PWA_SETUP.md).
+
+---
+
 ## 🌐 Publicare
 
 Site-ul este publicat prin **GitHub Pages** la:
@@ -76,7 +93,7 @@ Modificările ajunse în branch-ul principal vor fi reflectate pe site după pro
 ## 📌 Îmbunătățiri recomandate în continuare
 
 - separarea CSS și JavaScript în fișiere dedicate
-- adăugarea unui manifest PWA și a unui service worker pentru folosire offline
+- conectarea snippet-urilor PWA direct în `index.html`
 - adăugarea de teste smoke pentru navigare, quiz și simulare
 - optimizarea accesibilității pentru tastatură și cititoare de ecran
 - adăugarea de capturi reale în secțiunea de preview
