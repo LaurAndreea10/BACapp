@@ -1,8 +1,14 @@
 # Fix AI Coach: răspunsuri presetate
 
-Acest branch adaugă `ai-coach-presets.js`, un fallback local pentru AI Coach.
+`ai-coach-presets.js` este fallback-ul local pentru AI Coach.
 
-## Ce face
+## De ce era eroarea CORS
+
+Browserul nu poate apela direct `https://api.anthropic.com/v1/messages` dintr-un site public GitHub Pages. Anthropic nu trimite headerul `Access-Control-Allow-Origin` pentru astfel de apeluri, deci preflight-ul CORS este blocat. În plus, un apel direct din frontend ar expune cheia API în codul public.
+
+Soluția corectă pentru AI real ar fi un backend/proxy server-side. Pentru această aplicație statică, folosim răspunsuri presetate locale.
+
+## Ce face scriptul
 
 - adaugă răspunsuri presetate pentru întrebări despre:
   - plan de studiu
@@ -11,16 +17,23 @@ Acest branch adaugă `ai-coach-presets.js`, un fallback local pentru AI Coach.
   - simulare BAC
   - stres / motivație
   - recapitulare
+- interceptează apelurile directe către `api.anthropic.com/v1/messages` și returnează un răspuns local compatibil cu forma răspunsului Anthropic
 - încearcă să intercepteze funcțiile uzuale de trimitere (`askAI`, `aiAsk`, `sendAI`, `sendMsg`)
 - adaugă helper-ul global `BAC_AI_COACH_PRESETS.answerSuggestedQuestion(question)`
-- permite folosirea de butoane cu `data-ai-question` sau `data-coach-question`
+- permite folosirea de butoane cu `data-ai-question`, `data-coach-question`, `.ai-suggestion` sau `.coach-suggestion`
 
 ## Activare în `index.html`
 
-Adaugă înainte de `</body>`:
+Adaugă scriptul cât mai devreme posibil, ideal în `<head>` după scripturile externe, ca să poată intercepta `fetch` înainte ca AI Coach să trimită request-ul:
 
 ```html
 <script src="/BACapp/ai-coach-presets.js" defer></script>
+```
+
+Dacă AI Coach definește și apelează codul foarte devreme, folosește fără `defer`:
+
+```html
+<script src="/BACapp/ai-coach-presets.js"></script>
 ```
 
 ## Pentru întrebările sugerate
@@ -45,6 +58,6 @@ Scriptul va detecta click-ul și va afișa automat răspunsul presetat.
 </button>
 ```
 
-## Observație
+## Recomandare pe termen lung
 
-Nu am modificat direct `index.html` deoarece conectorul GitHub returnează fișierul mare trunchiat înainte de secțiunea AI Coach. Modificarea directă fără fișier complet ar risca să strice pagina live.
+Elimină complet din `index.html` apelul direct către `https://api.anthropic.com/v1/messages`. Pentru AI real, folosește un endpoint backend, de exemplu Cloudflare Worker, Netlify Function sau Vercel Function, unde cheia API rămâne server-side.
