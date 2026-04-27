@@ -21,6 +21,8 @@ const cleanHead = `<!DOCTYPE html>
 <script src="/BACapp/ai-coach-presets.js"></script>
 <script src="/BACapp/quiz-arena.js" defer></script>
 <script src="/BACapp/quiz-difficulty-fix.js" defer></script>
+<script src="/BACapp/quiz-superpowers.js" defer></script>
+<script src="/BACapp/teacher-dashboard.js" defer></script>
 <script src="/BACapp/pwa-register.js" defer></script>
 
 <style>
@@ -44,12 +46,18 @@ if (firstRootBeforeMarker === -1) {
 const rest = html.slice(markerIndex);
 html = `${cleanHead}:root{\n${rest}`;
 
-if (!html.includes('/BACapp/quiz-arena.js')) {
-  html = html.replace('</body>', '<script src="/BACapp/quiz-arena.js" defer></script>\n</body>');
-}
-if (!html.includes('/BACapp/quiz-difficulty-fix.js')) {
-  html = html.replace('</body>', '<script src="/BACapp/quiz-difficulty-fix.js" defer></script>\n</body>');
-}
+const requiredScripts = [
+  '/BACapp/quiz-arena.js',
+  '/BACapp/quiz-difficulty-fix.js',
+  '/BACapp/quiz-superpowers.js',
+  '/BACapp/teacher-dashboard.js'
+];
+
+requiredScripts.forEach(src => {
+  if (!html.includes(src)) {
+    html = html.replace('</body>', `<script src="${src}" defer></script>\n</body>`);
+  }
+});
 
 const invalidPatterns = [
   '<style>\n <link',
@@ -67,4 +75,4 @@ if (remainingInvalid.length > 0) {
 }
 
 writeFileSync(INDEX_PATH, html, 'utf8');
-console.log('index.html head cleaned successfully and Quiz Arena linked.');
+console.log('index.html head cleaned successfully and quiz modules linked.');
