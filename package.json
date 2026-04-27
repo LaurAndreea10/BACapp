@@ -1,0 +1,19 @@
+{
+  "name": "bac-space",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Aplicație statică pentru pregătirea examenului de Bacalaureat.",
+  "scripts": {
+    "fix:head": "node scripts/fix-index-head.mjs",
+    "verify": "node scripts/verify-static-site.mjs",
+    "serve": "python3 -m http.server 8000"
+  },
+  "keywords": [
+    "bacalaureat",
+    "educatie",
+    "pwa",
+    "static-site"
+  ],
+  "license": "MIT"
+}
