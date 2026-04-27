@@ -5,6 +5,16 @@
     target.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
   }
 
+  function loadQuizArena() {
+    if (document.getElementById('quiz-arena-loader') || window.__bacQuizArenaLoaded) return;
+    window.__bacQuizArenaLoaded = true;
+    const script = document.createElement('script');
+    script.id = 'quiz-arena-loader';
+    script.src = '/BACapp/quiz-arena.js';
+    script.defer = true;
+    document.body.appendChild(script);
+  }
+
   function addLandingSummary() {
     if (document.getElementById('public-ready-summary')) return;
     const root = document.querySelector('.mn') || document.querySelector('main') || document.body;
@@ -20,9 +30,11 @@
         <div class="public-ready-card"><strong>🇷🇴 Română</strong><span>Eseu, poezie, argumentativ, quiz și glosar.</span></div>
         <div class="public-ready-card"><strong>🏛️ Uman</strong><span>Istorie + Geografie cu plan de 7 zile și quiz.</span></div>
         <div class="public-ready-card"><strong>🔬 Real / Științe</strong><span>Matematică, Biologie, Chimie și Fizică pe pași.</span></div>
+        <div class="public-ready-card"><strong>❓ Quiz Arena</strong><span>Materii, dificultăți, quiz zilnic, simulare BAC, XP și achievements.</span></div>
       </div>
       <div class="public-ready-actions">
         <button type="button" data-target="learning-paths">Alege traseul</button>
+        <button type="button" data-target="quiz-arena">Quiz Arena</button>
         <button type="button" data-target="bac-education-pack">Deschide BAC Pack</button>
         <button type="button" data-target="ai-coach-local-suggestions">Întrebări AI Coach</button>
       </div>
@@ -62,6 +74,7 @@
     addLandingSummary();
     addAINotes();
     addEmptyStateHints();
+    loadQuizArena();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
