@@ -19,11 +19,13 @@
     loadStyleOnce('/BACapp/accessibility.css');
     loadStyleOnce('/BACapp/education-pack.css');
     loadStyleOnce('/BACapp/romanian-flow.css');
+    loadStyleOnce('/BACapp/history-geography-flow.css');
     loadScriptOnce('/BACapp/accessibility.js');
     loadScriptOnce('/BACapp/ai-coach-extra-presets.js');
     loadScriptOnce('/BACapp/legal-notice.js');
     loadScriptOnce('/BACapp/education-pack.js');
     loadScriptOnce('/BACapp/romanian-flow.js');
+    loadScriptOnce('/BACapp/history-geography-flow.js');
   }
 
   loadRuntimeAssets();
