@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#06090f">
-<title>BAC Space Premium · 2025</title>
+<title>BAC Space Premium · 2026</title>
 <link rel="manifest" href="/BACapp/manifest.webmanifest">
 <link rel="icon" href="/BACapp/icons/icon-192.svg" type="image/svg+xml">
 <style>
@@ -53,7 +53,7 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted)}
 <body>
 <header class="top">
   <div class="wrap nav">
-    <div class="brand">BAC Space Premium · 2025</div>
+    <div class="brand">BAC Space Premium · 2026</div>
     <nav>
       <a href="#trasee">Trasee</a>
       <a href="#romana">Română</a>
@@ -184,14 +184,14 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted)}
     <article class="card">
       <h3>Simulare pe profil</h3>
       <select id="profile"><option>Real</option><option>Uman</option><option>Tehnologic</option><option>Științe ale naturii</option></select>
-      <button class="btn primary" id="generate" style="margin-top:10px">Generează simulare</button>
-      <p id="sim-output" class="muted"></p>
+      <button class="btn primary" id="generate" type="button" style="margin-top:10px">Generează simulare</button>
+      <p id="sim-output" class="muted" aria-live="polite"></p>
     </article>
     <article class="card">
       <h3>Raport după simulare</h3>
       <input id="score" type="number" min="1" max="10" placeholder="Scor estimativ 1-10">
-      <button class="btn teal" id="report" style="margin-top:10px">Generează raport</button>
-      <p id="report-output" class="muted"></p>
+      <button class="btn teal" id="report" type="button" style="margin-top:10px">Generează raport</button>
+      <p id="report-output" class="muted" aria-live="polite"></p>
     </article>
   </div>
 </section>
@@ -200,9 +200,9 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted)}
   <h2>🤖 AI Coach local</h2>
   <div class="notice"><strong>Clarificare:</strong> AI Coach este local și orientativ. Nu trimite date către servicii externe și nu cere API key.</div>
   <div class="grid" style="margin-top:14px">
-    <button class="btn" data-ai="plan">Plan de studiu</button>
-    <button class="btn" data-ai="eseu">Eseu română</button>
-    <button class="btn" data-ai="timp">Timp la simulare</button>
+    <button class="btn" type="button" data-ai="plan">Plan de studiu</button>
+    <button class="btn" type="button" data-ai="eseu">Eseu română</button>
+    <button class="btn" type="button" data-ai="timp">Timp la simulare</button>
   </div>
   <article class="card" style="margin-top:14px">
     <h3>Răspuns Coach</h3>
@@ -212,35 +212,83 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted)}
 </main>
 
 <footer>
-  <div class="wrap">BAC Space Premium · simulator educațional · <a style="color:var(--gold)" href="/BACapp/PRIVACY.md">Politica de confidențialitate</a></div>
+  <div class="wrap">BAC Space Premium · 2026 · simulator educațional · <a style="color:var(--gold)" href="/BACapp/PRIVACY.md">Politica de confidențialitate</a></div>
 </footer>
 
 <script>
-const state=JSON.parse(localStorage.getItem('bac_public_state')||'{"xp":0,"lessons":0,"quizzes":0,"reports":0}');
-function save(){localStorage.setItem('bac_public_state',JSON.stringify(state));render()}
-function render(){xp.textContent=state.xp;lessons.textContent=state.lessons;quizzes.textContent=state.quizzes;reports.textContent=state.reports}
-render();
-document.querySelectorAll('[data-xp]').forEach(btn=>btn.onclick=()=>{
-  state.xp+=Number(btn.dataset.xp||0);
-  if(btn.dataset.type==='lesson')state.lessons++;
-  if(btn.dataset.type==='quiz')state.quizzes++;
-  btn.textContent='Salvat ✓';
-  save();
-});
-generate.onclick=()=>{sim-output.textContent=`Structură ${profile.value}: lecții rapide, quiz, recapitulare și raport orientativ.`};
-report.onclick=()=>{
-  state.reports++;
-  save();
-  const s=Number(score.value||0);
-  report-output.textContent=s>=8?'Foarte bine. Mâine repetă doar greșelile.':'Recomandare: reia lecția, fă quiz-ul și notează 3 greșeli principale.';
-};
-const answers={
-  plan:'Începe cu 25 min lecție, 5 min pauză, 20 min quiz și 10 min corectarea greșelilor.',
-  eseu:'Schema: introducere, încadrare, temă, două scene, două elemente de construcție, concluzie.',
-  timp:'Rezolvă întâi ce știi sigur, revino la cerințele medii și lasă 10 minute pentru verificare.'
-};
-document.querySelectorAll('[data-ai]').forEach(btn=>btn.onclick=()=>{ai-answer.textContent=answers[btn.dataset.ai]});
-if('serviceWorker'in navigator){navigator.serviceWorker.register('/BACapp/service-worker.js').catch(()=>{})}
+(() => {
+  const els = {
+    xp: document.getElementById('xp'),
+    lessons: document.getElementById('lessons'),
+    quizzes: document.getElementById('quizzes'),
+    reports: document.getElementById('reports'),
+    profile: document.getElementById('profile'),
+    generate: document.getElementById('generate'),
+    simOutput: document.getElementById('sim-output'),
+    score: document.getElementById('score'),
+    report: document.getElementById('report'),
+    reportOutput: document.getElementById('report-output'),
+    aiAnswer: document.getElementById('ai-answer')
+  };
+
+  const state = JSON.parse(localStorage.getItem('bac_public_state') || '{"xp":0,"lessons":0,"quizzes":0,"reports":0}');
+
+  function save() {
+    localStorage.setItem('bac_public_state', JSON.stringify(state));
+    render();
+  }
+
+  function render() {
+    els.xp.textContent = state.xp;
+    els.lessons.textContent = state.lessons;
+    els.quizzes.textContent = state.quizzes;
+    els.reports.textContent = state.reports;
+  }
+
+  render();
+
+  document.querySelectorAll('[data-xp]').forEach(button => {
+    button.addEventListener('click', () => {
+      state.xp += Number(button.dataset.xp || 0);
+      if (button.dataset.type === 'lesson') state.lessons += 1;
+      if (button.dataset.type === 'quiz') state.quizzes += 1;
+      button.textContent = 'Salvat ✓';
+      save();
+    });
+  });
+
+  els.generate.addEventListener('click', () => {
+    const profile = els.profile.value;
+    const subjects = {
+      Real: 'Matematică, Română și o probă la alegere din zona reală.',
+      Uman: 'Română, Istorie și Geografie / Logică / Psihologie, în funcție de profil.',
+      Tehnologic: 'Română, proba profilului și itemi aplicați pentru competențe tehnice.',
+      'Științe ale naturii': 'Română, Matematică/Biologie/Chimie/Fizică și recapitulare pe formule.'
+    };
+    els.simOutput.innerHTML = `<strong>Simulare ${profile}</strong><br>1. Încălzire: 10 minute recapitulare rapidă.<br>2. Probă principală: ${subjects[profile] || subjects.Real}<br>3. Mini-quiz de verificare: 5 întrebări.<br>4. Raport orientativ: notează 3 greșeli și următorul pas.`;
+  });
+
+  els.report.addEventListener('click', () => {
+    state.reports += 1;
+    save();
+    const score = Number(els.score.value || 0);
+    els.reportOutput.textContent = score >= 8
+      ? 'Foarte bine. Mâine repetă doar greșelile și fă o mini-simulare de 20 minute.'
+      : 'Recomandare: reia lecția, fă quiz-ul și notează 3 greșeli principale înainte de următoarea simulare.';
+  });
+
+  const answers = {
+    plan: 'Începe cu 25 min lecție, 5 min pauză, 20 min quiz și 10 min corectarea greșelilor.',
+    eseu: 'Schema: introducere, încadrare, temă, două scene, două elemente de construcție, concluzie.',
+    timp: 'Rezolvă întâi ce știi sigur, revino la cerințele medii și lasă 10 minute pentru verificare.'
+  };
+
+  document.querySelectorAll('[data-ai]').forEach(button => {
+    button.addEventListener('click', () => {
+      els.aiAnswer.textContent = answers[button.dataset.ai] || 'Răspuns orientativ pentru pregătire.';
+    });
+  });
+})();
 </script>
 </body>
 </html>
