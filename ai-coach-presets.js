@@ -15,21 +15,58 @@
     { triggers: ['recapitulare', 'repet', 'memorez', 'uit', 'spaced'], answer: `Folosește recapitularea 1-3-7-14-30:\n\n• după 1 zi: refaci ideile principale;\n• după 3 zile: quiz scurt;\n• după 7 zile: explici lecția cu voce tare;\n• după 14 zile: rezolvi exerciții;\n• după 30 zile: simulare sau test mixt.\n\nNu reciti pasiv. Încearcă să reproduci din memorie.` }
   ];
 
-  const SUGGESTED_QUESTIONS = [
-    'Cum îmi fac un plan de studiu pentru azi?',
-    'Cum repar greșelile din quiz?',
-    'Cum structurez eseul la română?',
-    'Ce fac la Subiectul I?',
-    'Ajută-mă la istorie',
-    'Dă-mi o strategie pentru geografie',
-    'Cum rezolv la matematică?',
-    'Cum învăț la biologie?',
-    'Cum abordez problemele la chimie?',
-    'Cum rezolv la fizică?',
-    'Cum gestionez timpul la simulare?',
-    'Ce fac când sunt stresat?'
+  const SUGGESTION_GROUPS = [
+    {
+      title: 'Plan & progres',
+      icon: '🗓️',
+      accent: 'var(--gold)',
+      questions: [
+        'Cum îmi fac un plan de studiu pentru azi?',
+        'Cum repar greșelile din quiz?',
+        'Cum recapitulez eficient?'
+      ]
+    },
+    {
+      title: 'Română',
+      icon: '✍️',
+      accent: 'var(--violet)',
+      questions: [
+        'Cum structurez eseul la română?',
+        'Ce fac la Subiectul I?'
+      ]
+    },
+    {
+      title: 'Uman',
+      icon: '🏛️',
+      accent: 'var(--peach)',
+      questions: [
+        'Ajută-mă la istorie',
+        'Dă-mi o strategie pentru geografie'
+      ]
+    },
+    {
+      title: 'Real',
+      icon: '🔬',
+      accent: 'var(--teal)',
+      questions: [
+        'Cum rezolv la matematică?',
+        'Cum învăț la biologie?',
+        'Cum abordez problemele la chimie?',
+        'Cum rezolv la fizică?'
+      ]
+    },
+    {
+      title: 'Examen & stare',
+      icon: '🎯',
+      accent: 'var(--rose)',
+      questions: [
+        'Cum gestionez timpul la simulare?',
+        'Ce fac când sunt stresat?'
+      ]
+    }
   ];
 
+  const SUGGESTED_QUESTIONS = SUGGESTION_GROUPS.flatMap(group => group.questions);
   const DEFAULT_ANSWER = `Pot răspunde momentan cu sfaturi presetate. Alege una dintre întrebările sugerate sau scrie despre: plan de studiu, greșeli la quiz, română, istorie, geografie, matematică, biologie, chimie, fizică, simulare BAC, stres/motivație sau recapitulare.`;
   let lastCoachQuestion = '';
 
@@ -90,17 +127,44 @@
     wrap.style.marginBottom = '12px';
     wrap.innerHTML = `
       <div class="ct"><span class="dt" style="background:var(--teal)"></span>Întrebări sugerate</div>
-      <div style="display:flex;flex-wrap:wrap;gap:6px"></div>
+      <div class="ai-suggestion-groups" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px"></div>
     `;
 
-    const list = wrap.querySelector('div:last-child');
-    SUGGESTED_QUESTIONS.forEach(question => {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'bt bt-c ai-suggestion';
-      button.dataset.aiQuestion = question;
-      button.textContent = question;
-      list.appendChild(button);
+    const grid = wrap.querySelector('.ai-suggestion-groups');
+    SUGGESTION_GROUPS.forEach(group => {
+      const section = document.createElement('div');
+      section.className = 'cs';
+      section.style.padding = '10px';
+      section.style.borderColor = 'var(--line)';
+      section.innerHTML = `
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;color:var(--txt);font-weight:700;font-size:.78rem">
+          <span>${group.icon}</span>
+          <span>${group.title}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px"></div>
+      `;
+      const list = section.querySelector('div:last-child');
+      group.questions.forEach(question => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'bt ai-suggestion';
+        button.dataset.aiQuestion = question;
+        button.textContent = question;
+        button.style.textAlign = 'left';
+        button.style.whiteSpace = 'normal';
+        button.style.borderColor = 'var(--line)';
+        button.style.color = 'var(--txt2)';
+        button.addEventListener('mouseenter', () => {
+          button.style.color = group.accent;
+          button.style.borderColor = group.accent;
+        });
+        button.addEventListener('mouseleave', () => {
+          button.style.color = 'var(--txt2)';
+          button.style.borderColor = 'var(--line)';
+        });
+        list.appendChild(button);
+      });
+      grid.appendChild(section);
     });
 
     if (anchor && anchor.parentElement) {
@@ -184,6 +248,7 @@
 
   window.BAC_AI_COACH_PRESETS = {
     answers: PRESET_ANSWERS,
+    suggestionGroups: SUGGESTION_GROUPS,
     suggestions: SUGGESTED_QUESTIONS,
     getPresetAnswer,
     answerSuggestedQuestion,
@@ -205,6 +270,7 @@
   });
 
   document.addEventListener('click', event => {
+    setTimeout(renderSuggestedQuestions, 50);
     const target = event.target.closest('[data-ai-question], [data-coach-question], .ai-suggestion, .coach-suggestion');
     if (!target) return;
     const question = target.dataset.aiQuestion || target.dataset.coachQuestion || target.textContent.trim();
