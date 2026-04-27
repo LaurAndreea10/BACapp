@@ -18,7 +18,7 @@ Politica de confidențialitate: [`PRIVACY.md`](./PRIVACY.md)
 
 ## ✨ Prezentare
 
-**BAC Space** este o aplicație web pentru elevii care se pregătesc pentru Bacalaureat. Include lecții, quiz-uri, simulări, eseuri-model, hartă interactivă, Pomodoro, calendar de recapitulare, AI Coach local și un **BAC Pack** pentru pregătire rapidă.
+**BAC Space** este o aplicație web pentru elevii care se pregătesc pentru Bacalaureat. Include lecții, quiz-uri, simulări, eseuri-model, hartă interactivă, Pomodoro, calendar de recapitulare, AI Coach local, **BAC Pack** și un **flux complet de învățare la Română**.
 
 Aplicația este gândită ca un spațiu de învățare structurat, motivant și accesibil. Progresul este salvat local în browser, iar site-ul funcționează ca PWA.
 
@@ -28,6 +28,7 @@ Aplicația este gândită ca un spațiu de învățare structurat, motivant și 
 
 - 🏠 **Dashboard** cu XP, nivel, streak și progres
 - 📚 **Materii & lecții** pentru învățare structurată
+- 🇷🇴 **Flux complet Română**: onboarding 7 zile, lecții, quiz, XP, recapitulări și progres local
 - 📚 **BAC Pack** cu lecții rapide, simulare pe profil, raport și reset progres
 - ❓ **Quiz-uri interactive** cu statistici de acuratețe
 - 🎯 **Mod greșeli** pentru refacerea întrebărilor dificile
@@ -41,6 +42,27 @@ Aplicația este gândită ca un spațiu de învățare structurat, motivant și 
 - 🤖 **AI Coach local**, fără API extern și fără costuri
 - ♿ **Panou de accesibilitate** cu contrast ridicat, text mărit, citire ușoară, fără distrageri și citire vocală
 - 📲 **PWA-ready**: manifest, service worker, iconițe și pagină offline
+
+---
+
+## 🇷🇴 Flux complet Română
+
+Modulul Română demonstrează o experiență completă de învățare:
+
+- onboarding „Start 7 zile”;
+- 3 lecții reale: eseu la roman, poezie modernistă, text argumentativ;
+- quiz aferent fiecărei lecții;
+- XP local pentru lecții, quiz și fișe rapide;
+- recapitulări recente;
+- modele de eseu;
+- 5 fișe rapide;
+- 10 termeni de glosar;
+- clarificare că AI Coach/generatorul/corectarea sunt orientative și nu înlocuiesc baremul oficial.
+
+Fișiere:
+
+- `romanian-flow.css`
+- `romanian-flow.js`
 
 ---
 
@@ -197,6 +219,7 @@ După modificări în `main`, GitHub Pages poate avea nevoie de câteva minute p
 - test pe mobil
 - test banner simulator/confidențialitate
 - test link `PRIVACY.md`
+- test flux Română: onboarding, lecție, quiz, XP, progres
 - test BAC Pack: lecții, simulare, raport, reset progres
 - test AI Coach cu întrebări sugerate
 - test panou ♿
@@ -211,5 +234,5 @@ După modificări în `main`, GitHub Pages poate avea nevoie de câteva minute p
 - extragerea treptată a JavaScript-ului principal din `index.html` în `app.js`
 - audit complet cu screen reader real
 - capturi reale în README
-- mai multe lecții și presetări AI Coach pe fiecare materie
+- extinderea fluxului complet și pentru istorie/geografie/matematică
 - teste smoke pentru navigare, quiz și simulare
