@@ -1,0 +1,41 @@
+name: Clean index head
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  clean:
+    name: Clean and commit index head
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Clean index head
+        run: npm run fix:head
+
+      - name: Verify static site
+        run: npm run verify
+
+      - name: Commit cleaned index.html
+        run: |
+          if git diff --quiet index.html; then
+            echo "index.html already clean; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Clean index head"
+          git push
