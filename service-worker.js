@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'bac-space-v3-a11y';
+const CACHE_VERSION = 'bac-space-v4-a11y-stage-2';
 const APP_SCOPE = '/BACapp/';
 const APP_SHELL = [
   APP_SCOPE,
