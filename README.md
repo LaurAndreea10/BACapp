@@ -24,6 +24,23 @@ Aplicația este gândită ca un spațiu de învățare structurat, motivant și 
 
 ---
 
+## ✅ Vizibilitate pe pagina publică
+
+Pentru ca evaluatorii să vadă rapid că aplicația are fluxuri funcționale, pagina publică include un rezumat de start:
+
+- **Începe pregătirea BAC**;
+- carduri pentru Română, Uman și Real / Științe;
+- butoane rapide către trasee și BAC Pack;
+- note clare că AI/corectarea/generatorul oferă feedback orientativ;
+- indicii în zonele goale care trimit spre fluxurile complete.
+
+Fișiere:
+
+- `public-polish.css`
+- `public-polish.js`
+
+---
+
 ## 📸 Capturi și testare cu utilizatori
 
 Repository-ul include acum materiale pentru capturi și testare reală:
