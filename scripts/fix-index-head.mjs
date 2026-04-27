@@ -8,7 +8,8 @@ const cleanHead = `<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#06090f">
-<title>BAC Space Premium</title>
+<title>BAC Space – simulator BAC 2026 cu quiz-uri, subiecte, eseuri și plan de învățare</title>
+<meta name="description" content="Pregătește-te pentru Bacalaureat cu quiz-uri interactive, lecții scurte, simulări, subiecte oficiale și progres salvat local. Pentru Română, Matematică, Istorie, Geografie și Științe.">
 
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700&family=Manrope:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -19,6 +20,7 @@ const cleanHead = `<!DOCTYPE html>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="/BACapp/ai-coach-presets.js"></script>
+<script src="/BACapp/bac-training-engine.js?v=20260427" defer></script>
 <script src="/BACapp/quiz-arena.js" defer></script>
 <script src="/BACapp/quiz-difficulty-fix.js" defer></script>
 <script src="/BACapp/quiz-superpowers.js" defer></script>
@@ -30,8 +32,6 @@ const cleanHead = `<!DOCTYPE html>
 
 let html = readFileSync(INDEX_PATH, 'utf8');
 
-// The current broken file contains duplicated <style> and duplicated :root{ near the top.
-// Keep the real CSS body starting from the first CSS variable declaration after the broken markup.
 const marker = '--bg:#06090f;';
 const markerIndex = html.indexOf(marker);
 if (markerIndex === -1) {
@@ -47,6 +47,7 @@ const rest = html.slice(markerIndex);
 html = `${cleanHead}:root{\n${rest}`;
 
 const requiredScripts = [
+  '/BACapp/bac-training-engine.js',
   '/BACapp/quiz-arena.js',
   '/BACapp/quiz-difficulty-fix.js',
   '/BACapp/quiz-superpowers.js',
@@ -75,4 +76,4 @@ if (remainingInvalid.length > 0) {
 }
 
 writeFileSync(INDEX_PATH, html, 'utf8');
-console.log('index.html head cleaned successfully and quiz modules linked.');
+console.log('index.html head cleaned successfully and BAC training engine linked.');
