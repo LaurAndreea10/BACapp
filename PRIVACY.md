@@ -2,81 +2,89 @@
 
 Ultima actualizare: 27 aprilie 2026
 
-## 1. Despre aplicație
+## Pe scurt
 
-BAC Space este un simulator educațional pentru pregătirea examenului de Bacalaureat. Aplicația este creată pentru studiu, recapitulare și antrenament.
+BAC Space este o aplicație educațională pentru pregătirea examenului de Bacalaureat.
 
-BAC Space nu este o platformă oficială a Ministerului Educației, nu reprezintă o instituție publică și nu garantează rezultatul la examenul real.
+Aplicația salvează progresul utilizatorului **local, în browser**, nu pe un server propriu.
 
-## 2. Date colectate
+Coach-ul local folosește răspunsuri și recomandări presetate în aplicație. Nu trimite întrebările, progresul sau răspunsurile utilizatorului către servicii AI externe.
 
-BAC Space nu colectează, nu vinde și nu transmite către dezvoltator date personale introduse în aplicație.
+## Ce date se salvează local
 
-Majoritatea datelor aplicației sunt salvate local în browserul utilizatorului, prin tehnologii precum `localStorage` și cache PWA.
+BAC Space poate salva în browser informații precum:
 
-Exemple de date salvate local:
+- XP-ul și nivelul;
+- streak-ul;
+- lecțiile finalizate;
+- quiz-urile parcurse;
+- răspunsurile corecte și greșite;
+- simulările generate;
+- rapoartele orientative;
+- preferințe sau stări locale ale aplicației.
 
-- progresul la lecții;
-- XP, streak și statistici;
-- răspunsuri la quiz-uri;
-- setări de accesibilitate;
-- preferințe locale ale aplicației.
+Aceste date sunt folosite pentru ca utilizatorul să își vadă progresul și să continue pregătirea de unde a rămas.
 
-Aceste date rămân pe dispozitivul utilizatorului, cu excepția cazului în care browserul, extensiile, sistemul de operare sau utilizatorul le șterge ori le sincronizează prin servicii externe proprii.
+## Unde sunt stocate datele
 
-## 3. AI Coach
+Datele sunt salvate local în browser, prin tehnologii precum `localStorage`, cache și funcții PWA.
 
-AI Coach funcționează local, cu răspunsuri presetate.
+BAC Space nu are conturi de utilizator și nu are un server propriu care să primească progresul elevului.
 
-- nu folosește API extern;
-- nu necesită cheie API;
-- nu trimite întrebările către Anthropic, OpenAI sau alt serviciu AI;
-- nu consumă tokeni;
-- nu creează profiluri ale utilizatorilor.
+Datele pot fi șterse de utilizator din setările browserului sau prin ștergerea datelor site-ului pentru `laurandreea10.github.io`.
 
-## 4. PWA și cache offline
+## Ce NU face aplicația
 
-Aplicația folosește un service worker pentru funcții PWA, cache și acces offline.
+BAC Space nu:
 
-Browserul poate salva local fișiere precum:
+- colectează date personale printr-un formular de cont;
+- vinde date;
+- trimite progresul către dezvoltator;
+- trimite întrebările către OpenAI, Anthropic sau alte servicii AI;
+- cere cheie API;
+- creează profiluri comerciale ale utilizatorilor.
 
-- HTML;
-- CSS;
-- JavaScript;
-- iconițe;
-- manifest PWA;
-- pagină offline.
+## Coach local
 
-Acest cache este folosit doar pentru ca aplicația să se încarce mai rapid și să poată funcționa parțial offline.
+Coach-ul local este un instrument orientativ. El oferă recomandări simple pe baza acțiunilor din aplicație, de exemplu:
 
-## 5. Servicii terțe
+- dacă ai greșit la un quiz, îți recomandă să repeți o fișă;
+- dacă ai generat o simulare, îți recomandă să lucrezi pe timp limitat;
+- dacă ai introdus un scor, îți recomandă ce să repeți mai departe.
 
-Aplicația poate încărca unele resurse publice din servicii terțe, de exemplu:
+Aceste recomandări sunt generate local, în pagina aplicației, fără trimiterea datelor către un serviciu extern de inteligență artificială.
 
-- Google Fonts;
-- Leaflet prin CDN public.
+## Subiecte oficiale
 
-Aceste servicii pot procesa informații tehnice de bază ale browserului, conform propriilor politici.
+Secțiunea „Subiecte Oficiale” trimite utilizatorul către site-ul public `subiecte.edu.ro`.
 
-## 6. GitHub Pages
+BAC Space nu copiază și nu înlocuiește documentele oficiale. Pentru variante exacte, bareme și actualizări, utilizatorul trebuie să verifice sursa oficială.
+
+## Servicii terțe și găzduire
 
 Site-ul este găzduit prin GitHub Pages. GitHub poate procesa date tehnice de acces, cum ar fi adresa IP, user agent-ul și loguri de securitate, conform politicilor GitHub.
 
-## 7. Ștergerea datelor locale
+Dacă aplicația încarcă resurse publice externe, cum ar fi fonturi sau biblioteci prin CDN, acele servicii pot procesa informații tehnice de bază conform propriilor politici.
 
-Utilizatorul poate șterge datele locale prin:
+## Ștergerea datelor locale
 
-- setările browserului;
-- ștergerea datelor site-ului pentru `laurandreea10.github.io`;
-- dezinstalarea PWA-ului;
-- resetarea cache-ului/service worker-ului din DevTools.
+Utilizatorul poate șterge datele locale astfel:
 
-## 8. Limitări
+1. deschide setările browserului;
+2. caută datele site-ului pentru `laurandreea10.github.io`;
+3. șterge datele, cache-ul sau spațiul local al site-ului;
+4. dacă aplicația a fost instalată ca PWA, o poate dezinstala.
 
-BAC Space este oferit ca instrument educațional. Informațiile, simulările, quiz-urile și răspunsurile presetate trebuie folosite pentru pregătire și orientare, nu ca înlocuitor pentru programa oficială, profesor sau materiale aprobate oficial.
+După ștergere, progresul pornește din nou de la zero.
 
-## 9. Contact
+## Limitări educaționale
 
-Pentru probleme, sugestii sau raportarea unei erori, folosește secțiunea Issues din repository-ul GitHub al proiectului:
+BAC Space este un simulator educațional. Lecțiile, quiz-urile, simulările, rapoartele și recomandările Coach-ului sunt orientative.
+
+Aplicația nu înlocuiește programa oficială, profesorul, manualele aprobate sau baremele oficiale.
+
+## Contact
+
+Pentru probleme, sugestii sau raportarea unei erori, folosește secțiunea Issues din repository-ul GitHub:
 
 https://github.com/LaurAndreea10/BACapp/issues
