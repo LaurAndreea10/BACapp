@@ -1,0 +1,40 @@
+name: Link Quiz Arena
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'quiz-arena.js'
+      - 'public-polish.js'
+      - 'scripts/fix-index-head.mjs'
+      - 'scripts/verify-static-site.mjs'
+      - '.github/workflows/link-quiz-arena.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  link:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Link Quiz Arena in index
+        run: npm run fix:head
+      - name: Verify static site
+        run: npm run verify
+      - name: Commit updated index
+        run: |
+          if git diff --quiet; then
+            echo "No index changes needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Link Quiz Arena in index"
+          git push
