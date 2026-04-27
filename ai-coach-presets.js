@@ -10,252 +10,52 @@
       head.appendChild(link);
     };
 
-    ensureLink('link[rel="manifest"]', {
-      rel: 'manifest',
-      href: '/BACapp/manifest.webmanifest'
-    });
-    ensureLink('link[rel="icon"][href="/BACapp/icons/icon-192.svg"]', {
-      rel: 'icon',
-      href: '/BACapp/icons/icon-192.svg',
-      type: 'image/svg+xml'
-    });
-    ensureLink('link[rel="apple-touch-icon"]', {
-      rel: 'apple-touch-icon',
-      href: '/BACapp/icons/icon-192.svg'
-    });
+    ensureLink('link[rel="manifest"]', { rel: 'manifest', href: '/BACapp/manifest.webmanifest' });
+    ensureLink('link[rel="icon"][href="/BACapp/icons/icon-192.svg"]', { rel: 'icon', href: '/BACapp/icons/icon-192.svg', type: 'image/svg+xml' });
+    ensureLink('link[rel="apple-touch-icon"]', { rel: 'apple-touch-icon', href: '/BACapp/icons/icon-192.svg' });
 
-    if (!document.getElementById('bac-space-css-vars-fallback')) {
+    if (!document.getElementById('bac-space-emergency-style')) {
       const style = document.createElement('style');
-      style.id = 'bac-space-css-vars-fallback';
+      style.id = 'bac-space-emergency-style';
       style.textContent = `
-:root{
---bg:#06090f;--bg2:#0b0f1a;--bg3:#101626;--bg4:#161e30;
---surf:rgba(11,15,26,.88);--surf2:rgba(16,22,38,.75);
---line:rgba(255,255,255,.06);--line2:rgba(255,255,255,.11);--line3:rgba(255,255,255,.18);
---gold:#e4a84c;--gold2:#f2c978;--gold-d:rgba(228,168,76,.08);--gold-g:rgba(228,168,76,.18);
---teal:#3ccfbe;--teal-d:rgba(60,207,190,.08);
---rose:#e86060;--rose-d:rgba(232,96,96,.08);
---violet:#8b6cf0;--violet-d:rgba(139,108,240,.08);
---green:#50c878;--green-d:rgba(80,200,120,.08);
---sky:#5898f0;--sky-d:rgba(88,152,240,.08);
---peach:#f09860;--peach-d:rgba(240,152,96,.08);
---txt:#e0e4f0;--txt2:#7a84a0;--txt3:#454d66;
---r:16px;--rs:10px;--rr:999px;
---sh:0 6px 28px rgba(0,0,0,.35);
---t:.18s cubic-bezier(.4,0,.2,1);
---sbw:252px;
-}`;
+:root{--bg:#06090f;--bg2:#0b0f1a;--bg3:#101626;--bg4:#161e30;--surf:rgba(11,15,26,.92);--surf2:rgba(16,22,38,.8);--line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.16);--gold:#e4a84c;--gold2:#f2c978;--gold-d:rgba(228,168,76,.1);--gold-g:rgba(228,168,76,.2);--teal:#3ccfbe;--teal-d:rgba(60,207,190,.1);--rose:#e86060;--rose-d:rgba(232,96,96,.1);--violet:#8b6cf0;--violet-d:rgba(139,108,240,.1);--green:#50c878;--green-d:rgba(80,200,120,.1);--sky:#5898f0;--sky-d:rgba(88,152,240,.1);--peach:#f09860;--peach-d:rgba(240,152,96,.1);--txt:#e0e4f0;--txt2:#7a84a0;--txt3:#454d66;--r:16px;--rs:10px;--rr:999px;--sh:0 6px 28px rgba(0,0,0,.35);--t:.18s cubic-bezier(.4,0,.2,1);--sbw:252px}
+*,*::before,*::after{box-sizing:border-box}html{font-size:14.5px;scroll-behavior:smooth}body{margin:0!important;font-family:'Manrope',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif!important;background:radial-gradient(ellipse 55% 40% at 80% 0%,rgba(228,168,76,.04),transparent 55%),radial-gradient(ellipse 45% 45% at 10% 95%,rgba(60,207,190,.03),transparent 55%),var(--bg)!important;color:var(--txt)!important;min-height:100vh!important;overflow-x:hidden!important;font-weight:400!important}button,input,textarea,select{font:inherit;border:none;outline:none}.sb{position:fixed!important;top:0!important;left:0!important;bottom:0!important;width:var(--sbw)!important;background:var(--surf)!important;border-right:1px solid var(--line)!important;display:flex!important;flex-direction:column!important;z-index:100!important;backdrop-filter:blur(24px)!important}.sb-logo{padding:20px 16px 14px!important;border-bottom:1px solid var(--line)!important}.sb-logo h1{margin:0!important;font-family:'Fraunces',Georgia,serif!important;font-size:1.45rem!important;font-weight:700!important;color:var(--gold)!important;font-style:italic!important;letter-spacing:-.03em!important;line-height:1!important}.sb-logo small{font-family:'IBM Plex Mono',monospace!important;font-size:.52rem!important;color:var(--txt3)!important;text-transform:uppercase!important;letter-spacing:2.5px!important;display:block!important;margin-top:5px!important}.sb-nav{flex:1!important;padding:8px 6px!important;overflow-y:auto!important}.sb-lbl{font-size:.5rem!important;text-transform:uppercase!important;letter-spacing:3px!important;color:var(--txt3)!important;padding:14px 10px 5px!important;font-family:'IBM Plex Mono',monospace!important}.ni{display:flex!important;align-items:center!important;gap:9px!important;padding:8px 10px!important;border-radius:var(--rs)!important;cursor:pointer!important;color:var(--txt2)!important;font-size:.8rem!important;position:relative!important;margin-bottom:1px!important;transition:all var(--t)!important}.ni .ic{font-size:.85rem!important;width:18px!important;text-align:center!important}.ni:hover{background:rgba(255,255,255,.04)!important;color:var(--txt)!important}.ni.act{background:var(--gold-d)!important;color:var(--gold)!important;font-weight:600!important}.ni.act::before{content:''!important;position:absolute!important;left:0!important;top:25%!important;width:2.5px!important;height:50%!important;background:var(--gold)!important;border-radius:0 2px 2px 0!important}.sb-ft{padding:12px!important;border-top:1px solid var(--line)!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px!important}.sb-chip{background:rgba(255,255,255,.03)!important;border:1px solid var(--line)!important;border-radius:var(--rs)!important;padding:8px!important;text-align:center!important}.sb-chip .v{font-family:'Fraunces',Georgia,serif!important;font-size:1.1rem!important;color:var(--gold)!important;display:block!important;font-weight:700!important}.sb-chip .l{font-size:.5rem!important;color:var(--txt3)!important;text-transform:uppercase!important;letter-spacing:1.5px!important;font-family:'IBM Plex Mono',monospace!important}.mn{margin-left:var(--sbw)!important;min-height:100vh!important;position:relative!important;z-index:1!important}.tb{position:sticky!important;top:0!important;background:rgba(6,9,15,.88)!important;backdrop-filter:blur(24px)!important;border-bottom:1px solid var(--line)!important;padding:10px 20px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;z-index:50!important}.tb-t{font-family:'Fraunces',Georgia,serif!important;font-size:1rem!important;color:var(--txt)!important;font-style:italic!important}.tb-a{display:flex!important;align-items:center!important;gap:6px!important}.strk{display:flex!important;align-items:center!important;gap:4px!important;background:var(--gold-d)!important;border:1px solid rgba(228,168,76,.15)!important;border-radius:var(--rr)!important;padding:4px 10px!important;font-family:'IBM Plex Mono',monospace!important;font-size:.68rem!important;color:var(--gold)!important;cursor:pointer!important}.ib,.hm{width:32px!important;height:32px!important;border-radius:var(--rs)!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.03)!important;color:var(--txt2)!important;cursor:pointer!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:.85rem!important}.hm{display:none!important}.pn{display:none!important;padding:20px!important}.pn.act{display:block!important}.cd{background:var(--surf)!important;border:1px solid var(--line)!important;border-radius:var(--r)!important;padding:16px!important;backdrop-filter:blur(10px)!important}.ct{font-family:'Fraunces',Georgia,serif!important;font-size:.95rem!important;color:var(--txt)!important;margin-bottom:10px!important;display:flex!important;align-items:center!important;gap:7px!important;font-style:italic!important;font-weight:500!important}.dt{width:5px!important;height:5px!important;border-radius:50%!important;background:var(--gold)!important;flex-shrink:0!important}.g2{display:grid!important;grid-template-columns:1fr 1fr!important;gap:12px!important}.ga{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(155px,1fr))!important;gap:10px!important}.hd{display:flex!important;align-items:baseline!important;gap:8px!important;margin-bottom:16px!important}.hd h2{font-family:'Fraunces',Georgia,serif!important;font-size:1.4rem!important;font-weight:700!important;color:var(--txt)!important;font-style:italic!important;letter-spacing:-.02em!important;margin:0!important}.hd .sub{font-size:.65rem!important;color:var(--txt3)!important;font-family:'IBM Plex Mono',monospace!important}.bt{padding:7px 14px!important;border-radius:var(--rs)!important;border:1px solid var(--line)!important;background:rgba(255,255,255,.04)!important;color:var(--txt2)!important;font-size:.75rem!important;cursor:pointer!important;font-weight:500!important}.bt:hover{color:var(--txt)!important;border-color:var(--line2)!important;background:rgba(255,255,255,.07)!important}.bt-g{background:var(--gold-d)!important;border-color:rgba(228,168,76,.18)!important;color:var(--gold)!important}.bt-c{background:var(--teal-d)!important;border-color:rgba(60,207,190,.15)!important;color:var(--teal)!important}.bt-r{background:var(--rose-d)!important;border-color:rgba(232,96,96,.15)!important;color:var(--rose)!important}.bt-p{background:linear-gradient(135deg,var(--gold),#d08030)!important;border:none!important;color:#080b14!important;font-weight:700!important}.bg{display:inline-flex!important;align-items:center!important;padding:2px 7px!important;border-radius:var(--rr)!important;font-size:.58rem!important;font-family:'IBM Plex Mono',monospace!important;font-weight:500!important}.bg-g{background:var(--gold-d)!important;color:var(--gold)!important}.bg-c{background:var(--teal-d)!important;color:var(--teal)!important}.bg-r{background:var(--rose-d)!important;color:var(--rose)!important}.bg-v{background:var(--violet-d)!important;color:var(--violet)!important}.bg-gr{background:var(--green-d)!important;color:var(--green)!important}.bg-s{background:var(--sky-d)!important;color:var(--sky)!important}input,textarea,select{background:rgba(255,255,255,.04)!important;border:1px solid var(--line)!important;border-radius:var(--rs)!important;color:var(--txt)!important;padding:8px 12px!important;font-size:.82rem!important;width:100%!important}label{font-size:.58rem!important;color:var(--txt3)!important;display:block!important;margin-bottom:3px!important;font-family:'IBM Plex Mono',monospace!important;text-transform:uppercase!important;letter-spacing:1.5px!important}.pb{height:4px!important;background:rgba(255,255,255,.05)!important;border-radius:var(--rr)!important;overflow:hidden!important}.pf{height:100%!important;background:linear-gradient(90deg,var(--gold),var(--gold2))!important;border-radius:var(--rr)!important}.dv{height:1px!important;background:var(--line)!important;margin:12px 0!important}.sc{background:var(--surf)!important;border:1px solid var(--line)!important;border-radius:var(--r)!important;padding:14px!important;cursor:pointer!important;position:relative!important;overflow:hidden!important}.sc .si{font-size:1.4rem!important;margin-bottom:5px!important}.sc .sn{font-family:'Fraunces',Georgia,serif!important;font-size:.88rem!important;color:var(--txt)!important;font-style:italic!important;margin-bottom:2px!important}.sc .sx{font-size:.58rem!important;color:var(--txt3)!important;font-family:'IBM Plex Mono',monospace!important}.qo{padding:11px 14px!important;border:1px solid var(--line)!important;border-radius:var(--rs)!important;cursor:pointer!important;font-size:.82rem!important;color:var(--txt2)!important;background:rgba(255,255,255,.03)!important;margin-bottom:5px!important}.qo.ok{background:rgba(60,207,190,.08)!important;border-color:rgba(60,207,190,.3)!important;color:var(--teal)!important}.qo.no{background:rgba(232,96,96,.08)!important;border-color:rgba(232,96,96,.3)!important;color:var(--rose)!important}.am{display:flex!important;flex-direction:column!important;gap:2px!important;max-height:300px!important;overflow-y:auto!important;padding-right:3px!important}.bb{padding:9px 13px!important;border-radius:12px!important;font-size:.8rem!important;line-height:1.7!important;margin-bottom:5px!important;max-width:88%!important}.bb.bot{background:rgba(255,255,255,.04)!important;border:1px solid var(--line)!important;color:var(--txt)!important;align-self:flex-start!important;border-bottom-left-radius:3px!important}.bb.usr{background:var(--gold-d)!important;border:1px solid rgba(228,168,76,.15)!important;color:var(--gold)!important;align-self:flex-end!important;border-bottom-right-radius:3px!important;margin-left:auto!important}.ar{display:flex!important;gap:6px!important;margin-top:8px!important}.ar textarea{flex:1!important;resize:none!important;height:40px!important}.mc{border-radius:var(--r)!important;overflow:hidden!important;border:1px solid var(--line)!important;height:380px!important}.av,.gt,.ge,.cs{background:rgba(255,255,255,.03)!important;border:1px solid var(--line)!important;border-radius:var(--rs)!important;padding:12px!important;color:var(--txt2)!important}.tst{position:fixed!important;bottom:18px!important;right:18px!important;background:var(--surf)!important;border:1px solid rgba(228,168,76,.2)!important;color:var(--gold)!important;padding:11px 16px!important;border-radius:var(--r)!important;font-size:.8rem!important;z-index:9999!important}@media(max-width:768px){.sb{transform:translateX(-100%)!important}.sb.open{transform:translateX(0)!important;box-shadow:0 0 40px rgba(0,0,0,.6)!important}.mn{margin-left:0!important}.pn{padding:12px!important}.g2{grid-template-columns:1fr!important}.tb{padding:9px 12px!important}.hm{display:flex!important}.mc{height:260px!important}.ov.show{display:block!important}}`;
       head.appendChild(style);
     }
 
     if ('serviceWorker' in navigator && !window.__BAC_SPACE_SW_REGISTERED__) {
       window.__BAC_SPACE_SW_REGISTERED__ = true;
-      window.addEventListener('load', () => {
-        navigator.serviceWorker
-          .register('/BACapp/service-worker.js', { scope: '/BACapp/' })
-          .catch(error => console.warn('BAC Space service worker registration failed:', error));
-      });
+      window.addEventListener('load', () => navigator.serviceWorker.register('/BACapp/service-worker.js', { scope: '/BACapp/' }).catch(error => console.warn('BAC Space service worker registration failed:', error)));
     }
   }
 
   ensureHeadIntegration();
 
   const PRESET_ANSWERS = [
-    {
-      triggers: ['plan', 'program', 'azi', 'invăț', 'invat', 'studiu', 'orar'],
-      title: 'Plan rapid pentru azi',
-      answer: `Îți recomand un plan scurt și realist:\n\n1. 25 min: o lecție nouă sau recapitulare la materia principală.\n2. 5 min: pauză fără telefon.\n3. 20 min: 8-10 întrebări de quiz.\n4. 10 min: notează 3 greșeli și corectează-le.\n\nDacă ai puțin timp, fă doar un Pomodoro de 25 min și un mini-quiz.`
-    },
-    {
-      triggers: ['greșeli', 'greseli', 'gresit', 'quiz', 'întrebări', 'intrebari', 'test'],
-      title: 'Cum repari greșelile din quiz',
-      answer: `Folosește regula 3 pași:\n\n1. Scrie pe scurt de ce răspunsul tău a fost greșit.\n2. Repetă teoria exactă din spatele întrebării.\n3. Refă întrebarea după 24 de ore.\n\nDacă greșești aceeași idee de 2 ori, transform-o într-o fișă rapidă.`
-    },
-    {
-      triggers: ['eseu', 'română', 'romana', 'comentariu', 'argumentare', 'operă', 'opera'],
-      title: 'Structură pentru eseu la română',
-      answer: `Structură sigură pentru eseu:\n\n1. Introducere: autor, operă, curent/perioadă.\n2. Încadrare: 2 trăsături ale curentului sau speciei.\n3. Temă: formulare clară + 2 scene/secvențe relevante.\n4. Elemente de construcție: titlu, conflict, perspectivă, personaje, limbaj.\n5. Concluzie: reia ideea centrală, fără informații noi.\n\nÎnainte de examen, memorează scheme, nu eseuri întregi.`
-    },
-    {
-      triggers: ['simulare', 'bac', 'examen', 'timp', 'cronometru'],
-      title: 'Strategie pentru simulare BAC',
-      answer: `La simulare, lucrează în 3 ture:\n\n1. Prima tură: rezolvă ce știi sigur.\n2. A doua tură: revino la exercițiile medii.\n3. Ultima tură: verifică cerințele, calculele și exprimarea.\n\nNu sta blocat mai mult de 5-7 minute pe o cerință. Marcheaz-o și mergi mai departe.`
-    },
-    {
-      triggers: ['motivație', 'motivatie', 'stres', 'panică', 'panica', 'obosit', 'nu pot'],
-      title: 'Când ești blocat sau stresat',
-      answer: `Începe foarte mic:\n\n1. Alege o singură lecție.\n2. Pune timer 10 minute.\n3. Scrie doar ideile-cheie.\n4. După 10 minute decizi dacă mai continui.\n\nScopul nu este să ai chef, ci să pornești. Motivația apare după primele minute de lucru.`
-    },
-    {
-      triggers: ['recapitulare', 'repet', 'memorez', 'uit', 'spaced'],
-      title: 'Metodă de recapitulare',
-      answer: `Folosește recapitularea 1-3-7-14-30:\n\n• după 1 zi: refaci ideile principale;\n• după 3 zile: quiz scurt;\n• după 7 zile: explici lecția cu voce tare;\n• după 14 zile: rezolvi exerciții;\n• după 30 zile: simulare sau test mixt.\n\nNu reciti pasiv. Încearcă să reproduci din memorie.`
-    }
+    { triggers: ['plan', 'program', 'azi', 'invăț', 'invat', 'studiu', 'orar'], answer: `Îți recomand un plan scurt și realist:\n\n1. 25 min: o lecție nouă sau recapitulare la materia principală.\n2. 5 min: pauză fără telefon.\n3. 20 min: 8-10 întrebări de quiz.\n4. 10 min: notează 3 greșeli și corectează-le.\n\nDacă ai puțin timp, fă doar un Pomodoro de 25 min și un mini-quiz.` },
+    { triggers: ['greșeli', 'greseli', 'gresit', 'quiz', 'întrebări', 'intrebari', 'test'], answer: `Folosește regula 3 pași:\n\n1. Scrie pe scurt de ce răspunsul tău a fost greșit.\n2. Repetă teoria exactă din spatele întrebării.\n3. Refă întrebarea după 24 de ore.\n\nDacă greșești aceeași idee de 2 ori, transform-o într-o fișă rapidă.` },
+    { triggers: ['eseu', 'română', 'romana', 'comentariu', 'argumentare', 'operă', 'opera'], answer: `Structură sigură pentru eseu:\n\n1. Introducere: autor, operă, curent/perioadă.\n2. Încadrare: 2 trăsături ale curentului sau speciei.\n3. Temă: formulare clară + 2 scene/secvențe relevante.\n4. Elemente de construcție: titlu, conflict, perspectivă, personaje, limbaj.\n5. Concluzie: reia ideea centrală, fără informații noi.\n\nÎnainte de examen, memorează scheme, nu eseuri întregi.` },
+    { triggers: ['simulare', 'bac', 'examen', 'timp', 'cronometru'], answer: `La simulare, lucrează în 3 ture:\n\n1. Prima tură: rezolvă ce știi sigur.\n2. A doua tură: revino la exercițiile medii.\n3. Ultima tură: verifică cerințele, calculele și exprimarea.\n\nNu sta blocat mai mult de 5-7 minute pe o cerință. Marcheaz-o și mergi mai departe.` },
+    { triggers: ['motivație', 'motivatie', 'stres', 'panică', 'panica', 'obosit', 'nu pot'], answer: `Începe foarte mic:\n\n1. Alege o singură lecție.\n2. Pune timer 10 minute.\n3. Scrie doar ideile-cheie.\n4. După 10 minute decizi dacă mai continui.\n\nScopul nu este să ai chef, ci să pornești. Motivația apare după primele minute de lucru.` },
+    { triggers: ['recapitulare', 'repet', 'memorez', 'uit', 'spaced'], answer: `Folosește recapitularea 1-3-7-14-30:\n\n• după 1 zi: refaci ideile principale;\n• după 3 zile: quiz scurt;\n• după 7 zile: explici lecția cu voce tare;\n• după 14 zile: rezolvi exerciții;\n• după 30 zile: simulare sau test mixt.\n\nNu reciti pasiv. Încearcă să reproduci din memorie.` }
   ];
-
   const DEFAULT_ANSWER = `Pot răspunde momentan cu sfaturi presetate. Alege una dintre întrebările sugerate sau scrie despre: plan de studiu, greșeli la quiz, eseu la română, simulare BAC, stres/motivație sau recapitulare.`;
   let lastCoachQuestion = '';
-
-  function normalize(text) {
-    return String(text || '')
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .trim();
-  }
-
-  function getPresetAnswer(question) {
-    const q = normalize(question || lastCoachQuestion);
-    const found = PRESET_ANSWERS.find(item => item.triggers.some(trigger => q.includes(normalize(trigger))));
-    return found ? found.answer : DEFAULT_ANSWER;
-  }
-
-  function appendCoachBubble(text, type = 'bot') {
-    const chat = document.getElementById('am') || document.querySelector('.am');
-    if (!chat) return false;
-    const bubble = document.createElement('div');
-    bubble.className = `bb ${type}`;
-    bubble.textContent = text;
-    chat.appendChild(bubble);
-    chat.scrollTop = chat.scrollHeight;
-    return true;
-  }
-
-  function getCoachInput() {
-    return document.getElementById('aii') || document.getElementById('aiInput') || document.querySelector('#p-ai textarea, #p-ai input, .ar textarea');
-  }
-
-  function rememberQuestion(question) {
-    const clean = String(question || '').trim();
-    if (clean) lastCoachQuestion = clean;
-    return clean;
-  }
-
-  function answerSuggestedQuestion(question) {
-    const clean = rememberQuestion(question);
-    if (clean) appendCoachBubble(clean, 'usr');
-    appendCoachBubble(getPresetAnswer(clean), 'bot');
-  }
-
-  function fallbackAsk() {
-    const input = getCoachInput();
-    const question = rememberQuestion(input && input.value ? input.value : '');
-    if (!question) return;
-    appendCoachBubble(question, 'usr');
-    appendCoachBubble(getPresetAnswer(question), 'bot');
-    input.value = '';
-  }
-
-  function anthropicPresetPayload(question) {
-    return {
-      id: `preset-${Date.now()}`,
-      type: 'message',
-      role: 'assistant',
-      model: 'bac-space-preset-coach',
-      content: [{ type: 'text', text: getPresetAnswer(question) }],
-      stop_reason: 'end_turn',
-      stop_sequence: null,
-      usage: { input_tokens: 0, output_tokens: 0 }
-    };
-  }
-
-  function getQuestionFromAnthropicBody(body) {
-    try {
-      const payload = typeof body === 'string' ? JSON.parse(body) : body;
-      const messages = Array.isArray(payload?.messages) ? payload.messages : [];
-      const lastUser = [...messages].reverse().find(message => message.role === 'user');
-      const content = lastUser?.content;
-      if (typeof content === 'string') return rememberQuestion(content);
-      if (Array.isArray(content)) {
-        const text = content.map(part => typeof part === 'string' ? part : part?.text || '').join(' ').trim();
-        return rememberQuestion(text);
-      }
-    } catch (error) {
-      console.warn('Could not parse AI Coach request body; using generic preset answer.', error);
-    }
-    return lastCoachQuestion;
-  }
-
-  function hideAnthropicSettings() {
-    const labels = ['anthropic api key', 'api key', 'model', 'șterge', 'sterge', 'nu ai setat încă o cheie', 'nu ai setat inca o cheie'];
-    const aiPanel = document.getElementById('p-ai') || document.body;
-    const candidates = Array.from(aiPanel.querySelectorAll('label, input, select, button, small, p, div'));
-
-    candidates.forEach(node => {
-      const text = normalize(node.textContent || node.placeholder || node.value || '');
-      const idName = normalize(`${node.id || ''} ${node.name || ''} ${node.className || ''}`);
-      const isAnthropicControl = labels.some(label => text.includes(normalize(label)) || idName.includes(normalize(label.replaceAll(' ', ''))));
-      if (!isAnthropicControl) return;
-
-      const card = node.closest('.cd, .gt, .ge, .av, .cs') || node.parentElement;
-      if (card && card !== aiPanel && card !== document.body) {
-        card.style.display = 'none';
-        card.setAttribute('aria-hidden', 'true');
-      } else {
-        node.style.display = 'none';
-        node.setAttribute('aria-hidden', 'true');
-      }
-    });
-
-    const noteId = 'local-ai-coach-note';
-    if (document.getElementById(noteId) || !aiPanel || aiPanel === document.body) return;
-    const note = document.createElement('div');
-    note.id = noteId;
-    note.className = 'cs';
-    note.style.marginBottom = '10px';
-    note.innerHTML = '🤖 AI Coach rulează local, cu răspunsuri presetate. Nu folosește Anthropic, nu consumă tokeni și nu cere API Key.';
-    aiPanel.prepend(note);
-  }
-
+  function normalize(text) { return String(text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim(); }
+  function getPresetAnswer(question) { const q = normalize(question || lastCoachQuestion); const found = PRESET_ANSWERS.find(item => item.triggers.some(trigger => q.includes(normalize(trigger)))); return found ? found.answer : DEFAULT_ANSWER; }
+  function appendCoachBubble(text, type = 'bot') { const chat = document.getElementById('am') || document.querySelector('.am'); if (!chat) return false; const bubble = document.createElement('div'); bubble.className = `bb ${type}`; bubble.textContent = text; chat.appendChild(bubble); chat.scrollTop = chat.scrollHeight; return true; }
+  function getCoachInput() { return document.getElementById('aii') || document.getElementById('aiInput') || document.querySelector('#p-ai textarea, #p-ai input, .ar textarea'); }
+  function rememberQuestion(question) { const clean = String(question || '').trim(); if (clean) lastCoachQuestion = clean; return clean; }
+  function answerSuggestedQuestion(question) { const clean = rememberQuestion(question); if (clean) appendCoachBubble(clean, 'usr'); appendCoachBubble(getPresetAnswer(clean), 'bot'); }
+  function fallbackAsk() { const input = getCoachInput(); const question = rememberQuestion(input && input.value ? input.value : ''); if (!question) return; appendCoachBubble(question, 'usr'); appendCoachBubble(getPresetAnswer(question), 'bot'); input.value = ''; }
+  function anthropicPresetPayload(question) { return { id: `preset-${Date.now()}`, type: 'message', role: 'assistant', model: 'bac-space-preset-coach', content: [{ type: 'text', text: getPresetAnswer(question) }], stop_reason: 'end_turn', stop_sequence: null, usage: { input_tokens: 0, output_tokens: 0 } }; }
+  function getQuestionFromAnthropicBody(body) { try { const payload = typeof body === 'string' ? JSON.parse(body) : body; const messages = Array.isArray(payload?.messages) ? payload.messages : []; const lastUser = [...messages].reverse().find(message => message.role === 'user'); const content = lastUser?.content; if (typeof content === 'string') return rememberQuestion(content); if (Array.isArray(content)) return rememberQuestion(content.map(part => typeof part === 'string' ? part : part?.text || '').join(' ').trim()); } catch (error) { console.warn('Could not parse AI Coach request body; using generic preset answer.', error); } return lastCoachQuestion; }
+  function hideAnthropicSettings() { const labels = ['anthropic api key', 'api key', 'model', 'șterge', 'sterge', 'nu ai setat încă o cheie', 'nu ai setat inca o cheie']; const aiPanel = document.getElementById('p-ai') || document.body; Array.from(aiPanel.querySelectorAll('label, input, select, button, small, p, div')).forEach(node => { const text = normalize(node.textContent || node.placeholder || node.value || ''); const idName = normalize(`${node.id || ''} ${node.name || ''} ${node.className || ''}`); const match = labels.some(label => text.includes(normalize(label)) || idName.includes(normalize(label.replaceAll(' ', '')))); if (!match) return; const card = node.closest('.cd, .gt, .ge, .av, .cs') || node.parentElement; if (card && card !== aiPanel && card !== document.body) { card.style.display = 'none'; card.setAttribute('aria-hidden', 'true'); } else { node.style.display = 'none'; node.setAttribute('aria-hidden', 'true'); } }); const noteId = 'local-ai-coach-note'; if (document.getElementById(noteId) || !aiPanel || aiPanel === document.body) return; const note = document.createElement('div'); note.id = noteId; note.className = 'cs'; note.style.marginBottom = '10px'; note.innerHTML = '🤖 AI Coach rulează local, cu răspunsuri presetate. Nu folosește Anthropic, nu consumă tokeni și nu cere API Key.'; aiPanel.prepend(note); }
   const nativeFetch = window.fetch ? window.fetch.bind(window) : null;
-  if (nativeFetch) {
-    window.fetch = function patchedFetch(input, init = {}) {
-      const url = typeof input === 'string' ? input : input?.url;
-      if (url && url.includes('api.anthropic.com/v1/messages')) {
-        const question = getQuestionFromAnthropicBody(init?.body);
-        return Promise.resolve(new Response(JSON.stringify(anthropicPresetPayload(question)), {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' }
-        }));
-      }
-      return nativeFetch(input, init);
-    };
-  }
-
-  window.BAC_AI_COACH_PRESETS = {
-    answers: PRESET_ANSWERS,
-    getPresetAnswer,
-    answerSuggestedQuestion,
-    hideAnthropicSettings,
-    ensureHeadIntegration
-  };
-
-  ['askAI', 'aiAsk', 'sendAI', 'sendMsg'].forEach(name => {
-    const original = window[name];
-    window[name] = function patchedCoachAsk(...args) {
-      try {
-        if (typeof original === 'function') return original.apply(this, args);
-      } catch (error) {
-        console.warn('AI Coach live answer failed; using preset fallback.', error);
-      }
-      return fallbackAsk();
-    };
-  });
-
-  document.addEventListener('click', event => {
-    const target = event.target.closest('[data-ai-question], [data-coach-question], .ai-suggestion, .coach-suggestion');
-    if (!target) return;
-    const question = target.dataset.aiQuestion || target.dataset.coachQuestion || target.textContent.trim();
-    if (!question) return;
-    event.preventDefault();
-    answerSuggestedQuestion(question);
-  });
-
-  document.addEventListener('DOMContentLoaded', () => {
-    ensureHeadIntegration();
-    hideAnthropicSettings();
-  });
-  setTimeout(ensureHeadIntegration, 300);
-  setTimeout(hideAnthropicSettings, 300);
-  setTimeout(hideAnthropicSettings, 1200);
+  if (nativeFetch) window.fetch = function patchedFetch(input, init = {}) { const url = typeof input === 'string' ? input : input?.url; if (url && url.includes('api.anthropic.com/v1/messages')) { const question = getQuestionFromAnthropicBody(init?.body); return Promise.resolve(new Response(JSON.stringify(anthropicPresetPayload(question)), { status: 200, headers: { 'Content-Type': 'application/json' } })); } return nativeFetch(input, init); };
+  window.BAC_AI_COACH_PRESETS = { answers: PRESET_ANSWERS, getPresetAnswer, answerSuggestedQuestion, hideAnthropicSettings, ensureHeadIntegration };
+  ['askAI', 'aiAsk', 'sendAI', 'sendMsg'].forEach(name => { const original = window[name]; window[name] = function patchedCoachAsk(...args) { try { if (typeof original === 'function') return original.apply(this, args); } catch (error) { console.warn('AI Coach live answer failed; using preset fallback.', error); } return fallbackAsk(); }; });
+  document.addEventListener('click', event => { const target = event.target.closest('[data-ai-question], [data-coach-question], .ai-suggestion, .coach-suggestion'); if (!target) return; const question = target.dataset.aiQuestion || target.dataset.coachQuestion || target.textContent.trim(); if (!question) return; event.preventDefault(); answerSuggestedQuestion(question); });
+  document.addEventListener('DOMContentLoaded', () => { ensureHeadIntegration(); hideAnthropicSettings(); });
+  setTimeout(ensureHeadIntegration, 300); setTimeout(hideAnthropicSettings, 300); setTimeout(hideAnthropicSettings, 1200);
 })();
