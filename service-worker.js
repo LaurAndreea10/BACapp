@@ -1,16 +1,18 @@
-const CACHE_VERSION = 'bac-space-v5-quality-mobile-content';
+const CACHE_VERSION = 'bac-space-v6-legal-privacy';
 const APP_SCOPE = '/BACapp/';
 const APP_SHELL = [
   APP_SCOPE,
   `${APP_SCOPE}index.html`,
   `${APP_SCOPE}offline.html`,
   `${APP_SCOPE}404.html`,
+  `${APP_SCOPE}PRIVACY.md`,
   `${APP_SCOPE}manifest.webmanifest`,
   `${APP_SCOPE}styles.css`,
   `${APP_SCOPE}accessibility.css`,
   `${APP_SCOPE}accessibility.js`,
   `${APP_SCOPE}ai-coach-presets.js`,
   `${APP_SCOPE}ai-coach-extra-presets.js`,
+  `${APP_SCOPE}legal-notice.js`,
   `${APP_SCOPE}pwa-register.js`,
   `${APP_SCOPE}icons/icon-192.svg`,
   `${APP_SCOPE}icons/icon-512.svg`,
@@ -40,7 +42,7 @@ self.addEventListener('fetch', event => {
   if (request.method !== 'GET') return;
 
   const url = new URL(request.url);
-  const isLocalAsset = url.pathname.startsWith(APP_SCOPE) && /\.(?:js|css|webmanifest)$/.test(url.pathname);
+  const isLocalAsset = url.pathname.startsWith(APP_SCOPE) && /\.(?:js|css|webmanifest|md)$/.test(url.pathname);
 
   if (request.mode === 'navigate') {
     event.respondWith(
