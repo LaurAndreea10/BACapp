@@ -24,6 +24,23 @@ Aplicația este gândită ca un spațiu de învățare structurat, motivant și 
 
 ---
 
+## 📸 Capturi recomandate
+
+Adaugă capturi reale în repository, de preferat în `docs/screenshots/`, apoi le poți include aici.
+
+Capturi utile pentru prezentare:
+
+- `learning-paths.png` — secțiunea **Alege traseul tău**;
+- `romanian-flow.png` — flux complet Română;
+- `human-flow.png` — flux Istorie + Geografie;
+- `science-flow.png` — flux Matematică + Științe;
+- `bac-pack.png` — simulare/raport BAC Pack;
+- `ai-coach.png` — AI Coach cu sugestii grupate;
+- `accessibility-panel.png` — panoul ♿;
+- `privacy-banner.png` — banner simulator + confidențialitate.
+
+---
+
 ## 🚀 Funcționalități principale
 
 - 🧭 **Alege traseul tău** cu 3 carduri principale: Română, Uman, Real/Științe
@@ -186,6 +203,35 @@ AI Coach funcționează cu răspunsuri presetate, direct în browser.
 
 ---
 
+## 🧪 Checklist final de lansare
+
+Checklist-ul complet este în [`LAUNCH_CHECKLIST.md`](./LAUNCH_CHECKLIST.md).
+
+Testează obligatoriu:
+
+- **Alege traseul tău**;
+- flux Română;
+- flux Istorie + Geografie;
+- flux Matematică + Științe;
+- BAC Pack;
+- AI Coach;
+- panoul ♿;
+- bannerul simulator/confidențialitate;
+- PWA/cache/offline;
+- layout mobil.
+
+---
+
+## 🎤 Ghid de prezentare
+
+Ghidul complet este în [`PRESENTATION_GUIDE.md`](./PRESENTATION_GUIDE.md).
+
+Pitch scurt:
+
+> BAC Space este un simulator educațional PWA pentru pregătirea Bacalaureatului. Organizează învățarea pe trasee clare — Română, Uman și Real/Științe — cu lecții, quiz-uri, XP și progres local. Include AI Coach local, simulare BAC, raport după simulare, accesibilitate și politică de confidențialitate.
+
+---
+
 ## 🛠️ Tehnologii
 
 - HTML
@@ -270,25 +316,6 @@ Site-ul este publicat prin **GitHub Pages**:
 https://laurandreea10.github.io/BACapp/
 
 După modificări în `main`, GitHub Pages poate avea nevoie de câteva minute pentru publicare.
-
----
-
-## 🧪 Testare manuală recomandată
-
-- hard refresh după modificări mari
-- test pe mobil
-- test secțiunea „Alege traseul tău”
-- test banner simulator/confidențialitate
-- test link `PRIVACY.md`
-- test flux Română: onboarding, lecție, quiz, XP, progres
-- test flux Istorie + Geografie: plan, lecții, quiz, fișe, progres
-- test flux Matematică + Științe: plan, lecții, quiz, fișe, progres
-- test BAC Pack: lecții, simulare, raport, reset progres
-- test AI Coach cu întrebări sugerate
-- test panou ♿
-- test `Citește textul`
-- test PWA install/offline
-- test navigare doar cu tastatura
 
 ---
 

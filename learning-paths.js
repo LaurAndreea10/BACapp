@@ -2,17 +2,17 @@
   const PATHS = [
     {
       id: 'romana', icon: '🇷🇴', title: 'Română', target: 'ro-flow', cta: 'Începe Română',
-      text: 'Pentru toți elevii: eseu, poezie, argumentativ, quiz și progres.',
-      items: ['Start 7 zile', '3 lecții reale', 'Quiz + XP', 'Eseuri, fișe, glosar']
+      text: 'Eseu, poezie, argumentativ, quiz și progres.',
+      items: ['Plan 7 zile', 'Lecții reale', 'Quiz + XP', 'Eseuri și glosar']
     },
     {
       id: 'uman', icon: '🏛️', title: 'Uman', target: 'hg-flow', cta: 'Începe Uman',
-      text: 'Pentru Istorie + Geografie: cronologie, hartă, climă, Europa și recapitulare.',
-      items: ['Plan 7 zile', '3 lecții Istorie', '3 lecții Geografie', 'Quiz + fișe rapide']
+      text: 'Istorie + Geografie cu recapitulare ghidată.',
+      items: ['Plan 7 zile', 'Istorie', 'Geografie', 'Quiz + fișe']
     },
     {
       id: 'real', icon: '🔬', title: 'Real / Științe', target: 'ms-flow', cta: 'Începe Real',
-      text: 'Pentru Matematică, Biologie, Chimie și Fizică, cu pași de rezolvare.',
+      text: 'Matematică și științe, explicate pe pași.',
       items: ['Plan 7 zile', 'Matematică', 'Bio/Chimie/Fizică', 'Quiz + formule']
     }
   ];
@@ -36,7 +36,7 @@
       <div class="lp-head">
         <div>
           <div class="lp-title">Alege traseul tău</div>
-          <div class="lp-sub">În loc să parcurgi toate modulele deodată, începe cu profilul potrivit. Fiecare traseu are lecții, quiz, XP și progres local.</div>
+          <div class="lp-sub">Începe cu profilul potrivit. Fiecare traseu are lecții, quiz, XP și progres local.</div>
         </div>
         <div class="lp-badge">Start rapid</div>
       </div>
@@ -56,9 +56,9 @@
         <div><strong>1</strong>Alege profilul</div>
         <div><strong>2</strong>Parcurge lecția</div>
         <div><strong>3</strong>Fă quiz-ul</div>
-        <div><strong>4</strong>Urmărește progresul</div>
+        <div><strong>4</strong>Vezi progresul</div>
       </div>
-      <div class="lp-tip">Sfat: începe cu un singur traseu pe zi. După ce termini quiz-ul, verifică tabul „Progres”.</div>
+      <div class="lp-tip">Sfat: începe cu un singur traseu pe zi și verifică tabul „Progres”.</div>
     `;
 
     const anchor = document.getElementById('ro-flow') || document.getElementById('hg-flow') || document.getElementById('ms-flow') || document.getElementById('bac-education-pack') || root.firstElementChild;
