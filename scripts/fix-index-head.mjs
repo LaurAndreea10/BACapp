@@ -21,6 +21,7 @@ const cleanHead = `<!DOCTYPE html>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="/BACapp/ai-coach-presets.js"></script>
 <script src="/BACapp/bac-training-engine.js?v=20260427" defer></script>
+<script src="/BACapp/bac-advanced-features.js?v=20260427" defer></script>
 <script src="/BACapp/quiz-arena.js" defer></script>
 <script src="/BACapp/quiz-difficulty-fix.js" defer></script>
 <script src="/BACapp/quiz-superpowers.js" defer></script>
@@ -48,6 +49,7 @@ html = `${cleanHead}:root{\n${rest}`;
 
 const requiredScripts = [
   '/BACapp/bac-training-engine.js',
+  '/BACapp/bac-advanced-features.js',
   '/BACapp/quiz-arena.js',
   '/BACapp/quiz-difficulty-fix.js',
   '/BACapp/quiz-superpowers.js',
@@ -76,4 +78,4 @@ if (remainingInvalid.length > 0) {
 }
 
 writeFileSync(INDEX_PATH, html, 'utf8');
-console.log('index.html head cleaned successfully and BAC training engine linked.');
+console.log('index.html head cleaned successfully and all BAC engines linked.');
