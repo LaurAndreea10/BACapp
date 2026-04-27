@@ -18,10 +18,12 @@
   function loadRuntimeAssets() {
     loadStyleOnce('/BACapp/accessibility.css');
     loadStyleOnce('/BACapp/education-pack.css');
+    loadStyleOnce('/BACapp/romanian-flow.css');
     loadScriptOnce('/BACapp/accessibility.js');
     loadScriptOnce('/BACapp/ai-coach-extra-presets.js');
     loadScriptOnce('/BACapp/legal-notice.js');
     loadScriptOnce('/BACapp/education-pack.js');
+    loadScriptOnce('/BACapp/romanian-flow.js');
   }
 
   loadRuntimeAssets();
