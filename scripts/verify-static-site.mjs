@@ -4,6 +4,7 @@ const requiredFiles = [
   'index.html',
   'styles.css',
   'ai-coach-presets.js',
+  'quiz-arena.js',
   'pwa-register.js',
   'service-worker.js',
   'manifest.webmanifest',
@@ -24,6 +25,7 @@ const index = readFileSync('index.html', 'utf8');
 const checks = [
   ['loads styles.css', index.includes('/BACapp/styles.css') || index.includes('styles.css')],
   ['loads ai-coach-presets.js', index.includes('/BACapp/ai-coach-presets.js')],
+  ['loads quiz-arena.js', index.includes('/BACapp/quiz-arena.js')],
   ['loads manifest', index.includes('/BACapp/manifest.webmanifest') || index.includes('manifest.webmanifest')],
   ['does not contain duplicated :root near top', !index.includes(':root{\n:root{') && !index.includes(':root{\r\n:root{')],
   ['does not contain nested style tags', !index.includes('<style>\n<style>') && !index.includes('<style>\r\n<style>')],
