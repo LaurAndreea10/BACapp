@@ -18,7 +18,7 @@ Politica de confidențialitate: [`PRIVACY.md`](./PRIVACY.md)
 
 ## ✨ Prezentare
 
-**BAC Space** este o aplicație web pentru elevii care se pregătesc pentru Bacalaureat. Include lecții, quiz-uri, simulări, eseuri-model, hartă interactivă, Pomodoro, calendar de recapitulare, AI Coach local, **BAC Pack** și un **flux complet de învățare la Română**.
+**BAC Space** este o aplicație web pentru elevii care se pregătesc pentru Bacalaureat. Include lecții, quiz-uri, simulări, eseuri-model, hartă interactivă, Pomodoro, calendar de recapitulare, AI Coach local, **BAC Pack**, un **flux complet de învățare la Română** și un **flux complet Istorie + Geografie**.
 
 Aplicația este gândită ca un spațiu de învățare structurat, motivant și accesibil. Progresul este salvat local în browser, iar site-ul funcționează ca PWA.
 
@@ -29,6 +29,7 @@ Aplicația este gândită ca un spațiu de învățare structurat, motivant și 
 - 🏠 **Dashboard** cu XP, nivel, streak și progres
 - 📚 **Materii & lecții** pentru învățare structurată
 - 🇷🇴 **Flux complet Română**: onboarding 7 zile, lecții, quiz, XP, recapitulări și progres local
+- 🏛️ **Flux complet Istorie + Geografie**: lecții, quiz, XP, fișe rapide și progres local pentru profil uman
 - 📚 **BAC Pack** cu lecții rapide, simulare pe profil, raport și reset progres
 - ❓ **Quiz-uri interactive** cu statistici de acuratețe
 - 🎯 **Mod greșeli** pentru refacerea întrebărilor dificile
@@ -63,6 +64,25 @@ Fișiere:
 
 - `romanian-flow.css`
 - `romanian-flow.js`
+
+---
+
+## 🏛️ Flux complet Istorie + Geografie
+
+Modulul Istorie + Geografie extinde experiența completă pentru profilul uman:
+
+- plan de 7 zile;
+- 3 lecții reale la Istorie: constituțiile României, comunismul, romanitatea românilor;
+- 3 lecții reale la Geografie: relieful României, clima României, Europa;
+- quiz aferent fiecărei lecții;
+- XP local pentru lecții, quiz și fișe rapide;
+- fișe rapide cu termeni-cheie;
+- progres local și activitate recentă.
+
+Fișiere:
+
+- `history-geography-flow.css`
+- `history-geography-flow.js`
 
 ---
 
@@ -220,6 +240,7 @@ După modificări în `main`, GitHub Pages poate avea nevoie de câteva minute p
 - test banner simulator/confidențialitate
 - test link `PRIVACY.md`
 - test flux Română: onboarding, lecție, quiz, XP, progres
+- test flux Istorie + Geografie: plan, lecții, quiz, fișe, progres
 - test BAC Pack: lecții, simulare, raport, reset progres
 - test AI Coach cu întrebări sugerate
 - test panou ♿
@@ -234,5 +255,5 @@ După modificări în `main`, GitHub Pages poate avea nevoie de câteva minute p
 - extragerea treptată a JavaScript-ului principal din `index.html` în `app.js`
 - audit complet cu screen reader real
 - capturi reale în README
-- extinderea fluxului complet și pentru istorie/geografie/matematică
+- extinderea fluxului complet pentru matematică/științe
 - teste smoke pentru navigare, quiz și simulare
