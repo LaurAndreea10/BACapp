@@ -1,12 +1,12 @@
 {
   "ci": {
     "collect": {
-      "staticDistDir": ".",
       "url": [
         "http://localhost:8000/BACapp/"
       ],
       "startServerCommand": "python3 -m http.server 8000 --directory ..",
       "startServerReadyPattern": "Serving HTTP",
+      "startServerReadyTimeout": 10000,
       "numberOfRuns": 1,
       "settings": {
         "chromeFlags": "--no-sandbox --headless=new"
