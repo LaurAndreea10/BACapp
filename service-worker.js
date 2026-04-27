@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'bac-space-v13-direct-bootstrap';
+const CACHE_VERSION = 'bac-space-v14-advanced-bac-engines';
 const APP_SCOPE = '/BACapp/';
 const APP_SHELL = [
   APP_SCOPE,
@@ -24,6 +24,13 @@ const APP_SHELL = [
   `${APP_SCOPE}public-polish.js`,
   `${APP_SCOPE}ai-coach-presets.js`,
   `${APP_SCOPE}ai-coach-extra-presets.js`,
+  `${APP_SCOPE}bac-training-engine.js`,
+  `${APP_SCOPE}bac-advanced-features.js`,
+  `${APP_SCOPE}quiz-arena.js`,
+  `${APP_SCOPE}quiz-difficulty-fix.js`,
+  `${APP_SCOPE}quiz-superpowers.js`,
+  `${APP_SCOPE}teacher-dashboard.js`,
+  `${APP_SCOPE}site-diagnostics.js`,
   `${APP_SCOPE}legal-notice.js`,
   `${APP_SCOPE}pwa-register.js`,
   `${APP_SCOPE}icons/icon-192.svg`,
@@ -50,7 +57,6 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   const request = event.request;
-
   if (request.method !== 'GET') return;
 
   const url = new URL(request.url);
