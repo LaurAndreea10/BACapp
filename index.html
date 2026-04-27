@@ -8,286 +8,66 @@
 <link rel="manifest" href="/BACapp/manifest.webmanifest">
 <link rel="icon" href="/BACapp/icons/icon-192.svg" type="image/svg+xml">
 <style>
-:root{--bg:#06090f;--line:rgba(255,255,255,.1);--txt:#e8ecf8;--muted:#9aa5bd;--gold:#e4a84c;--teal:#3ccfbe;--violet:#9b8cff}
+:root{--bg:#06090f;--line:rgba(255,255,255,.1);--txt:#e8ecf8;--muted:#9aa5bd;--gold:#e4a84c;--teal:#3ccfbe;--violet:#9b8cff;--rose:#e86060;--green:#50c878}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(circle at top right,rgba(228,168,76,.13),transparent 34%),radial-gradient(circle at bottom left,rgba(60,207,190,.1),transparent 36%),var(--bg);color:var(--txt);line-height:1.6}
 .wrap{width:min(1120px,calc(100% - 32px));margin:auto}
 .top{position:sticky;top:0;z-index:20;background:rgba(6,9,15,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
-.nav{display:flex;justify-content:space-between;gap:16px;padding:14px 0}
-.brand{font-weight:900;color:var(--gold)}
-.nav a{color:var(--muted);text-decoration:none;margin-left:12px}
-.hero{padding:58px 0 28px}
-.badge{display:inline-flex;border:1px solid rgba(228,168,76,.35);background:rgba(228,168,76,.09);color:var(--gold);border-radius:999px;padding:6px 11px;font-weight:800;font-size:.78rem}
-h1{font-size:clamp(2.2rem,6vw,5rem);line-height:1;margin:18px 0 14px;letter-spacing:-.06em}
-.lead{font-size:1.08rem;color:var(--muted);max-width:780px}
-.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
-.btn{border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--txt);border-radius:14px;padding:11px 14px;text-decoration:none;font-weight:850;cursor:pointer}
-.btn.primary{border-color:rgba(228,168,76,.45);background:linear-gradient(135deg,var(--gold),#c87c31);color:#090c13}
-.btn.teal{border-color:rgba(60,207,190,.35);color:var(--teal);background:rgba(60,207,190,.08)}
-section{padding:24px 0}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-.card{border:1px solid var(--line);background:rgba(11,15,26,.78);border-radius:22px;padding:18px;box-shadow:0 18px 50px rgba(0,0,0,.22)}
-.card p,.card li,.muted{color:var(--muted)}
-.notice{border:1px solid rgba(228,168,76,.35);background:rgba(228,168,76,.08);border-radius:18px;padding:14px;color:var(--muted)}
-.notice strong{color:var(--gold)}
-.path{position:relative;overflow:hidden}
-.path:before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--accent,var(--gold))}
-.romanian{--accent:var(--violet)}
-.human{--accent:var(--gold)}
-.real{--accent:var(--teal)}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.stat{border:1px solid var(--line);border-radius:16px;padding:12px;background:rgba(255,255,255,.03)}
-.stat strong{display:block;font-size:1.5rem;color:var(--gold)}
-select,input{width:100%;padding:10px;border-radius:12px;border:1px solid var(--line);background:#101626;color:var(--txt)}
-footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted)}
-@media(max-width:850px){
-  .grid,.grid2,.stats{grid-template-columns:1fr}
-  .nav{flex-direction:column}
-  .nav a{margin:0 10px 0 0}
-  .hero{padding-top:34px}
-}
+.nav{display:flex;justify-content:space-between;gap:16px;padding:14px 0;align-items:center}.brand{font-weight:900;color:var(--gold)}.nav a{color:var(--muted);text-decoration:none;margin-left:12px;font-size:.92rem}.nav a:hover{color:var(--txt)}
+.hero{padding:58px 0 28px}.badge{display:inline-flex;border:1px solid rgba(228,168,76,.35);background:rgba(228,168,76,.09);color:var(--gold);border-radius:999px;padding:6px 11px;font-weight:800;font-size:.78rem}h1{font-size:clamp(2.2rem,6vw,5rem);line-height:1;margin:18px 0 14px;letter-spacing:-.06em}.lead{font-size:1.08rem;color:var(--muted);max-width:780px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.btn{border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--txt);border-radius:14px;padding:11px 14px;text-decoration:none;font-weight:850;cursor:pointer;display:inline-block}.btn.primary{border-color:rgba(228,168,76,.45);background:linear-gradient(135deg,var(--gold),#c87c31);color:#090c13}.btn.teal{border-color:rgba(60,207,190,.35);color:var(--teal);background:rgba(60,207,190,.08)}.btn.rose{border-color:rgba(232,96,96,.35);color:var(--rose);background:rgba(232,96,96,.08)}
+section{padding:24px 0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.card{border:1px solid var(--line);background:rgba(11,15,26,.78);border-radius:22px;padding:18px;box-shadow:0 18px 50px rgba(0,0,0,.22)}.card p,.card li,.muted{color:var(--muted)}.notice{border:1px solid rgba(228,168,76,.35);background:rgba(228,168,76,.08);border-radius:18px;padding:14px;color:var(--muted)}.notice strong{color:var(--gold)}
+.path{position:relative;overflow:hidden}.path:before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--accent,var(--gold))}.romanian{--accent:var(--violet)}.human{--accent:var(--gold)}.real{--accent:var(--teal)}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{border:1px solid var(--line);border-radius:16px;padding:12px;background:rgba(255,255,255,.03)}.stat strong{display:block;font-size:1.5rem;color:var(--gold)}
+select,input,textarea{width:100%;padding:10px;border-radius:12px;border:1px solid var(--line);background:#101626;color:var(--txt)}textarea{min-height:110px;resize:vertical}.list{display:grid;gap:8px}.pill{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:5px 9px;color:var(--muted);font-size:.86rem;margin:3px 4px 3px 0}.ok{color:var(--green)}.timer{font-size:clamp(2.4rem,8vw,5rem);font-weight:900;color:var(--gold);letter-spacing:-.06em}.mapbox{min-height:260px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(135deg,rgba(60,207,190,.12),rgba(228,168,76,.08));display:grid;place-items:center;text-align:center;padding:20px}.small{font-size:.9rem;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted)}@media(max-width:850px){.grid,.grid2,.grid4,.stats{grid-template-columns:1fr}.nav{flex-direction:column;align-items:flex-start}.nav a{margin:0 10px 0 0}.hero{padding-top:34px}}
 </style>
 </head>
 <body>
-<header class="top">
-  <div class="wrap nav">
-    <div class="brand">BAC Space Premium · 2026</div>
-    <nav>
-      <a href="#trasee">Trasee</a>
-      <a href="#romana">Română</a>
-      <a href="#uman">Uman</a>
-      <a href="#real">Real</a>
-      <a href="#bac-pack">BAC Pack</a>
-      <a href="#ai">AI Coach</a>
-    </nav>
-  </div>
-</header>
-
+<header class="top"><div class="wrap nav"><div class="brand">BAC Space Premium · 2026</div><nav><a href="#trasee">Trasee</a><a href="#romana">Română</a><a href="#uman">Uman</a><a href="#real">Real</a><a href="#bac-pack">BAC Pack</a><a href="#aplicatie">Aplicația completă</a><a href="#ai">AI Coach</a></nav></div></header>
 <main>
-<section class="hero wrap">
-  <span class="badge">Simulator educațional pentru Bacalaureat</span>
-  <h1>Începe pregătirea BAC cu un traseu clar.</h1>
-  <p class="lead">Alegi profilul, parcurgi o lecție, faci quiz, primești XP local și vezi progresul. Fără cont, fără API extern, potrivit pentru prezentare și testare reală.</p>
-  <div class="actions">
-    <a class="btn primary" href="#trasee">Alege traseul tău</a>
-    <a class="btn teal" href="#bac-pack">Deschide BAC Pack</a>
-    <a class="btn" href="#ai">AI Coach local</a>
-  </div>
-</section>
-
-<section class="wrap">
-  <div class="notice"><strong>Important:</strong> BAC Space este doar un simulator educațional. Nu este platformă oficială și nu garantează rezultatul la examen. Feedbackul AI/corectarea/generatorul sunt orientative și nu înlocuiesc baremul oficial sau profesorul. Progresul se salvează local în browser.</div>
-</section>
-
-<section id="trasee" class="wrap">
-  <h2>Alege traseul tău</h2>
-  <div class="grid">
-    <article class="card path romanian">
-      <h3>🇷🇴 Română</h3>
-      <p>Eseu, poezie, argumentativ, quiz, fișe și glosar.</p>
-      <ul><li>Plan 7 zile</li><li>3 lecții reale</li><li>Quiz + XP</li></ul>
-      <a class="btn" href="#romana">Începe Română</a>
-    </article>
-    <article class="card path human">
-      <h3>🏛️ Uman</h3>
-      <p>Istorie + Geografie cu lecții scurte și verificare rapidă.</p>
-      <ul><li>Constituții, comunism, romanitate</li><li>Relief, climă, Europa</li><li>Quiz + fișe</li></ul>
-      <a class="btn" href="#uman">Începe Uman</a>
-    </article>
-    <article class="card path real">
-      <h3>🔬 Real / Științe</h3>
-      <p>Matematică, Biologie, Chimie și Fizică explicate pe pași.</p>
-      <ul><li>Funcții și integrale</li><li>Genetică, chimie, fizică</li><li>Quiz + formule</li></ul>
-      <a class="btn" href="#real">Începe Real</a>
-    </article>
-  </div>
-</section>
-
-<section id="progres" class="wrap">
-  <h2>Progres local</h2>
-  <div class="stats">
-    <div class="stat"><strong id="xp">0</strong>XP</div>
-    <div class="stat"><strong id="lessons">0</strong>Lecții</div>
-    <div class="stat"><strong id="quizzes">0</strong>Quiz-uri</div>
-    <div class="stat"><strong id="reports">0</strong>Rapoarte</div>
-  </div>
-</section>
-
-<section id="romana" class="wrap">
-  <h2>🇷🇴 Flux complet Română</h2>
-  <div class="grid">
-    <article class="card">
-      <h3>Structura eseului la roman</h3>
-      <p>Autor, operă, încadrare, temă, două scene, două elemente de construcție și concluzie.</p>
-      <button class="btn primary" data-xp="20" data-type="lesson">Marchează parcursă +20 XP</button>
-    </article>
-    <article class="card">
-      <h3>Poezia modernistă</h3>
-      <p>Curent, temă, imagini poetice, figuri de stil și efectul lor.</p>
-      <button class="btn primary" data-xp="20" data-type="lesson">Marchează parcursă +20 XP</button>
-    </article>
-    <article class="card">
-      <h3>Quiz Română</h3>
-      <p>Ce trebuie evitat într-un eseu?</p>
-      <button class="btn" data-xp="15" data-type="quiz">Rezumatul operei</button>
-    </article>
-  </div>
-</section>
-
-<section id="uman" class="wrap">
-  <h2>🏛️ Flux complet Istorie + Geografie</h2>
-  <div class="grid">
-    <article class="card">
-      <h3>Istorie</h3>
-      <p>Constituțiile României, comunismul și romanitatea românilor.</p>
-      <button class="btn primary" data-xp="20" data-type="lesson">Lecție parcursă +20 XP</button>
-    </article>
-    <article class="card">
-      <h3>Geografie</h3>
-      <p>Relieful României, clima și Europa.</p>
-      <button class="btn primary" data-xp="20" data-type="lesson">Lecție parcursă +20 XP</button>
-    </article>
-    <article class="card">
-      <h3>Quiz Uman</h3>
-      <p>Ce constituție este asociată României Mari?</p>
-      <button class="btn" data-xp="15" data-type="quiz">1923</button>
-    </article>
-  </div>
-</section>
-
-<section id="real" class="wrap">
-  <h2>🔬 Flux complet Matematică + Științe</h2>
-  <div class="grid">
-    <article class="card">
-      <h3>Matematică</h3>
-      <p>Funcții, derivate, tabel de variație, integrale și primitive.</p>
-      <button class="btn primary" data-xp="20" data-type="lesson">Lecție parcursă +20 XP</button>
-    </article>
-    <article class="card">
-      <h3>Științe</h3>
-      <p>Genetică, anatomie, stoichiometrie, pH, mecanică și electricitate.</p>
-      <button class="btn primary" data-xp="20" data-type="lesson">Lecție parcursă +20 XP</button>
-    </article>
-    <article class="card">
-      <h3>Quiz Real</h3>
-      <p>La integrala definită se calculează:</p>
-      <button class="btn" data-xp="15" data-type="quiz">F(b)-F(a)</button>
-    </article>
-  </div>
-</section>
-
-<section id="bac-pack" class="wrap">
-  <h2>📚 BAC Pack</h2>
-  <div class="grid2">
-    <article class="card">
-      <h3>Simulare pe profil</h3>
-      <select id="profile"><option>Real</option><option>Uman</option><option>Tehnologic</option><option>Științe ale naturii</option></select>
-      <button class="btn primary" id="generate" type="button" style="margin-top:10px">Generează simulare</button>
-      <p id="sim-output" class="muted" aria-live="polite"></p>
-    </article>
-    <article class="card">
-      <h3>Raport după simulare</h3>
-      <input id="score" type="number" min="1" max="10" placeholder="Scor estimativ 1-10">
-      <button class="btn teal" id="report" type="button" style="margin-top:10px">Generează raport</button>
-      <p id="report-output" class="muted" aria-live="polite"></p>
-    </article>
-  </div>
-</section>
-
-<section id="ai" class="wrap">
-  <h2>🤖 AI Coach local</h2>
-  <div class="notice"><strong>Clarificare:</strong> AI Coach este local și orientativ. Nu trimite date către servicii externe și nu cere API key.</div>
-  <div class="grid" style="margin-top:14px">
-    <button class="btn" type="button" data-ai="plan">Plan de studiu</button>
-    <button class="btn" type="button" data-ai="eseu">Eseu română</button>
-    <button class="btn" type="button" data-ai="timp">Timp la simulare</button>
-  </div>
-  <article class="card" style="margin-top:14px">
-    <h3>Răspuns Coach</h3>
-    <p id="ai-answer" class="muted">Alege o întrebare sugerată.</p>
-  </article>
-</section>
+<section class="hero wrap"><span class="badge">Simulator educațional pentru Bacalaureat</span><h1>Începe pregătirea BAC cu un traseu clar.</h1><p class="lead">Alegi profilul, parcurgi o lecție, faci quiz, primești XP local și vezi progresul. Fără cont, fără API extern, potrivit pentru prezentare și testare reală.</p><div class="actions"><a class="btn primary" href="#trasee">Alege traseul tău</a><a class="btn teal" href="#bac-pack">Deschide BAC Pack</a><a class="btn" href="#aplicatie">Vezi aplicația completă</a><a class="btn" href="#ai">AI Coach local</a></div></section>
+<section class="wrap"><div class="notice"><strong>Important:</strong> BAC Space este doar un simulator educațional. Nu este platformă oficială și nu garantează rezultatul la examen. Feedbackul AI/corectarea/generatorul sunt orientative și nu înlocuiesc baremul oficial sau profesorul. Progresul se salvează local în browser.</div></section>
+<section id="trasee" class="wrap"><h2>Alege traseul tău</h2><div class="grid"><article class="card path romanian"><h3>🇷🇴 Română</h3><p>Eseu, poezie, argumentativ, quiz, fișe și glosar.</p><ul><li>Plan 7 zile</li><li>3 lecții reale</li><li>Quiz + XP</li></ul><a class="btn" href="#romana">Începe Română</a></article><article class="card path human"><h3>🏛️ Uman</h3><p>Istorie + Geografie cu lecții scurte și verificare rapidă.</p><ul><li>Constituții, comunism, romanitate</li><li>Relief, climă, Europa</li><li>Quiz + fișe</li></ul><a class="btn" href="#uman">Începe Uman</a></article><article class="card path real"><h3>🔬 Real / Științe</h3><p>Matematică, Biologie, Chimie și Fizică explicate pe pași.</p><ul><li>Funcții și integrale</li><li>Genetică, chimie, fizică</li><li>Quiz + formule</li></ul><a class="btn" href="#real">Începe Real</a></article></div></section>
+<section id="progres" class="wrap"><h2>Progres local</h2><div class="stats"><div class="stat"><strong id="xp">0</strong>XP</div><div class="stat"><strong id="lessons">0</strong>Lecții</div><div class="stat"><strong id="quizzes">0</strong>Quiz-uri</div><div class="stat"><strong id="reports">0</strong>Rapoarte</div></div></section>
+<section id="romana" class="wrap"><h2>🇷🇴 Flux complet Română</h2><div class="grid"><article class="card"><h3>Structura eseului la roman</h3><p>Autor, operă, încadrare, temă, două scene, două elemente de construcție și concluzie.</p><button class="btn primary" data-xp="20" data-type="lesson">Marchează parcursă +20 XP</button></article><article class="card"><h3>Poezia modernistă</h3><p>Curent, temă, imagini poetice, figuri de stil și efectul lor.</p><button class="btn primary" data-xp="20" data-type="lesson">Marchează parcursă +20 XP</button></article><article class="card"><h3>Quiz Română</h3><p>Ce trebuie evitat într-un eseu?</p><button class="btn" data-xp="15" data-type="quiz">Rezumatul operei</button></article></div></section>
+<section id="uman" class="wrap"><h2>🏛️ Flux complet Istorie + Geografie</h2><div class="grid"><article class="card"><h3>Istorie</h3><p>Constituțiile României, comunismul și romanitatea românilor.</p><button class="btn primary" data-xp="20" data-type="lesson">Lecție parcursă +20 XP</button></article><article class="card"><h3>Geografie</h3><p>Relieful României, clima și Europa.</p><button class="btn primary" data-xp="20" data-type="lesson">Lecție parcursă +20 XP</button></article><article class="card"><h3>Quiz Uman</h3><p>Ce constituție este asociată României Mari?</p><button class="btn" data-xp="15" data-type="quiz">1923</button></article></div></section>
+<section id="real" class="wrap"><h2>🔬 Flux complet Matematică + Științe</h2><div class="grid"><article class="card"><h3>Matematică</h3><p>Funcții, derivate, tabel de variație, integrale și primitive.</p><button class="btn primary" data-xp="20" data-type="lesson">Lecție parcursă +20 XP</button></article><article class="card"><h3>Științe</h3><p>Genetică, anatomie, stoichiometrie, pH, mecanică și electricitate.</p><button class="btn primary" data-xp="20" data-type="lesson">Lecție parcursă +20 XP</button></article><article class="card"><h3>Quiz Real</h3><p>La integrala definită se calculează:</p><button class="btn" data-xp="15" data-type="quiz">F(b)-F(a)</button></article></div></section>
+<section id="bac-pack" class="wrap"><h2>📚 BAC Pack</h2><div class="grid2"><article class="card"><h3>Simulare pe profil</h3><select id="profile"><option>Real</option><option>Uman</option><option>Tehnologic</option><option>Științe ale naturii</option></select><button class="btn primary" id="generate" type="button" style="margin-top:10px">Generează simulare</button><p id="sim-output" class="muted" aria-live="polite"></p></article><article class="card"><h3>Raport după simulare</h3><input id="score" type="number" min="1" max="10" placeholder="Scor estimativ 1-10"><button class="btn teal" id="report" type="button" style="margin-top:10px">Generează raport</button><p id="report-output" class="muted" aria-live="polite"></p></article></div></section>
+<section id="aplicatie" class="wrap"><h2>🧩 Aplicația completă</h2><p class="muted">Zona de mai jos readuce modulele din versiunea anterioară, dar fără să lase prima impresie de dashboard gol.</p><div class="grid4"><a class="btn" href="#pomo">🍅 Pomodoro</a><a class="btn" href="#calendar">📅 Calendar</a><a class="btn" href="#generator">🎲 Generator</a><a class="btn" href="#eseuri">✍️ Eseuri</a><a class="btn" href="#geo">🌍 Geografie</a><a class="btn" href="#resurse">📋 Resurse</a><a class="btn" href="#achievements">🏆 Achievements</a><a class="btn" href="#statistici">📊 Statistici</a></div></section>
+<section id="pomo" class="wrap"><h2>🍅 Pomodoro</h2><div class="grid2"><article class="card"><div class="timer" id="timer">25:00</div><p class="muted">Sesiune de focus pentru lecții sau quiz.</p><button class="btn primary" id="startTimer" type="button">Start</button> <button class="btn" id="resetTimer" type="button">Reset</button></article><article class="card"><h3>Plan rapid</h3><ol class="muted"><li>25 min lecție</li><li>5 min pauză</li><li>20 min quiz</li><li>10 min corectarea greșelilor</li></ol></article></div></section>
+<section id="calendar" class="wrap"><h2>📅 Calendar recapitulare</h2><div class="grid"><article class="card"><h3>Azi</h3><p class="muted">Lecție + quiz la traseul ales.</p></article><article class="card"><h3>+3 zile</h3><p class="muted">Refaci greșelile și o fișă rapidă.</p></article><article class="card"><h3>+7 zile</h3><p class="muted">Mini-simulare și raport orientativ.</p></article></div></section>
+<section id="generator" class="wrap"><h2>🎲 Generator subiecte</h2><div class="grid2"><article class="card"><h3>Generează cerință</h3><select id="genSubject"><option>Română</option><option>Istorie</option><option>Geografie</option><option>Matematică</option></select><button class="btn primary" id="genBtn" type="button" style="margin-top:10px">Generează subiect</button><p id="genOut" class="muted"></p></article><article class="notice"><strong>Notă:</strong> subiectele generate sunt pentru antrenament și nu înlocuiesc subiectele oficiale.</article></div></section>
+<section id="eseuri" class="wrap"><h2>✍️ Modele eseuri</h2><div class="grid"><article class="card"><h3>Roman interbelic</h3><p>Introducere → încadrare → temă → scene → construcție → concluzie.</p></article><article class="card"><h3>Poezie modernistă</h3><p>Tema, imaginar poetic, limbaj, figuri de stil și ambiguitate.</p></article><article class="card"><h3>Argumentativ</h3><p>Opinie clară, două argumente, exemple și concluzie scurtă.</p></article></div></section>
+<section id="geo" class="wrap"><h2>🌍 Geografie & hartă</h2><div class="grid2"><div class="mapbox"><div><h3>Hartă educațională</h3><p class="muted">România: relief, climă, orașe, râuri și regiuni. Modul simplificat pentru prezentare.</p></div></div><article class="card"><h3>Întrebări rapide</h3><ul><li>Care sunt grupele Carpaților?</li><li>Ce influențe climatice are România?</li><li>Ce râuri importante apar pe hartă?</li></ul></article></div></section>
+<section id="resurse" class="wrap"><h2>📋 Fișe rapide & glosar</h2><div class="grid2"><article class="card"><h3>Fișe rapide</h3><span class="pill">Eseu: 5 pași</span><span class="pill">Istorie: cauză-fapt-consecință</span><span class="pill">Mate: domeniu-derivată-semn</span><span class="pill">Chimie: moli-raport-unitate</span></article><article class="card"><h3>Glosar</h3><p><strong>Incipit:</strong> începutul operei.</p><p><strong>Constituție:</strong> lege fundamentală.</p><p><strong>Integrală:</strong> operație inversă derivării, în contexte de calcul.</p></article></div></section>
+<section id="achievements" class="wrap"><h2>🏆 Achievements</h2><div class="grid"><article class="card"><h3>Primul pas</h3><p class="muted">Finalizează o lecție.</p></article><article class="card"><h3>Quiz starter</h3><p class="muted">Răspunde la un quiz.</p></article><article class="card"><h3>Simulare începută</h3><p class="muted">Generează o simulare BAC.</p></article></div></section>
+<section id="statistici" class="wrap"><h2>📊 Statistici detaliate</h2><div class="grid4"><div class="stat"><strong id="statXp">0</strong>XP total</div><div class="stat"><strong id="statLessons">0</strong>Lecții</div><div class="stat"><strong id="statQuizzes">0</strong>Quiz-uri</div><div class="stat"><strong id="statReports">0</strong>Rapoarte</div></div></section>
+<section id="ai" class="wrap"><h2>🤖 AI Coach local</h2><div class="notice"><strong>Clarificare:</strong> AI Coach este local și orientativ. Nu trimite date către servicii externe și nu cere API key.</div><div class="grid" style="margin-top:14px"><button class="btn" type="button" data-ai="plan">Plan de studiu</button><button class="btn" type="button" data-ai="eseu">Eseu română</button><button class="btn" type="button" data-ai="timp">Timp la simulare</button></div><article class="card" style="margin-top:14px"><h3>Răspuns Coach</h3><p id="ai-answer" class="muted">Alege o întrebare sugerată.</p></article></section>
 </main>
-
-<footer>
-  <div class="wrap">BAC Space Premium · 2026 · simulator educațional · <a style="color:var(--gold)" href="/BACapp/PRIVACY.md">Politica de confidențialitate</a></div>
-</footer>
-
+<footer><div class="wrap">BAC Space Premium · 2026 · simulator educațional · <a style="color:var(--gold)" href="/BACapp/PRIVACY.md">Politica de confidențialitate</a></div></footer>
 <script>
 (() => {
   const els = {
-    xp: document.getElementById('xp'),
-    lessons: document.getElementById('lessons'),
-    quizzes: document.getElementById('quizzes'),
-    reports: document.getElementById('reports'),
-    profile: document.getElementById('profile'),
-    generate: document.getElementById('generate'),
-    simOutput: document.getElementById('sim-output'),
-    score: document.getElementById('score'),
-    report: document.getElementById('report'),
-    reportOutput: document.getElementById('report-output'),
-    aiAnswer: document.getElementById('ai-answer')
+    xp: document.getElementById('xp'), lessons: document.getElementById('lessons'), quizzes: document.getElementById('quizzes'), reports: document.getElementById('reports'),
+    statXp: document.getElementById('statXp'), statLessons: document.getElementById('statLessons'), statQuizzes: document.getElementById('statQuizzes'), statReports: document.getElementById('statReports'),
+    profile: document.getElementById('profile'), generate: document.getElementById('generate'), simOutput: document.getElementById('sim-output'), score: document.getElementById('score'), report: document.getElementById('report'), reportOutput: document.getElementById('report-output'), aiAnswer: document.getElementById('ai-answer'),
+    timer: document.getElementById('timer'), startTimer: document.getElementById('startTimer'), resetTimer: document.getElementById('resetTimer'), genSubject: document.getElementById('genSubject'), genBtn: document.getElementById('genBtn'), genOut: document.getElementById('genOut')
   };
-
   const state = JSON.parse(localStorage.getItem('bac_public_state') || '{"xp":0,"lessons":0,"quizzes":0,"reports":0}');
-
-  function save() {
-    localStorage.setItem('bac_public_state', JSON.stringify(state));
-    render();
-  }
-
-  function render() {
-    els.xp.textContent = state.xp;
-    els.lessons.textContent = state.lessons;
-    els.quizzes.textContent = state.quizzes;
-    els.reports.textContent = state.reports;
-  }
-
+  function save(){localStorage.setItem('bac_public_state', JSON.stringify(state));render()}
+  function render(){els.xp.textContent=state.xp;els.lessons.textContent=state.lessons;els.quizzes.textContent=state.quizzes;els.reports.textContent=state.reports;els.statXp.textContent=state.xp;els.statLessons.textContent=state.lessons;els.statQuizzes.textContent=state.quizzes;els.statReports.textContent=state.reports}
   render();
-
-  document.querySelectorAll('[data-xp]').forEach(button => {
-    button.addEventListener('click', () => {
-      state.xp += Number(button.dataset.xp || 0);
-      if (button.dataset.type === 'lesson') state.lessons += 1;
-      if (button.dataset.type === 'quiz') state.quizzes += 1;
-      button.textContent = 'Salvat ✓';
-      save();
-    });
-  });
-
-  els.generate.addEventListener('click', () => {
-    const profile = els.profile.value;
-    const subjects = {
-      Real: 'Matematică, Română și o probă la alegere din zona reală.',
-      Uman: 'Română, Istorie și Geografie / Logică / Psihologie, în funcție de profil.',
-      Tehnologic: 'Română, proba profilului și itemi aplicați pentru competențe tehnice.',
-      'Științe ale naturii': 'Română, Matematică/Biologie/Chimie/Fizică și recapitulare pe formule.'
-    };
-    els.simOutput.innerHTML = `<strong>Simulare ${profile}</strong><br>1. Încălzire: 10 minute recapitulare rapidă.<br>2. Probă principală: ${subjects[profile] || subjects.Real}<br>3. Mini-quiz de verificare: 5 întrebări.<br>4. Raport orientativ: notează 3 greșeli și următorul pas.`;
-  });
-
-  els.report.addEventListener('click', () => {
-    state.reports += 1;
-    save();
-    const score = Number(els.score.value || 0);
-    els.reportOutput.textContent = score >= 8
-      ? 'Foarte bine. Mâine repetă doar greșelile și fă o mini-simulare de 20 minute.'
-      : 'Recomandare: reia lecția, fă quiz-ul și notează 3 greșeli principale înainte de următoarea simulare.';
-  });
-
-  const answers = {
-    plan: 'Începe cu 25 min lecție, 5 min pauză, 20 min quiz și 10 min corectarea greșelilor.',
-    eseu: 'Schema: introducere, încadrare, temă, două scene, două elemente de construcție, concluzie.',
-    timp: 'Rezolvă întâi ce știi sigur, revino la cerințele medii și lasă 10 minute pentru verificare.'
-  };
-
-  document.querySelectorAll('[data-ai]').forEach(button => {
-    button.addEventListener('click', () => {
-      els.aiAnswer.textContent = answers[button.dataset.ai] || 'Răspuns orientativ pentru pregătire.';
-    });
-  });
+  document.querySelectorAll('[data-xp]').forEach(button=>button.addEventListener('click',()=>{state.xp+=Number(button.dataset.xp||0);if(button.dataset.type==='lesson')state.lessons+=1;if(button.dataset.type==='quiz')state.quizzes+=1;button.textContent='Salvat ✓';save()}));
+  els.generate.addEventListener('click',()=>{const profile=els.profile.value;const subjects={Real:'Matematică, Română și o probă la alegere din zona reală.',Uman:'Română, Istorie și Geografie / Logică / Psihologie, în funcție de profil.',Tehnologic:'Română, proba profilului și itemi aplicați pentru competențe tehnice.','Științe ale naturii':'Română, Matematică/Biologie/Chimie/Fizică și recapitulare pe formule.'};els.simOutput.innerHTML=`<strong>Simulare ${profile}</strong><br>1. Încălzire: 10 minute recapitulare rapidă.<br>2. Probă principală: ${subjects[profile]||subjects.Real}<br>3. Mini-quiz de verificare: 5 întrebări.<br>4. Raport orientativ: notează 3 greșeli și următorul pas.`});
+  els.report.addEventListener('click',()=>{state.reports+=1;save();const score=Number(els.score.value||0);els.reportOutput.textContent=score>=8?'Foarte bine. Mâine repetă doar greșelile și fă o mini-simulare de 20 minute.':'Recomandare: reia lecția, fă quiz-ul și notează 3 greșeli principale înainte de următoarea simulare.'});
+  const prompts={Română:'Redactează un text argumentativ despre rolul lecturii în formarea unui tânăr.',Istorie:'Prezintă două caracteristici ale Constituției din 1923 și o consecință.',Geografie:'Explică două influențe climatice asupra României și dă exemple.',Matematică:'Studiază o funcție simplă: domeniu, derivată, semn și concluzie.'};
+  els.genBtn.addEventListener('click',()=>{els.genOut.textContent=prompts[els.genSubject.value]||prompts.Română});
+  const answers={plan:'Începe cu 25 min lecție, 5 min pauză, 20 min quiz și 10 min corectarea greșelilor.',eseu:'Schema: introducere, încadrare, temă, două scene, două elemente de construcție, concluzie.',timp:'Rezolvă întâi ce știi sigur, revino la cerințele medii și lasă 10 minute pentru verificare.'};
+  document.querySelectorAll('[data-ai]').forEach(button=>button.addEventListener('click',()=>{els.aiAnswer.textContent=answers[button.dataset.ai]||'Răspuns orientativ pentru pregătire.'}));
+  let remaining=25*60, tick=null;function drawTimer(){const m=String(Math.floor(remaining/60)).padStart(2,'0');const s=String(remaining%60).padStart(2,'0');els.timer.textContent=`${m}:${s}`}
+  els.startTimer.addEventListener('click',()=>{if(tick)return;els.startTimer.textContent='Rulează';tick=setInterval(()=>{remaining=Math.max(0,remaining-1);drawTimer();if(remaining===0){clearInterval(tick);tick=null;els.startTimer.textContent='Start';state.xp+=10;save()}},1000)});
+  els.resetTimer.addEventListener('click',()=>{clearInterval(tick);tick=null;remaining=25*60;els.startTimer.textContent='Start';drawTimer()});drawTimer();
 })();
 </script>
 </body>
