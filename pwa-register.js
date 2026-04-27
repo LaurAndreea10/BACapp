@@ -1,21 +1,27 @@
 (() => {
-  function loadAccessibilityAssets() {
-    if (!document.querySelector('link[href="/BACapp/accessibility.css"]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = '/BACapp/accessibility.css';
-      document.head.appendChild(link);
-    }
-
-    if (!document.querySelector('script[src="/BACapp/accessibility.js"]')) {
-      const script = document.createElement('script');
-      script.src = '/BACapp/accessibility.js';
-      script.defer = true;
-      document.head.appendChild(script);
-    }
+  function loadScriptOnce(src, defer = true) {
+    if (document.querySelector(`script[src="${src}"]`)) return;
+    const script = document.createElement('script');
+    script.src = src;
+    script.defer = defer;
+    document.head.appendChild(script);
   }
 
-  loadAccessibilityAssets();
+  function loadStyleOnce(href) {
+    if (document.querySelector(`link[href="${href}"]`)) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    document.head.appendChild(link);
+  }
+
+  function loadRuntimeAssets() {
+    loadStyleOnce('/BACapp/accessibility.css');
+    loadScriptOnce('/BACapp/accessibility.js');
+    loadScriptOnce('/BACapp/ai-coach-extra-presets.js');
+  }
+
+  loadRuntimeAssets();
 
   if (!('serviceWorker' in navigator)) return;
 
