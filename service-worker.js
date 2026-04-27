@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'bac-space-v2';
+const CACHE_VERSION = 'bac-space-v3-a11y';
 const APP_SCOPE = '/BACapp/';
 const APP_SHELL = [
   APP_SCOPE,
@@ -7,6 +7,8 @@ const APP_SHELL = [
   `${APP_SCOPE}404.html`,
   `${APP_SCOPE}manifest.webmanifest`,
   `${APP_SCOPE}styles.css`,
+  `${APP_SCOPE}accessibility.css`,
+  `${APP_SCOPE}accessibility.js`,
   `${APP_SCOPE}ai-coach-presets.js`,
   `${APP_SCOPE}pwa-register.js`,
   `${APP_SCOPE}icons/icon-192.svg`,
