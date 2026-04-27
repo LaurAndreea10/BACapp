@@ -24,11 +24,15 @@ Aplicația este gândită ca un spațiu de învățare structurat, motivant și 
 
 ---
 
-## 📸 Capturi recomandate
+## 📸 Capturi și testare cu utilizatori
 
-Adaugă capturi reale în repository, de preferat în `docs/screenshots/`, apoi le poți include aici.
+Repository-ul include acum materiale pentru capturi și testare reală:
 
-Capturi utile pentru prezentare:
+- [`docs/screenshots/README.md`](./docs/screenshots/README.md) — lista capturilor recomandate și numele fișierelor;
+- [`USER_TESTING.md`](./USER_TESTING.md) — plan de testare cu 2-5 utilizatori;
+- [`USER_FEEDBACK_TEMPLATE.md`](./USER_FEEDBACK_TEMPLATE.md) — template pentru centralizarea feedbackului.
+
+Capturi recomandate:
 
 - `learning-paths.png` — secțiunea **Alege traseul tău**;
 - `romanian-flow.png` — flux complet Română;
@@ -79,6 +83,25 @@ Fișiere:
 
 - `learning-paths.css`
 - `learning-paths.js`
+
+---
+
+## 🧪 Testare cu utilizatori
+
+Planul complet este în [`USER_TESTING.md`](./USER_TESTING.md).
+
+Flux recomandat pentru test:
+
+1. Utilizatorul explică ce crede că face aplicația după primele 10 secunde.
+2. Alege un traseu: Română, Uman sau Real / Științe.
+3. Parcurge o lecție.
+4. Face un quiz.
+5. Caută progresul / XP-ul.
+6. Generează o simulare în BAC Pack.
+7. Apasă o întrebare sugerată în AI Coach.
+8. Găsește mențiunea de simulator și politica de confidențialitate.
+
+Centralizarea feedbackului se face în [`USER_FEEDBACK_TEMPLATE.md`](./USER_FEEDBACK_TEMPLATE.md).
 
 ---
 
