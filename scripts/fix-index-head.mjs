@@ -19,6 +19,7 @@ const cleanHead = `<!DOCTYPE html>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="/BACapp/ai-coach-presets.js"></script>
+<script src="/BACapp/quiz-arena.js" defer></script>
 <script src="/BACapp/pwa-register.js" defer></script>
 
 <style>
@@ -42,6 +43,10 @@ if (firstRootBeforeMarker === -1) {
 const rest = html.slice(markerIndex);
 html = `${cleanHead}:root{\n${rest}`;
 
+if (!html.includes('/BACapp/quiz-arena.js')) {
+  html = html.replace('</body>', '<script src="/BACapp/quiz-arena.js" defer></script>\n</body>');
+}
+
 const invalidPatterns = [
   '<style>\n <link',
   '<style>\n<link',
@@ -58,4 +63,4 @@ if (remainingInvalid.length > 0) {
 }
 
 writeFileSync(INDEX_PATH, html, 'utf8');
-console.log('index.html head cleaned successfully.');
+console.log('index.html head cleaned successfully and Quiz Arena linked.');
