@@ -18,6 +18,7 @@
     loadScriptOnce('quiz-arena-loader', '/BACapp/quiz-arena.js');
     loadScriptOnce('quiz-difficulty-fix-loader', '/BACapp/quiz-difficulty-fix.js');
     loadScriptOnce('quiz-superpowers-loader', '/BACapp/quiz-superpowers.js');
+    loadScriptOnce('teacher-dashboard-loader', '/BACapp/teacher-dashboard.js');
   }
 
   function addLandingSummary() {
@@ -37,11 +38,13 @@
         <div class="public-ready-card"><strong>🔬 Real / Științe</strong><span>Matematică, Biologie, Chimie și Fizică pe pași.</span></div>
         <div class="public-ready-card"><strong>❓ Quiz Arena</strong><span>Materii, dificultăți, quiz zilnic, simulare BAC, XP și achievements.</span></div>
         <div class="public-ready-card"><strong>🚀 Quiz Pro</strong><span>Capitole, explicații, rapoarte, repetare greșeli, export și badge-uri.</span></div>
+        <div class="public-ready-card"><strong>👩‍🏫 Panou profesor</strong><span>Rezumat pentru evaluator: scoruri, capitole slabe și recomandări.</span></div>
       </div>
       <div class="public-ready-actions">
         <button type="button" data-target="learning-paths">Alege traseul</button>
         <button type="button" data-target="quiz-arena">Quiz Arena</button>
         <button type="button" data-target="quiz-pro">Quiz Pro</button>
+        <button type="button" data-target="teacher-dashboard">Panou profesor</button>
         <button type="button" data-target="bac-education-pack">Deschide BAC Pack</button>
         <button type="button" data-target="ai-coach-local-suggestions">Întrebări AI Coach</button>
       </div>
