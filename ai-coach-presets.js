@@ -15,6 +15,21 @@
     { triggers: ['recapitulare', 'repet', 'memorez', 'uit', 'spaced'], answer: `Folosește recapitularea 1-3-7-14-30:\n\n• după 1 zi: refaci ideile principale;\n• după 3 zile: quiz scurt;\n• după 7 zile: explici lecția cu voce tare;\n• după 14 zile: rezolvi exerciții;\n• după 30 zile: simulare sau test mixt.\n\nNu reciti pasiv. Încearcă să reproduci din memorie.` }
   ];
 
+  const SUGGESTED_QUESTIONS = [
+    'Cum îmi fac un plan de studiu pentru azi?',
+    'Cum repar greșelile din quiz?',
+    'Cum structurez eseul la română?',
+    'Ce fac la Subiectul I?',
+    'Ajută-mă la istorie',
+    'Dă-mi o strategie pentru geografie',
+    'Cum rezolv la matematică?',
+    'Cum învăț la biologie?',
+    'Cum abordez problemele la chimie?',
+    'Cum rezolv la fizică?',
+    'Cum gestionez timpul la simulare?',
+    'Ce fac când sunt stresat?'
+  ];
+
   const DEFAULT_ANSWER = `Pot răspunde momentan cu sfaturi presetate. Alege una dintre întrebările sugerate sau scrie despre: plan de studiu, greșeli la quiz, română, istorie, geografie, matematică, biologie, chimie, fizică, simulare BAC, stres/motivație sau recapitulare.`;
   let lastCoachQuestion = '';
 
@@ -62,6 +77,37 @@
     appendCoachBubble(question, 'usr');
     appendCoachBubble(getPresetAnswer(question), 'bot');
     input.value = '';
+  }
+
+  function renderSuggestedQuestions() {
+    const aiPanel = document.getElementById('p-ai');
+    if (!aiPanel || document.getElementById('ai-coach-local-suggestions')) return;
+
+    const anchor = aiPanel.querySelector('.ar') || getCoachInput()?.parentElement || aiPanel.firstElementChild;
+    const wrap = document.createElement('div');
+    wrap.id = 'ai-coach-local-suggestions';
+    wrap.className = 'cd';
+    wrap.style.marginBottom = '12px';
+    wrap.innerHTML = `
+      <div class="ct"><span class="dt" style="background:var(--teal)"></span>Întrebări sugerate</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px"></div>
+    `;
+
+    const list = wrap.querySelector('div:last-child');
+    SUGGESTED_QUESTIONS.forEach(question => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'bt bt-c ai-suggestion';
+      button.dataset.aiQuestion = question;
+      button.textContent = question;
+      list.appendChild(button);
+    });
+
+    if (anchor && anchor.parentElement) {
+      anchor.parentElement.insertBefore(wrap, anchor);
+    } else {
+      aiPanel.prepend(wrap);
+    }
   }
 
   function anthropicPresetPayload(question) {
@@ -138,8 +184,10 @@
 
   window.BAC_AI_COACH_PRESETS = {
     answers: PRESET_ANSWERS,
+    suggestions: SUGGESTED_QUESTIONS,
     getPresetAnswer,
     answerSuggestedQuestion,
+    renderSuggestedQuestions,
     hideAnthropicSettings: hideExternalAISettings,
     hideExternalAISettings
   };
@@ -165,7 +213,12 @@
     answerSuggestedQuestion(question);
   });
 
-  document.addEventListener('DOMContentLoaded', hideExternalAISettings);
+  document.addEventListener('DOMContentLoaded', () => {
+    hideExternalAISettings();
+    renderSuggestedQuestions();
+  });
   setTimeout(hideExternalAISettings, 300);
+  setTimeout(renderSuggestedQuestions, 300);
   setTimeout(hideExternalAISettings, 1200);
+  setTimeout(renderSuggestedQuestions, 1200);
 })();
