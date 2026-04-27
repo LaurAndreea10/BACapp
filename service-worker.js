@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'bac-space-v7-education-pack';
+const CACHE_VERSION = 'bac-space-v8-romanian-flow';
 const APP_SCOPE = '/BACapp/';
 const APP_SHELL = [
   APP_SCOPE,
@@ -12,6 +12,8 @@ const APP_SHELL = [
   `${APP_SCOPE}accessibility.js`,
   `${APP_SCOPE}education-pack.css`,
   `${APP_SCOPE}education-pack.js`,
+  `${APP_SCOPE}romanian-flow.css`,
+  `${APP_SCOPE}romanian-flow.js`,
   `${APP_SCOPE}ai-coach-presets.js`,
   `${APP_SCOPE}ai-coach-extra-presets.js`,
   `${APP_SCOPE}legal-notice.js`,
