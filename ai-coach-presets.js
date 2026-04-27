@@ -1,4 +1,65 @@
 (() => {
+  function ensureHeadIntegration() {
+    const head = document.head || document.getElementsByTagName('head')[0];
+    if (!head) return;
+
+    const ensureLink = (selector, attrs) => {
+      if (head.querySelector(selector)) return;
+      const link = document.createElement('link');
+      Object.entries(attrs).forEach(([key, value]) => link.setAttribute(key, value));
+      head.appendChild(link);
+    };
+
+    ensureLink('link[rel="manifest"]', {
+      rel: 'manifest',
+      href: '/BACapp/manifest.webmanifest'
+    });
+    ensureLink('link[rel="icon"][href="/BACapp/icons/icon-192.svg"]', {
+      rel: 'icon',
+      href: '/BACapp/icons/icon-192.svg',
+      type: 'image/svg+xml'
+    });
+    ensureLink('link[rel="apple-touch-icon"]', {
+      rel: 'apple-touch-icon',
+      href: '/BACapp/icons/icon-192.svg'
+    });
+
+    if (!document.getElementById('bac-space-css-vars-fallback')) {
+      const style = document.createElement('style');
+      style.id = 'bac-space-css-vars-fallback';
+      style.textContent = `
+:root{
+--bg:#06090f;--bg2:#0b0f1a;--bg3:#101626;--bg4:#161e30;
+--surf:rgba(11,15,26,.88);--surf2:rgba(16,22,38,.75);
+--line:rgba(255,255,255,.06);--line2:rgba(255,255,255,.11);--line3:rgba(255,255,255,.18);
+--gold:#e4a84c;--gold2:#f2c978;--gold-d:rgba(228,168,76,.08);--gold-g:rgba(228,168,76,.18);
+--teal:#3ccfbe;--teal-d:rgba(60,207,190,.08);
+--rose:#e86060;--rose-d:rgba(232,96,96,.08);
+--violet:#8b6cf0;--violet-d:rgba(139,108,240,.08);
+--green:#50c878;--green-d:rgba(80,200,120,.08);
+--sky:#5898f0;--sky-d:rgba(88,152,240,.08);
+--peach:#f09860;--peach-d:rgba(240,152,96,.08);
+--txt:#e0e4f0;--txt2:#7a84a0;--txt3:#454d66;
+--r:16px;--rs:10px;--rr:999px;
+--sh:0 6px 28px rgba(0,0,0,.35);
+--t:.18s cubic-bezier(.4,0,.2,1);
+--sbw:252px;
+}`;
+      head.appendChild(style);
+    }
+
+    if ('serviceWorker' in navigator && !window.__BAC_SPACE_SW_REGISTERED__) {
+      window.__BAC_SPACE_SW_REGISTERED__ = true;
+      window.addEventListener('load', () => {
+        navigator.serviceWorker
+          .register('/BACapp/service-worker.js', { scope: '/BACapp/' })
+          .catch(error => console.warn('BAC Space service worker registration failed:', error));
+      });
+    }
+  }
+
+  ensureHeadIntegration();
+
   const PRESET_ANSWERS = [
     {
       triggers: ['plan', 'program', 'azi', 'invăț', 'invat', 'studiu', 'orar'],
@@ -165,7 +226,8 @@
     answers: PRESET_ANSWERS,
     getPresetAnswer,
     answerSuggestedQuestion,
-    hideAnthropicSettings
+    hideAnthropicSettings,
+    ensureHeadIntegration
   };
 
   ['askAI', 'aiAsk', 'sendAI', 'sendMsg'].forEach(name => {
@@ -189,7 +251,11 @@
     answerSuggestedQuestion(question);
   });
 
-  document.addEventListener('DOMContentLoaded', hideAnthropicSettings);
+  document.addEventListener('DOMContentLoaded', () => {
+    ensureHeadIntegration();
+    hideAnthropicSettings();
+  });
+  setTimeout(ensureHeadIntegration, 300);
   setTimeout(hideAnthropicSettings, 300);
   setTimeout(hideAnthropicSettings, 1200);
 })();
