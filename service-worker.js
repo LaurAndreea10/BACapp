@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'bac-space-v6-legal-privacy';
+const CACHE_VERSION = 'bac-space-v7-education-pack';
 const APP_SCOPE = '/BACapp/';
 const APP_SHELL = [
   APP_SCOPE,
@@ -10,6 +10,8 @@ const APP_SHELL = [
   `${APP_SCOPE}styles.css`,
   `${APP_SCOPE}accessibility.css`,
   `${APP_SCOPE}accessibility.js`,
+  `${APP_SCOPE}education-pack.css`,
+  `${APP_SCOPE}education-pack.js`,
   `${APP_SCOPE}ai-coach-presets.js`,
   `${APP_SCOPE}ai-coach-extra-presets.js`,
   `${APP_SCOPE}legal-notice.js`,

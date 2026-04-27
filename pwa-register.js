@@ -17,9 +17,11 @@
 
   function loadRuntimeAssets() {
     loadStyleOnce('/BACapp/accessibility.css');
+    loadStyleOnce('/BACapp/education-pack.css');
     loadScriptOnce('/BACapp/accessibility.js');
     loadScriptOnce('/BACapp/ai-coach-extra-presets.js');
     loadScriptOnce('/BACapp/legal-notice.js');
+    loadScriptOnce('/BACapp/education-pack.js');
   }
 
   loadRuntimeAssets();
