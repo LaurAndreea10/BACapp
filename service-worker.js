@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'bac-space-v12-public-polish';
+const CACHE_VERSION = 'bac-space-v13-direct-bootstrap';
 const APP_SCOPE = '/BACapp/';
 const APP_SHELL = [
   APP_SCOPE,
