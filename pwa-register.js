@@ -19,6 +19,7 @@
     loadStyleOnce('/BACapp/accessibility.css');
     loadScriptOnce('/BACapp/accessibility.js');
     loadScriptOnce('/BACapp/ai-coach-extra-presets.js');
+    loadScriptOnce('/BACapp/legal-notice.js');
   }
 
   loadRuntimeAssets();
