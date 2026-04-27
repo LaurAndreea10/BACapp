@@ -18,7 +18,7 @@ Politica de confidențialitate: [`PRIVACY.md`](./PRIVACY.md)
 
 ## ✨ Prezentare
 
-**BAC Space** este o aplicație web pentru elevii care se pregătesc pentru Bacalaureat. Include lecții, quiz-uri, simulări, eseuri-model, hartă interactivă, Pomodoro, calendar de recapitulare, AI Coach local, **BAC Pack**, un **flux complet de învățare la Română** și un **flux complet Istorie + Geografie**.
+**BAC Space** este o aplicație web pentru elevii care se pregătesc pentru Bacalaureat. Include lecții, quiz-uri, simulări, eseuri-model, hartă interactivă, Pomodoro, calendar de recapitulare, AI Coach local, **BAC Pack**, flux complet la **Română**, flux complet **Istorie + Geografie** și flux complet **Matematică + Științe**.
 
 Aplicația este gândită ca un spațiu de învățare structurat, motivant și accesibil. Progresul este salvat local în browser, iar site-ul funcționează ca PWA.
 
@@ -30,6 +30,7 @@ Aplicația este gândită ca un spațiu de învățare structurat, motivant și 
 - 📚 **Materii & lecții** pentru învățare structurată
 - 🇷🇴 **Flux complet Română**: onboarding 7 zile, lecții, quiz, XP, recapitulări și progres local
 - 🏛️ **Flux complet Istorie + Geografie**: lecții, quiz, XP, fișe rapide și progres local pentru profil uman
+- 🔬 **Flux complet Matematică + Științe**: lecții, quiz, XP, fișe rapide și progres local pentru profil real/științe
 - 📚 **BAC Pack** cu lecții rapide, simulare pe profil, raport și reset progres
 - ❓ **Quiz-uri interactive** cu statistici de acuratețe
 - 🎯 **Mod greșeli** pentru refacerea întrebărilor dificile
@@ -83,6 +84,27 @@ Fișiere:
 
 - `history-geography-flow.css`
 - `history-geography-flow.js`
+
+---
+
+## 🔬 Flux complet Matematică + Științe
+
+Modulul Matematică + Științe extinde experiența completă pentru profil real/științe:
+
+- plan de 7 zile;
+- lecții Matematică: funcții/tabel de variație, integrale/primitive;
+- lecții Biologie: genetică, anatomie;
+- lecții Chimie: stoichiometrie, pH/acizi și baze;
+- lecții Fizică: mecanică, electricitate/legea lui Ohm;
+- quiz aferent fiecărei lecții;
+- XP local pentru lecții, quiz și fișe rapide;
+- fișe rapide cu formule și termeni-cheie;
+- progres local și activitate recentă.
+
+Fișiere:
+
+- `math-science-flow.css`
+- `math-science-flow.js`
 
 ---
 
@@ -241,6 +263,7 @@ După modificări în `main`, GitHub Pages poate avea nevoie de câteva minute p
 - test link `PRIVACY.md`
 - test flux Română: onboarding, lecție, quiz, XP, progres
 - test flux Istorie + Geografie: plan, lecții, quiz, fișe, progres
+- test flux Matematică + Științe: plan, lecții, quiz, fișe, progres
 - test BAC Pack: lecții, simulare, raport, reset progres
 - test AI Coach cu întrebări sugerate
 - test panou ♿
@@ -255,5 +278,5 @@ După modificări în `main`, GitHub Pages poate avea nevoie de câteva minute p
 - extragerea treptată a JavaScript-ului principal din `index.html` în `app.js`
 - audit complet cu screen reader real
 - capturi reale în README
-- extinderea fluxului complet pentru matematică/științe
+- extinderea conținutului cu subiecte reale pe ani/profil
 - teste smoke pentru navigare, quiz și simulare
