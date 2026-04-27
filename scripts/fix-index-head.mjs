@@ -20,6 +20,7 @@ const cleanHead = `<!DOCTYPE html>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="/BACapp/ai-coach-presets.js"></script>
 <script src="/BACapp/quiz-arena.js" defer></script>
+<script src="/BACapp/quiz-difficulty-fix.js" defer></script>
 <script src="/BACapp/pwa-register.js" defer></script>
 
 <style>
@@ -45,6 +46,9 @@ html = `${cleanHead}:root{\n${rest}`;
 
 if (!html.includes('/BACapp/quiz-arena.js')) {
   html = html.replace('</body>', '<script src="/BACapp/quiz-arena.js" defer></script>\n</body>');
+}
+if (!html.includes('/BACapp/quiz-difficulty-fix.js')) {
+  html = html.replace('</body>', '<script src="/BACapp/quiz-difficulty-fix.js" defer></script>\n</body>');
 }
 
 const invalidPatterns = [
