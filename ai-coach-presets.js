@@ -1,4 +1,37 @@
 (() => {
+  function loadScriptOnce(src, defer = true) {
+    if (document.querySelector(`script[src="${src}"]`)) return;
+    const script = document.createElement('script');
+    script.src = src;
+    script.defer = defer;
+    document.head.appendChild(script);
+  }
+
+  function loadStyleOnce(href) {
+    if (document.querySelector(`link[href="${href}"]`)) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    document.head.appendChild(link);
+  }
+
+  function bootstrapVisibleLearningAssets() {
+    loadStyleOnce('/BACapp/education-pack.css');
+    loadStyleOnce('/BACapp/romanian-flow.css');
+    loadStyleOnce('/BACapp/history-geography-flow.css');
+    loadStyleOnce('/BACapp/math-science-flow.css');
+    loadStyleOnce('/BACapp/learning-paths.css');
+    loadStyleOnce('/BACapp/public-polish.css');
+    loadScriptOnce('/BACapp/education-pack.js');
+    loadScriptOnce('/BACapp/romanian-flow.js');
+    loadScriptOnce('/BACapp/history-geography-flow.js');
+    loadScriptOnce('/BACapp/math-science-flow.js');
+    loadScriptOnce('/BACapp/learning-paths.js');
+    loadScriptOnce('/BACapp/public-polish.js');
+  }
+
+  bootstrapVisibleLearningAssets();
+
   const PRESET_ANSWERS = [
     { triggers: ['plan', 'program', 'azi', 'invăț', 'invat', 'studiu', 'orar'], answer: `Îți recomand un plan scurt și realist:\n\n1. 25 min: o lecție nouă sau recapitulare la materia principală.\n2. 5 min: pauză fără telefon.\n3. 20 min: 8-10 întrebări de quiz.\n4. 10 min: notează 3 greșeli și corectează-le.\n\nDacă ai puțin timp, fă doar un Pomodoro de 25 min și un mini-quiz.` },
     { triggers: ['greșeli', 'greseli', 'gresit', 'quiz', 'întrebări', 'intrebari', 'test'], answer: `Folosește regula 3 pași:\n\n1. Scrie pe scurt de ce răspunsul tău a fost greșit.\n2. Repetă teoria exactă din spatele întrebării.\n3. Refă întrebarea după 24 de ore.\n\nDacă greșești aceeași idee de 2 ori, transform-o într-o fișă rapidă.` },
@@ -16,133 +49,41 @@
   ];
 
   const SUGGESTION_GROUPS = [
-    {
-      title: 'Plan & progres',
-      icon: '🗓️',
-      accent: 'var(--gold)',
-      questions: [
-        'Cum îmi fac un plan de studiu pentru azi?',
-        'Cum repar greșelile din quiz?',
-        'Cum recapitulez eficient?'
-      ]
-    },
-    {
-      title: 'Română',
-      icon: '✍️',
-      accent: 'var(--violet)',
-      questions: [
-        'Cum structurez eseul la română?',
-        'Ce fac la Subiectul I?'
-      ]
-    },
-    {
-      title: 'Uman',
-      icon: '🏛️',
-      accent: 'var(--peach)',
-      questions: [
-        'Ajută-mă la istorie',
-        'Dă-mi o strategie pentru geografie'
-      ]
-    },
-    {
-      title: 'Real',
-      icon: '🔬',
-      accent: 'var(--teal)',
-      questions: [
-        'Cum rezolv la matematică?',
-        'Cum învăț la biologie?',
-        'Cum abordez problemele la chimie?',
-        'Cum rezolv la fizică?'
-      ]
-    },
-    {
-      title: 'Examen & stare',
-      icon: '🎯',
-      accent: 'var(--rose)',
-      questions: [
-        'Cum gestionez timpul la simulare?',
-        'Ce fac când sunt stresat?'
-      ]
-    }
+    { title: 'Plan & progres', icon: '🗓️', accent: 'var(--gold)', questions: ['Cum îmi fac un plan de studiu pentru azi?', 'Cum repar greșelile din quiz?', 'Cum recapitulez eficient?'] },
+    { title: 'Română', icon: '✍️', accent: 'var(--violet)', questions: ['Cum structurez eseul la română?', 'Ce fac la Subiectul I?'] },
+    { title: 'Uman', icon: '🏛️', accent: 'var(--peach)', questions: ['Ajută-mă la istorie', 'Dă-mi o strategie pentru geografie'] },
+    { title: 'Real', icon: '🔬', accent: 'var(--teal)', questions: ['Cum rezolv la matematică?', 'Cum învăț la biologie?', 'Cum abordez problemele la chimie?', 'Cum rezolv la fizică?'] },
+    { title: 'Examen & stare', icon: '🎯', accent: 'var(--rose)', questions: ['Cum gestionez timpul la simulare?', 'Ce fac când sunt stresat?'] }
   ];
 
   const SUGGESTED_QUESTIONS = SUGGESTION_GROUPS.flatMap(group => group.questions);
   const DEFAULT_ANSWER = `Pot răspunde momentan cu sfaturi presetate. Alege una dintre întrebările sugerate sau scrie despre: plan de studiu, greșeli la quiz, română, istorie, geografie, matematică, biologie, chimie, fizică, simulare BAC, stres/motivație sau recapitulare.`;
   let lastCoachQuestion = '';
 
-  function normalize(text) {
-    return String(text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
-  }
-
-  function getPresetAnswer(question) {
-    const q = normalize(question || lastCoachQuestion);
-    const found = PRESET_ANSWERS.find(item => item.triggers.some(trigger => q.includes(normalize(trigger))));
-    return found ? found.answer : DEFAULT_ANSWER;
-  }
-
-  function appendCoachBubble(text, type = 'bot') {
-    const chat = document.getElementById('am') || document.querySelector('.am');
-    if (!chat) return false;
-    const bubble = document.createElement('div');
-    bubble.className = `bb ${type}`;
-    bubble.textContent = text;
-    chat.appendChild(bubble);
-    chat.scrollTop = chat.scrollHeight;
-    return true;
-  }
-
-  function getCoachInput() {
-    return document.getElementById('aii') || document.getElementById('aiInput') || document.querySelector('#p-ai textarea, #p-ai input, .ar textarea');
-  }
-
-  function rememberQuestion(question) {
-    const clean = String(question || '').trim();
-    if (clean) lastCoachQuestion = clean;
-    return clean;
-  }
-
-  function answerSuggestedQuestion(question) {
-    const clean = rememberQuestion(question);
-    if (clean) appendCoachBubble(clean, 'usr');
-    appendCoachBubble(getPresetAnswer(clean), 'bot');
-  }
-
-  function fallbackAsk() {
-    const input = getCoachInput();
-    const question = rememberQuestion(input && input.value ? input.value : '');
-    if (!question) return;
-    appendCoachBubble(question, 'usr');
-    appendCoachBubble(getPresetAnswer(question), 'bot');
-    input.value = '';
-  }
+  function normalize(text) { return String(text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim(); }
+  function getPresetAnswer(question) { const q = normalize(question || lastCoachQuestion); const found = PRESET_ANSWERS.find(item => item.triggers.some(trigger => q.includes(normalize(trigger)))); return found ? found.answer : DEFAULT_ANSWER; }
+  function appendCoachBubble(text, type = 'bot') { const chat = document.getElementById('am') || document.querySelector('.am'); if (!chat) return false; const bubble = document.createElement('div'); bubble.className = `bb ${type}`; bubble.textContent = text; chat.appendChild(bubble); chat.scrollTop = chat.scrollHeight; return true; }
+  function getCoachInput() { return document.getElementById('aii') || document.getElementById('aiInput') || document.querySelector('#p-ai textarea, #p-ai input, .ar textarea'); }
+  function rememberQuestion(question) { const clean = String(question || '').trim(); if (clean) lastCoachQuestion = clean; return clean; }
+  function answerSuggestedQuestion(question) { const clean = rememberQuestion(question); if (clean) appendCoachBubble(clean, 'usr'); appendCoachBubble(getPresetAnswer(clean), 'bot'); }
+  function fallbackAsk() { const input = getCoachInput(); const question = rememberQuestion(input && input.value ? input.value : ''); if (!question) return; appendCoachBubble(question, 'usr'); appendCoachBubble(getPresetAnswer(question), 'bot'); input.value = ''; }
 
   function renderSuggestedQuestions() {
     const aiPanel = document.getElementById('p-ai');
     if (!aiPanel || document.getElementById('ai-coach-local-suggestions')) return;
-
     const anchor = aiPanel.querySelector('.ar') || getCoachInput()?.parentElement || aiPanel.firstElementChild;
     const wrap = document.createElement('div');
     wrap.id = 'ai-coach-local-suggestions';
     wrap.className = 'cd';
     wrap.style.marginBottom = '12px';
-    wrap.innerHTML = `
-      <div class="ct"><span class="dt" style="background:var(--teal)"></span>Întrebări sugerate</div>
-      <div class="ai-suggestion-groups" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px"></div>
-    `;
-
+    wrap.innerHTML = `<div class="ct"><span class="dt" style="background:var(--teal)"></span>Întrebări sugerate</div><div class="ai-suggestion-groups" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px"></div>`;
     const grid = wrap.querySelector('.ai-suggestion-groups');
     SUGGESTION_GROUPS.forEach(group => {
       const section = document.createElement('div');
       section.className = 'cs';
       section.style.padding = '10px';
       section.style.borderColor = 'var(--line)';
-      section.innerHTML = `
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;color:var(--txt);font-weight:700;font-size:.78rem">
-          <span>${group.icon}</span>
-          <span>${group.title}</span>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:6px"></div>
-      `;
+      section.innerHTML = `<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;color:var(--txt);font-weight:700;font-size:.78rem"><span>${group.icon}</span><span>${group.title}</span></div><div style="display:flex;flex-direction:column;gap:6px"></div>`;
       const list = section.querySelector('div:last-child');
       group.questions.forEach(question => {
         const button = document.createElement('button');
@@ -154,54 +95,18 @@
         button.style.whiteSpace = 'normal';
         button.style.borderColor = 'var(--line)';
         button.style.color = 'var(--txt2)';
-        button.addEventListener('mouseenter', () => {
-          button.style.color = group.accent;
-          button.style.borderColor = group.accent;
-        });
-        button.addEventListener('mouseleave', () => {
-          button.style.color = 'var(--txt2)';
-          button.style.borderColor = 'var(--line)';
-        });
+        button.addEventListener('mouseenter', () => { button.style.color = group.accent; button.style.borderColor = group.accent; });
+        button.addEventListener('mouseleave', () => { button.style.color = 'var(--txt2)'; button.style.borderColor = 'var(--line)'; });
         list.appendChild(button);
       });
       grid.appendChild(section);
     });
-
-    if (anchor && anchor.parentElement) {
-      anchor.parentElement.insertBefore(wrap, anchor);
-    } else {
-      aiPanel.prepend(wrap);
-    }
+    if (anchor && anchor.parentElement) anchor.parentElement.insertBefore(wrap, anchor);
+    else aiPanel.prepend(wrap);
   }
 
-  function anthropicPresetPayload(question) {
-    return {
-      id: `preset-${Date.now()}`,
-      type: 'message',
-      role: 'assistant',
-      model: 'bac-space-preset-coach',
-      content: [{ type: 'text', text: getPresetAnswer(question) }],
-      stop_reason: 'end_turn',
-      stop_sequence: null,
-      usage: { input_tokens: 0, output_tokens: 0 }
-    };
-  }
-
-  function getQuestionFromAnthropicBody(body) {
-    try {
-      const payload = typeof body === 'string' ? JSON.parse(body) : body;
-      const messages = Array.isArray(payload?.messages) ? payload.messages : [];
-      const lastUser = [...messages].reverse().find(message => message.role === 'user');
-      const content = lastUser?.content;
-      if (typeof content === 'string') return rememberQuestion(content);
-      if (Array.isArray(content)) {
-        return rememberQuestion(content.map(part => typeof part === 'string' ? part : part?.text || '').join(' ').trim());
-      }
-    } catch (error) {
-      console.warn('Could not parse AI Coach request body; using generic preset answer.', error);
-    }
-    return lastCoachQuestion;
-  }
+  function anthropicPresetPayload(question) { return { id: `preset-${Date.now()}`, type: 'message', role: 'assistant', model: 'bac-space-preset-coach', content: [{ type: 'text', text: getPresetAnswer(question) }], stop_reason: 'end_turn', stop_sequence: null, usage: { input_tokens: 0, output_tokens: 0 } }; }
+  function getQuestionFromAnthropicBody(body) { try { const payload = typeof body === 'string' ? JSON.parse(body) : body; const messages = Array.isArray(payload?.messages) ? payload.messages : []; const lastUser = [...messages].reverse().find(message => message.role === 'user'); const content = lastUser?.content; if (typeof content === 'string') return rememberQuestion(content); if (Array.isArray(content)) return rememberQuestion(content.map(part => typeof part === 'string' ? part : part?.text || '').join(' ').trim()); } catch (error) { console.warn('Could not parse AI Coach request body; using generic preset answer.', error); } return lastCoachQuestion; }
 
   function hideExternalAISettings() {
     const labels = ['anthropic api key', 'api key', 'model', 'șterge', 'sterge', 'nu ai setat încă o cheie', 'nu ai setat inca o cheie'];
@@ -212,15 +117,9 @@
       const match = labels.some(label => text.includes(normalize(label)) || idName.includes(normalize(label.replaceAll(' ', ''))));
       if (!match) return;
       const card = node.closest('.cd, .gt, .ge, .av, .cs') || node.parentElement;
-      if (card && card !== aiPanel && card !== document.body) {
-        card.style.display = 'none';
-        card.setAttribute('aria-hidden', 'true');
-      } else {
-        node.style.display = 'none';
-        node.setAttribute('aria-hidden', 'true');
-      }
+      if (card && card !== aiPanel && card !== document.body) { card.style.display = 'none'; card.setAttribute('aria-hidden', 'true'); }
+      else { node.style.display = 'none'; node.setAttribute('aria-hidden', 'true'); }
     });
-
     const noteId = 'local-ai-coach-note';
     if (document.getElementById(noteId) || !aiPanel || aiPanel === document.body) return;
     const note = document.createElement('div');
@@ -237,34 +136,18 @@
       const url = typeof input === 'string' ? input : input?.url;
       if (url && url.includes('api.anthropic.com/v1/messages')) {
         const question = getQuestionFromAnthropicBody(init?.body);
-        return Promise.resolve(new Response(JSON.stringify(anthropicPresetPayload(question)), {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' }
-        }));
+        return Promise.resolve(new Response(JSON.stringify(anthropicPresetPayload(question)), { status: 200, headers: { 'Content-Type': 'application/json' } }));
       }
       return nativeFetch(input, init);
     };
   }
 
-  window.BAC_AI_COACH_PRESETS = {
-    answers: PRESET_ANSWERS,
-    suggestionGroups: SUGGESTION_GROUPS,
-    suggestions: SUGGESTED_QUESTIONS,
-    getPresetAnswer,
-    answerSuggestedQuestion,
-    renderSuggestedQuestions,
-    hideAnthropicSettings: hideExternalAISettings,
-    hideExternalAISettings
-  };
+  window.BAC_AI_COACH_PRESETS = { answers: PRESET_ANSWERS, suggestionGroups: SUGGESTION_GROUPS, suggestions: SUGGESTED_QUESTIONS, getPresetAnswer, answerSuggestedQuestion, renderSuggestedQuestions, hideAnthropicSettings: hideExternalAISettings, hideExternalAISettings, bootstrapVisibleLearningAssets };
 
   ['askAI', 'aiAsk', 'sendAI', 'sendMsg'].forEach(name => {
     const original = window[name];
     window[name] = function patchedCoachAsk(...args) {
-      try {
-        if (typeof original === 'function') return original.apply(this, args);
-      } catch (error) {
-        console.warn('AI Coach live answer failed; using preset fallback.', error);
-      }
+      try { if (typeof original === 'function') return original.apply(this, args); } catch (error) { console.warn('AI Coach live answer failed; using preset fallback.', error); }
       return fallbackAsk();
     };
   });
@@ -279,12 +162,11 @@
     answerSuggestedQuestion(question);
   });
 
-  document.addEventListener('DOMContentLoaded', () => {
-    hideExternalAISettings();
-    renderSuggestedQuestions();
-  });
+  document.addEventListener('DOMContentLoaded', () => { bootstrapVisibleLearningAssets(); hideExternalAISettings(); renderSuggestedQuestions(); });
+  setTimeout(bootstrapVisibleLearningAssets, 100);
   setTimeout(hideExternalAISettings, 300);
   setTimeout(renderSuggestedQuestions, 300);
+  setTimeout(bootstrapVisibleLearningAssets, 1200);
   setTimeout(hideExternalAISettings, 1200);
   setTimeout(renderSuggestedQuestions, 1200);
 })();
