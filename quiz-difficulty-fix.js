@@ -12,6 +12,7 @@
 
   function loadExtraQuizModules() {
     loadScriptOnce('bac-training-engine-loader-fallback', '/BACapp/bac-training-engine.js?v=20260427');
+    loadScriptOnce('bac-advanced-features-loader-fallback', '/BACapp/bac-advanced-features.js?v=20260427');
     loadScriptOnce('quiz-superpowers-loader-fallback', '/BACapp/quiz-superpowers.js');
     loadScriptOnce('teacher-dashboard-loader-fallback', '/BACapp/teacher-dashboard.js');
     loadScriptOnce('site-diagnostics-loader-fallback', '/BACapp/site-diagnostics.js');
