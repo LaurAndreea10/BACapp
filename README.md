@@ -18,7 +18,7 @@ Politica de confidențialitate: [`PRIVACY.md`](./PRIVACY.md)
 
 ## ✨ Prezentare
 
-**BAC Space** este o aplicație web pentru elevii care se pregătesc pentru Bacalaureat. Include lecții, quiz-uri, simulări, eseuri-model, hartă interactivă, Pomodoro, calendar de recapitulare și AI Coach local.
+**BAC Space** este o aplicație web pentru elevii care se pregătesc pentru Bacalaureat. Include lecții, quiz-uri, simulări, eseuri-model, hartă interactivă, Pomodoro, calendar de recapitulare, AI Coach local și un **BAC Pack** pentru pregătire rapidă.
 
 Aplicația este gândită ca un spațiu de învățare structurat, motivant și accesibil. Progresul este salvat local în browser, iar site-ul funcționează ca PWA.
 
@@ -28,6 +28,7 @@ Aplicația este gândită ca un spațiu de învățare structurat, motivant și 
 
 - 🏠 **Dashboard** cu XP, nivel, streak și progres
 - 📚 **Materii & lecții** pentru învățare structurată
+- 📚 **BAC Pack** cu lecții rapide, simulare pe profil, raport și reset progres
 - ❓ **Quiz-uri interactive** cu statistici de acuratețe
 - 🎯 **Mod greșeli** pentru refacerea întrebărilor dificile
 - 🔁 **Recapitulări spațiate** 1-3-7-14-30 zile
@@ -40,6 +41,22 @@ Aplicația este gândită ca un spațiu de învățare structurat, motivant și 
 - 🤖 **AI Coach local**, fără API extern și fără costuri
 - ♿ **Panou de accesibilitate** cu contrast ridicat, text mărit, citire ușoară, fără distrageri și citire vocală
 - 📲 **PWA-ready**: manifest, service worker, iconițe și pagină offline
+
+---
+
+## 📚 BAC Pack
+
+BAC Pack adaugă un modul educațional rapid, integrat direct în aplicație:
+
+- lecții rapide pentru română, istorie, geografie și profil real/științe;
+- simulare BAC pe profil: Real, Uman, Tehnologic, Științe ale naturii;
+- raport după simulare cu scor estimativ, greșeli și recomandări pentru următoarea sesiune;
+- buton **Reset progres** cu două confirmări înainte de ștergerea datelor locale.
+
+Fișiere:
+
+- `education-pack.css`
+- `education-pack.js`
 
 ---
 
@@ -180,6 +197,7 @@ După modificări în `main`, GitHub Pages poate avea nevoie de câteva minute p
 - test pe mobil
 - test banner simulator/confidențialitate
 - test link `PRIVACY.md`
+- test BAC Pack: lecții, simulare, raport, reset progres
 - test AI Coach cu întrebări sugerate
 - test panou ♿
 - test `Citește textul`
