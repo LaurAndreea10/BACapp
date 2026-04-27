@@ -18,7 +18,7 @@ Politica de confidențialitate: [`PRIVACY.md`](./PRIVACY.md)
 
 ## ✨ Prezentare
 
-**BAC Space** este o aplicație web pentru elevii care se pregătesc pentru Bacalaureat. Include lecții, quiz-uri, simulări, eseuri-model, hartă interactivă, Pomodoro, calendar de recapitulare, AI Coach local, **BAC Pack**, flux complet la **Română**, flux complet **Istorie + Geografie** și flux complet **Matematică + Științe**.
+**BAC Space** este o aplicație web pentru elevii care se pregătesc pentru Bacalaureat. Include lecții, quiz-uri, simulări, eseuri-model, hartă interactivă, Pomodoro, calendar de recapitulare, AI Coach local, **Alege traseul tău**, **BAC Pack**, flux complet la **Română**, flux complet **Istorie + Geografie** și flux complet **Matematică + Științe**.
 
 Aplicația este gândită ca un spațiu de învățare structurat, motivant și accesibil. Progresul este salvat local în browser, iar site-ul funcționează ca PWA.
 
@@ -26,6 +26,7 @@ Aplicația este gândită ca un spațiu de învățare structurat, motivant și 
 
 ## 🚀 Funcționalități principale
 
+- 🧭 **Alege traseul tău** cu 3 carduri principale: Română, Uman, Real/Științe
 - 🏠 **Dashboard** cu XP, nivel, streak și progres
 - 📚 **Materii & lecții** pentru învățare structurată
 - 🇷🇴 **Flux complet Română**: onboarding 7 zile, lecții, quiz, XP, recapitulări și progres local
@@ -44,6 +45,23 @@ Aplicația este gândită ca un spațiu de învățare structurat, motivant și 
 - 🤖 **AI Coach local**, fără API extern și fără costuri
 - ♿ **Panou de accesibilitate** cu contrast ridicat, text mărit, citire ușoară, fără distrageri și citire vocală
 - 📲 **PWA-ready**: manifest, service worker, iconițe și pagină offline
+
+---
+
+## 🧭 Alege traseul tău
+
+Secțiunea de start organizează fluxurile mari în 3 carduri clare:
+
+- **Română**: eseu, poezie, argumentativ, quiz și progres;
+- **Uman**: Istorie + Geografie, plan 7 zile, lecții, quiz și fișe;
+- **Real / Științe**: Matematică, Biologie, Chimie, Fizică, quiz și formule.
+
+Fiecare card trimite direct la fluxul potrivit, reducând aglomerația pentru utilizatorii noi.
+
+Fișiere:
+
+- `learning-paths.css`
+- `learning-paths.js`
 
 ---
 
@@ -259,6 +277,7 @@ După modificări în `main`, GitHub Pages poate avea nevoie de câteva minute p
 
 - hard refresh după modificări mari
 - test pe mobil
+- test secțiunea „Alege traseul tău”
 - test banner simulator/confidențialitate
 - test link `PRIVACY.md`
 - test flux Română: onboarding, lecție, quiz, XP, progres
