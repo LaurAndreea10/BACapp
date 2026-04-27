@@ -1,28 +1,4 @@
 (() => {
-  function ensureHeadIntegration() {
-    const head = document.head || document.getElementsByTagName('head')[0];
-    if (!head) return;
-
-    const ensureLink = (selector, attrs) => {
-      if (head.querySelector(selector)) return;
-      const link = document.createElement('link');
-      Object.entries(attrs).forEach(([key, value]) => link.setAttribute(key, value));
-      head.appendChild(link);
-    };
-
-    ensureLink('link[rel="manifest"]', { rel: 'manifest', href: '/BACapp/manifest.webmanifest' });
-    ensureLink('link[rel="icon"][href="/BACapp/icons/icon-192.svg"]', { rel: 'icon', href: '/BACapp/icons/icon-192.svg', type: 'image/svg+xml' });
-    ensureLink('link[rel="apple-touch-icon"]', { rel: 'apple-touch-icon', href: '/BACapp/icons/icon-192.svg' });
-    ensureLink('link[rel="stylesheet"][href="/BACapp/styles.css"]', { rel: 'stylesheet', href: '/BACapp/styles.css' });
-
-    if ('serviceWorker' in navigator && !window.__BAC_SPACE_SW_REGISTERED__) {
-      window.__BAC_SPACE_SW_REGISTERED__ = true;
-      window.addEventListener('load', () => navigator.serviceWorker.register('/BACapp/service-worker.js', { scope: '/BACapp/' }).catch(error => console.warn('BAC Space service worker registration failed:', error)));
-    }
-  }
-
-  ensureHeadIntegration();
-
   const PRESET_ANSWERS = [
     { triggers: ['plan', 'program', 'azi', 'invăț', 'invat', 'studiu', 'orar'], answer: `Îți recomand un plan scurt și realist:\n\n1. 25 min: o lecție nouă sau recapitulare la materia principală.\n2. 5 min: pauză fără telefon.\n3. 20 min: 8-10 întrebări de quiz.\n4. 10 min: notează 3 greșeli și corectează-le.\n\nDacă ai puțin timp, fă doar un Pomodoro de 25 min și un mini-quiz.` },
     { triggers: ['greșeli', 'greseli', 'gresit', 'quiz', 'întrebări', 'intrebari', 'test'], answer: `Folosește regula 3 pași:\n\n1. Scrie pe scurt de ce răspunsul tău a fost greșit.\n2. Repetă teoria exactă din spatele întrebării.\n3. Refă întrebarea după 24 de ore.\n\nDacă greșești aceeași idee de 2 ori, transform-o într-o fișă rapidă.` },
@@ -34,21 +10,155 @@
 
   const DEFAULT_ANSWER = `Pot răspunde momentan cu sfaturi presetate. Alege una dintre întrebările sugerate sau scrie despre: plan de studiu, greșeli la quiz, eseu la română, simulare BAC, stres/motivație sau recapitulare.`;
   let lastCoachQuestion = '';
-  function normalize(text) { return String(text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim(); }
-  function getPresetAnswer(question) { const q = normalize(question || lastCoachQuestion); const found = PRESET_ANSWERS.find(item => item.triggers.some(trigger => q.includes(normalize(trigger)))); return found ? found.answer : DEFAULT_ANSWER; }
-  function appendCoachBubble(text, type = 'bot') { const chat = document.getElementById('am') || document.querySelector('.am'); if (!chat) return false; const bubble = document.createElement('div'); bubble.className = `bb ${type}`; bubble.textContent = text; chat.appendChild(bubble); chat.scrollTop = chat.scrollHeight; return true; }
-  function getCoachInput() { return document.getElementById('aii') || document.getElementById('aiInput') || document.querySelector('#p-ai textarea, #p-ai input, .ar textarea'); }
-  function rememberQuestion(question) { const clean = String(question || '').trim(); if (clean) lastCoachQuestion = clean; return clean; }
-  function answerSuggestedQuestion(question) { const clean = rememberQuestion(question); if (clean) appendCoachBubble(clean, 'usr'); appendCoachBubble(getPresetAnswer(clean), 'bot'); }
-  function fallbackAsk() { const input = getCoachInput(); const question = rememberQuestion(input && input.value ? input.value : ''); if (!question) return; appendCoachBubble(question, 'usr'); appendCoachBubble(getPresetAnswer(question), 'bot'); input.value = ''; }
-  function anthropicPresetPayload(question) { return { id: `preset-${Date.now()}`, type: 'message', role: 'assistant', model: 'bac-space-preset-coach', content: [{ type: 'text', text: getPresetAnswer(question) }], stop_reason: 'end_turn', stop_sequence: null, usage: { input_tokens: 0, output_tokens: 0 } }; }
-  function getQuestionFromAnthropicBody(body) { try { const payload = typeof body === 'string' ? JSON.parse(body) : body; const messages = Array.isArray(payload?.messages) ? payload.messages : []; const lastUser = [...messages].reverse().find(message => message.role === 'user'); const content = lastUser?.content; if (typeof content === 'string') return rememberQuestion(content); if (Array.isArray(content)) return rememberQuestion(content.map(part => typeof part === 'string' ? part : part?.text || '').join(' ').trim()); } catch (error) { console.warn('Could not parse AI Coach request body; using generic preset answer.', error); } return lastCoachQuestion; }
-  function hideAnthropicSettings() { const labels = ['anthropic api key', 'api key', 'model', 'șterge', 'sterge', 'nu ai setat încă o cheie', 'nu ai setat inca o cheie']; const aiPanel = document.getElementById('p-ai') || document.body; Array.from(aiPanel.querySelectorAll('label, input, select, button, small, p, div')).forEach(node => { const text = normalize(node.textContent || node.placeholder || node.value || ''); const idName = normalize(`${node.id || ''} ${node.name || ''} ${node.className || ''}`); const match = labels.some(label => text.includes(normalize(label)) || idName.includes(normalize(label.replaceAll(' ', '')))); if (!match) return; const card = node.closest('.cd, .gt, .ge, .av, .cs') || node.parentElement; if (card && card !== aiPanel && card !== document.body) { card.style.display = 'none'; card.setAttribute('aria-hidden', 'true'); } else { node.style.display = 'none'; node.setAttribute('aria-hidden', 'true'); } }); const noteId = 'local-ai-coach-note'; if (document.getElementById(noteId) || !aiPanel || aiPanel === document.body) return; const note = document.createElement('div'); note.id = noteId; note.className = 'cs'; note.style.marginBottom = '10px'; note.innerHTML = '🤖 AI Coach rulează local, cu răspunsuri presetate. Nu folosește Anthropic, nu consumă tokeni și nu cere API Key.'; aiPanel.prepend(note); }
+
+  function normalize(text) {
+    return String(text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+  }
+
+  function getPresetAnswer(question) {
+    const q = normalize(question || lastCoachQuestion);
+    const found = PRESET_ANSWERS.find(item => item.triggers.some(trigger => q.includes(normalize(trigger))));
+    return found ? found.answer : DEFAULT_ANSWER;
+  }
+
+  function appendCoachBubble(text, type = 'bot') {
+    const chat = document.getElementById('am') || document.querySelector('.am');
+    if (!chat) return false;
+    const bubble = document.createElement('div');
+    bubble.className = `bb ${type}`;
+    bubble.textContent = text;
+    chat.appendChild(bubble);
+    chat.scrollTop = chat.scrollHeight;
+    return true;
+  }
+
+  function getCoachInput() {
+    return document.getElementById('aii') || document.getElementById('aiInput') || document.querySelector('#p-ai textarea, #p-ai input, .ar textarea');
+  }
+
+  function rememberQuestion(question) {
+    const clean = String(question || '').trim();
+    if (clean) lastCoachQuestion = clean;
+    return clean;
+  }
+
+  function answerSuggestedQuestion(question) {
+    const clean = rememberQuestion(question);
+    if (clean) appendCoachBubble(clean, 'usr');
+    appendCoachBubble(getPresetAnswer(clean), 'bot');
+  }
+
+  function fallbackAsk() {
+    const input = getCoachInput();
+    const question = rememberQuestion(input && input.value ? input.value : '');
+    if (!question) return;
+    appendCoachBubble(question, 'usr');
+    appendCoachBubble(getPresetAnswer(question), 'bot');
+    input.value = '';
+  }
+
+  function anthropicPresetPayload(question) {
+    return {
+      id: `preset-${Date.now()}`,
+      type: 'message',
+      role: 'assistant',
+      model: 'bac-space-preset-coach',
+      content: [{ type: 'text', text: getPresetAnswer(question) }],
+      stop_reason: 'end_turn',
+      stop_sequence: null,
+      usage: { input_tokens: 0, output_tokens: 0 }
+    };
+  }
+
+  function getQuestionFromAnthropicBody(body) {
+    try {
+      const payload = typeof body === 'string' ? JSON.parse(body) : body;
+      const messages = Array.isArray(payload?.messages) ? payload.messages : [];
+      const lastUser = [...messages].reverse().find(message => message.role === 'user');
+      const content = lastUser?.content;
+      if (typeof content === 'string') return rememberQuestion(content);
+      if (Array.isArray(content)) {
+        return rememberQuestion(content.map(part => typeof part === 'string' ? part : part?.text || '').join(' ').trim());
+      }
+    } catch (error) {
+      console.warn('Could not parse AI Coach request body; using generic preset answer.', error);
+    }
+    return lastCoachQuestion;
+  }
+
+  function hideExternalAISettings() {
+    const labels = ['anthropic api key', 'api key', 'model', 'șterge', 'sterge', 'nu ai setat încă o cheie', 'nu ai setat inca o cheie'];
+    const aiPanel = document.getElementById('p-ai') || document.body;
+    Array.from(aiPanel.querySelectorAll('label, input, select, button, small, p, div')).forEach(node => {
+      const text = normalize(node.textContent || node.placeholder || node.value || '');
+      const idName = normalize(`${node.id || ''} ${node.name || ''} ${node.className || ''}`);
+      const match = labels.some(label => text.includes(normalize(label)) || idName.includes(normalize(label.replaceAll(' ', ''))));
+      if (!match) return;
+      const card = node.closest('.cd, .gt, .ge, .av, .cs') || node.parentElement;
+      if (card && card !== aiPanel && card !== document.body) {
+        card.style.display = 'none';
+        card.setAttribute('aria-hidden', 'true');
+      } else {
+        node.style.display = 'none';
+        node.setAttribute('aria-hidden', 'true');
+      }
+    });
+
+    const noteId = 'local-ai-coach-note';
+    if (document.getElementById(noteId) || !aiPanel || aiPanel === document.body) return;
+    const note = document.createElement('div');
+    note.id = noteId;
+    note.className = 'cs';
+    note.style.marginBottom = '10px';
+    note.textContent = '🤖 AI Coach rulează local, cu răspunsuri presetate. Nu folosește servicii externe, nu consumă tokeni și nu cere API Key.';
+    aiPanel.prepend(note);
+  }
+
   const nativeFetch = window.fetch ? window.fetch.bind(window) : null;
-  if (nativeFetch) window.fetch = function patchedFetch(input, init = {}) { const url = typeof input === 'string' ? input : input?.url; if (url && url.includes('api.anthropic.com/v1/messages')) { const question = getQuestionFromAnthropicBody(init?.body); return Promise.resolve(new Response(JSON.stringify(anthropicPresetPayload(question)), { status: 200, headers: { 'Content-Type': 'application/json' } })); } return nativeFetch(input, init); };
-  window.BAC_AI_COACH_PRESETS = { answers: PRESET_ANSWERS, getPresetAnswer, answerSuggestedQuestion, hideAnthropicSettings, ensureHeadIntegration };
-  ['askAI', 'aiAsk', 'sendAI', 'sendMsg'].forEach(name => { const original = window[name]; window[name] = function patchedCoachAsk(...args) { try { if (typeof original === 'function') return original.apply(this, args); } catch (error) { console.warn('AI Coach live answer failed; using preset fallback.', error); } return fallbackAsk(); }; });
-  document.addEventListener('click', event => { const target = event.target.closest('[data-ai-question], [data-coach-question], .ai-suggestion, .coach-suggestion'); if (!target) return; const question = target.dataset.aiQuestion || target.dataset.coachQuestion || target.textContent.trim(); if (!question) return; event.preventDefault(); answerSuggestedQuestion(question); });
-  document.addEventListener('DOMContentLoaded', () => { ensureHeadIntegration(); hideAnthropicSettings(); });
-  setTimeout(ensureHeadIntegration, 300); setTimeout(hideAnthropicSettings, 300); setTimeout(hideAnthropicSettings, 1200);
+  if (nativeFetch) {
+    window.fetch = function patchedFetch(input, init = {}) {
+      const url = typeof input === 'string' ? input : input?.url;
+      if (url && url.includes('api.anthropic.com/v1/messages')) {
+        const question = getQuestionFromAnthropicBody(init?.body);
+        return Promise.resolve(new Response(JSON.stringify(anthropicPresetPayload(question)), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        }));
+      }
+      return nativeFetch(input, init);
+    };
+  }
+
+  window.BAC_AI_COACH_PRESETS = {
+    answers: PRESET_ANSWERS,
+    getPresetAnswer,
+    answerSuggestedQuestion,
+    hideAnthropicSettings: hideExternalAISettings,
+    hideExternalAISettings
+  };
+
+  ['askAI', 'aiAsk', 'sendAI', 'sendMsg'].forEach(name => {
+    const original = window[name];
+    window[name] = function patchedCoachAsk(...args) {
+      try {
+        if (typeof original === 'function') return original.apply(this, args);
+      } catch (error) {
+        console.warn('AI Coach live answer failed; using preset fallback.', error);
+      }
+      return fallbackAsk();
+    };
+  });
+
+  document.addEventListener('click', event => {
+    const target = event.target.closest('[data-ai-question], [data-coach-question], .ai-suggestion, .coach-suggestion');
+    if (!target) return;
+    const question = target.dataset.aiQuestion || target.dataset.coachQuestion || target.textContent.trim();
+    if (!question) return;
+    event.preventDefault();
+    answerSuggestedQuestion(question);
+  });
+
+  document.addEventListener('DOMContentLoaded', hideExternalAISettings);
+  setTimeout(hideExternalAISettings, 300);
+  setTimeout(hideExternalAISettings, 1200);
 })();
