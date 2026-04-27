@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'bac-space-v9-history-geography-flow';
+const CACHE_VERSION = 'bac-space-v10-math-science-flow';
 const APP_SCOPE = '/BACapp/';
 const APP_SHELL = [
   APP_SCOPE,
@@ -16,6 +16,8 @@ const APP_SHELL = [
   `${APP_SCOPE}romanian-flow.js`,
   `${APP_SCOPE}history-geography-flow.css`,
   `${APP_SCOPE}history-geography-flow.js`,
+  `${APP_SCOPE}math-science-flow.css`,
+  `${APP_SCOPE}math-science-flow.js`,
   `${APP_SCOPE}ai-coach-presets.js`,
   `${APP_SCOPE}ai-coach-extra-presets.js`,
   `${APP_SCOPE}legal-notice.js`,
