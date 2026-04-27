@@ -1,8 +1,18 @@
 # 🎓 BAC Space
 
-> Platformă educațională statică pentru pregătirea examenului de Bacalaureat din România.
+> Simulator educațional static pentru pregătirea examenului de Bacalaureat din România.
 
 🔗 **Live demo:** https://laurandreea10.github.io/BACapp/
+
+---
+
+## ⚠️ Mențiune importantă
+
+**BAC Space este doar un simulator educațional pentru pregătire și antrenament.**
+
+Aplicația nu este o platformă oficială a Ministerului Educației, nu reprezintă o instituție publică și nu garantează rezultatul la examenul real. Conținutul, quiz-urile, simulările și răspunsurile AI Coach trebuie folosite ca suport de învățare, alături de programa oficială, profesor și materiale aprobate.
+
+Politica de confidențialitate: [`PRIVACY.md`](./PRIVACY.md)
 
 ---
 
@@ -30,6 +40,18 @@ Aplicația este gândită ca un spațiu de învățare structurat, motivant și 
 - 🤖 **AI Coach local**, fără API extern și fără costuri
 - ♿ **Panou de accesibilitate** cu contrast ridicat, text mărit, citire ușoară, fără distrageri și citire vocală
 - 📲 **PWA-ready**: manifest, service worker, iconițe și pagină offline
+
+---
+
+## 🔒 Confidențialitate
+
+BAC Space nu colectează, nu vinde și nu transmite către dezvoltator date personale introduse în aplicație.
+
+Date precum progresul, XP-ul, streak-ul, răspunsurile la quiz-uri și setările de accesibilitate sunt salvate local în browser, prin `localStorage` și cache PWA.
+
+AI Coach rulează local, cu răspunsuri presetate. Nu trimite întrebările către Anthropic, OpenAI sau alt serviciu AI.
+
+Detalii: [`PRIVACY.md`](./PRIVACY.md)
 
 ---
 
@@ -121,7 +143,7 @@ Repository-ul include workflow-uri GitHub Actions pentru:
 
 - verificare statică a site-ului
 - curățarea/legarea automată a fișierelor critice în `index.html`
-- audit Lighthouse pentru accessibility, PWA, best practices și performance
+- audit Lighthouse pentru accessibility, best practices și performance
 
 Configurație Lighthouse: [`lighthouserc.json`](./lighthouserc.json)
 
@@ -138,7 +160,7 @@ Fișiere principale:
 - `icons/icon-192.svg`
 - `icons/icon-512.svg`
 
-Service worker-ul folosește cache versionat și strategie network-first pentru asset-uri locale `.js`, `.css` și `.webmanifest`.
+Service worker-ul folosește cache versionat și strategie network-first pentru asset-uri locale `.js`, `.css`, `.md` și `.webmanifest`.
 
 ---
 
@@ -156,6 +178,8 @@ După modificări în `main`, GitHub Pages poate avea nevoie de câteva minute p
 
 - hard refresh după modificări mari
 - test pe mobil
+- test banner simulator/confidențialitate
+- test link `PRIVACY.md`
 - test AI Coach cu întrebări sugerate
 - test panou ♿
 - test `Citește textul`
