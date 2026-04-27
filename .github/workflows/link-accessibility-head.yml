@@ -1,0 +1,41 @@
+name: Link accessibility assets
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  link:
+    name: Link accessibility assets in index head
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Link accessibility assets
+        run: node scripts/ensure-accessibility-head.mjs
+
+      - name: Verify static site
+        run: npm run verify
+
+      - name: Commit updated index.html
+        run: |
+          if git diff --quiet index.html; then
+            echo "index.html already links accessibility assets; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Link accessibility assets in index head"
+          git push
