@@ -1,6 +1,20 @@
 (() => {
   const levels = ['Toate', 'Ușor', 'Mediu', 'Greu'];
 
+  function loadScriptOnce(id, src) {
+    if (document.getElementById(id)) return;
+    const script = document.createElement('script');
+    script.id = id;
+    script.src = src;
+    script.defer = true;
+    document.body.appendChild(script);
+  }
+
+  function loadExtraQuizModules() {
+    loadScriptOnce('quiz-superpowers-loader-fallback', '/BACapp/quiz-superpowers.js');
+    loadScriptOnce('teacher-dashboard-loader-fallback', '/BACapp/teacher-dashboard.js');
+  }
+
   function ensureStyles() {
     if (document.getElementById('quiz-difficulty-fix-css')) return;
     const style = document.createElement('style');
@@ -54,6 +68,7 @@
 
   function mount() {
     ensureStyles();
+    loadExtraQuizModules();
     const arena = document.getElementById('quiz-arena');
     const select = document.getElementById('quiz-dif');
     if (!arena || !select || document.getElementById('difficulty-chooser')) return false;
@@ -87,10 +102,12 @@
   }
 
   function boot() {
+    loadExtraQuizModules();
     if (mount()) return;
     let tries = 0;
     const timer = setInterval(() => {
       tries += 1;
+      loadExtraQuizModules();
       if (mount() || tries > 30) clearInterval(timer);
     }, 300);
   }
